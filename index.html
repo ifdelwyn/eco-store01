@@ -605,18 +605,15 @@
       }
       .hero-card {
         position: absolute;
-        background: var(--card);
         border-radius: 24px;
-        box-shadow: var(--shadow-lg);
-        border: 1px solid var(--border);
         padding: 18px;
         animation: floaty 6s ease-in-out infinite;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
       }
       .hero-card.main {
         inset: 0;
-        background: linear-gradient(145deg, #1a3a2a 0%, #2d6a4f 100%);
+        background: linear-gradient(145deg, #0f2a1e 0%, #1a4a34 50%, #0d281a 100%);
         color: #fff;
         display: flex;
         flex-direction: column;
@@ -625,23 +622,45 @@
         border: none;
         overflow: hidden;
         border-radius: 32px;
-        box-shadow: 0 25px 60px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.1);
+        box-shadow: 0 25px 60px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.08);
       }
       .hero-card.main::before {
         content: "";
         position: absolute;
         inset: 0;
-        background: url("https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=900&q=80")
+        background: url("https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=900&q=80")
           center/cover;
-        opacity: 0.4;
+        opacity: 0.3;
         mix-blend-mode: overlay;
       }
       .hero-card.main::after {
         content: "";
         position: absolute;
         inset: 0;
-        background: radial-gradient(ellipse at 30% 80%, rgba(255,255,255,.12) 0%, transparent 60%);
+        background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.08) 0%, transparent 50%);
         pointer-events: none;
+      }
+      .hero-card.main .hero-prod-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .hero-card.main .hero-prod-grid .hp-item {
+        aspect-ratio: 1/1;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,.15);
+      }
+      .hero-card.main .hero-prod-grid .hp-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .5s;
+      }
+      .hero-card.main .hero-prod-grid .hp-item:hover img {
+        transform: scale(1.08);
       }
       .hero-card.main h3 {
         font-size: 1.6rem;
@@ -661,7 +680,7 @@
         right: -30px;
         width: 200px;
         animation-delay: -2s;
-        background: rgba(255,255,255,.85);
+        background: rgba(255,255,255,.88);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255,255,255,.5);
@@ -672,21 +691,21 @@
         left: -30px;
         width: 230px;
         animation-delay: -4s;
-        background: rgba(255,255,255,.85);
+        background: rgba(255,255,255,.88);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(255,255,255,.5);
         box-shadow: 0 15px 40px rgba(0,0,0,.12);
       }
       .hero-card.float3 {
-        top: 50%;
-        left: 50%;
-        width: 70px;
-        height: 70px;
+        top: 18%;
+        right: 10%;
+        width: 56px;
+        height: 56px;
         border-radius: 50%;
         animation: floatyRev 7s ease-in-out infinite;
         animation-delay: -1s;
-        background: rgba(255,255,255,.08);
+        background: rgba(255,255,255,.1);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         border: 1px solid rgba(255,255,255,.15);
@@ -694,7 +713,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
+        font-size: 1.5rem;
         pointer-events: none;
       }
       .mini-prod {
@@ -720,14 +739,14 @@
          50% { transform: translateY(-14px); }
       }
       @keyframes floatyRev {
-        0%, 100% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); }
-         33% { transform: translate(-50%, -50%) translateY(-18px) rotate(5deg); }
-         66% { transform: translate(-50%, -50%) translateY(8px) rotate(-3deg); }
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+         33% { transform: translateY(-18px) rotate(5deg); }
+         66% { transform: translateY(8px) rotate(-3deg); }
       }
       .hero-visual .deco-leaf {
         position: absolute;
         font-size: 2.8rem;
-        opacity: .12;
+        opacity: .1;
         pointer-events: none;
         animation: floaty 8s ease-in-out infinite;
       }
@@ -735,25 +754,26 @@
       .hero-visual .deco-leaf:nth-child(2) { bottom: -10px; right: -10px; font-size: 3.6rem; animation-delay: -5s; }
       @media (max-width: 992px) {
         .hero-visual {
-          height: 360px;
+          height: 380px;
           max-width: 480px;
           margin: 0 auto;
         }
+        .hero-card.main .hero-prod-grid { display: none; }
         .hero-card.float1 {
           right: -10px;
-          width: 170px;
+          width: 160px;
           top: 20px;
-          padding: 14px;
+          padding: 12px;
         }
         .hero-card.float2 {
           left: -10px;
-          width: 190px;
+          width: 180px;
           bottom: 20px;
-          padding: 14px;
+          padding: 12px;
         }
         .hero-card.float3 { display: none; }
-        .hero-card.main { border-radius: 24px; }
-        .mini-prod img { width: 40px; height: 40px; }
+        .hero-card.main { border-radius: 24px; padding: 24px; }
+        .mini-prod img { width: 38px; height: 38px; }
         .hero-visual .deco-leaf { display: none; }
       }
 
@@ -1587,6 +1607,27 @@
       }
       .auth-switch a {
         color: var(--primary);
+        cursor: pointer;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .auth-switch a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 480px) {
+        .eco-modal { padding: 0; align-items: flex-end; }
+        .eco-modal-content { max-width: 100%; border-radius: 22px 22px 0 0; max-height: 92vh; }
+        .eco-modal.show { animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+        @keyframes slideUp {
+          from { transform: translateY(100%); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        .auth-form-wrap { padding: 28px 24px 32px; }
+        .auth-form-wrap h3 { font-size: 1.2rem; }
+        .input-eco input { padding: 16px 14px 8px; font-size: 16px; }
+        .modal-close { top: 10px; right: 10px; width: 32px; height: 32px; }
+        .eco-modal-bg { backdrop-filter: blur(4px); }
+      }
         font-weight: 700;
         cursor: pointer;
       }
@@ -3411,12 +3452,17 @@
                 <div class="deco-leaf"><i class="fa-solid fa-leaf"></i></div>
                 <div class="deco-leaf"><i class="fa-solid fa-seedling"></i></div>
                 <div class="hero-card main">
-                  <h3 data-i18n="hero.cardT">Fresh from the farm</h3>
+                  <div class="hero-prod-grid">
+                    <div class="hp-item"><img src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=300&q=80" alt="Avocado"></div>
+                    <div class="hp-item"><img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=300&q=80" alt="Honey"></div>
+                    <div class="hp-item"><img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=300&q=80" alt="Berries"></div>
+                  </div>
+                  <h3 data-i18n="hero.cardT">From farm to your table</h3>
                   <p data-i18n="hero.cardP">
-                    Harvested this morning, delivered today.
+                    2,500+ organic products, handpicked just for you.
                   </p>
                 </div>
-                <div class="hero-card float3"><i class="fa-solid fa-spa"></i></div>
+                <div class="hero-card float3"><i class="fa-solid fa-store"></i></div>
                 <div class="hero-card float1">
                   <div class="mini-prod">
                     <img
@@ -3425,7 +3471,7 @@
                     />
                     <div>
                       <strong style="font-size: 0.85rem">Hass Avocado</strong
-                      ><br /><small>USDA Organic</small>
+                      ><br /><small>$3.99</small>
                     </div>
                   </div>
                 </div>
@@ -3437,7 +3483,7 @@
                     />
                     <div>
                       <strong style="font-size: 0.85rem">Raw Wild Honey</strong
-                      ><br /><small>EU Bio Certified</small>
+                      ><br /><small>$8.49</small>
                     </div>
                   </div>
                 </div>
