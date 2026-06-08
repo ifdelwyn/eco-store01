@@ -1,0 +1,2527 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoShop – Quản trị hệ thống</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>document.addEventListener('contextmenu',e=>e.preventDefault());document.addEventListener('keydown',e=>{if(e.key==='F12'||e.key==='f12'||(e.ctrlKey&&e.shiftKey&&['I','C','J','i','c','j'].includes(e.key))){e.preventDefault();e.stopPropagation()}});console.log('%cEcoShop v2.0 (c) 2026 EcoShop Team','font-size:18px;font-weight:bold;color:#16a34a');console.log('%cAll rights reserved.','font-size:12px;color:#666');</script>
+  <style>
+    :root { --primary: #16a34a; --secondary: #15803d; --accent: #22c55e; --bg: #f0fdf4; --soft: #dcfce7; --glow: #bbf7d0; --dark: #14532d; --text: #0f2417; --muted: #5b6b62; --card: #ffffff; --border: rgba(20,83,45,.1); --shadow: 0 10px 30px -10px rgba(20,83,45,.18); --shadow-lg: 0 30px 60px -20px rgba(20,83,45,.25); --radius: 18px; --radius-sm: 12px; --glass-strong: rgba(255,255,255,.85); --grad: linear-gradient(135deg,#16a34a 0%,#22c55e 60%,#bbf7d0 100%); --grad-dark: linear-gradient(135deg,#14532d 0%,#15803d 100%); }
+    [data-theme="dark"] { --bg: #06140d; --soft: #0e2418; --glow: #163826; --text: #e8fbef; --muted: #9ab5a4; --card: #0d2117; --border: rgba(187,247,208,.1); --shadow: 0 10px 30px -10px rgba(0,0,0,.55); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Plus Jakarta Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    #toasts { position: fixed; bottom: 80px; right: 24px; z-index: 9998; display: flex; flex-direction: column-reverse; gap: 10px; pointer-events: none; max-width: 100%; }
+    .admin-shell { display: grid; grid-template-columns: 240px 1fr; height: 100vh; overflow: hidden; background: var(--bg); }
+    @media (max-width: 768px) { .admin-shell { grid-template-columns: 1fr; } .admin-side { position: fixed; z-index: 1080; height: 100vh; transform: translateX(-100%); transition: transform .3s; } .admin-side.open { transform: translateX(0); } }
+    .admin-side { background: var(--grad-dark); color: #d4f4df; padding: 24px 16px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
+    .admin-side .logo-a { color: #fff; font-weight: 800; font-size: 1.1rem; margin-bottom: 20px; padding: 0 8px; display: flex; align-items: center; gap: 10px; }
+    .admin-nav { padding: 10px 14px; border-radius: 12px; color: #bbe5c8; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all .2s; font-size: .92rem; flex-shrink: 0; }
+    .admin-nav:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .admin-nav.active { background: var(--accent); color: #fff; }
+    .admin-main { padding: 24px; height: 100vh; overflow-y: auto; }
+    .admin-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+    .admin-top h2 { font-weight: 800; margin: 0; }
+    .btn-eco { background: var(--grad); color: #fff; border: none; padding: 12px 22px; border-radius: 14px; font-weight: 700; box-shadow: 0 10px 24px -8px rgba(22,163,74,.55); transition: all .3s; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+    .btn-eco:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -8px rgba(22,163,74,.7); color: #fff; }
+    .btn-ghost { background: transparent; color: var(--secondary); border: 1.5px solid var(--primary); padding: 11px 20px; border-radius: 14px; font-weight: 700; transition: all .3s; cursor: pointer; }
+    .btn-ghost:hover { background: var(--primary); color: #fff; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi { background: var(--card); padding: 18px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .kpi small { color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: .72rem; }
+    .kpi strong { display: block; font-size: 1.6rem; font-weight: 800; margin: 6px 0; color: var(--secondary); }
+    .kpi span { color: var(--primary); font-size: .82rem; font-weight: 700; }
+    .panel { background: var(--card); border-radius: 16px; border: 1px solid var(--border); padding: 20px; box-shadow: var(--shadow); margin-bottom: 18px; }
+    .table-eco { width: 100%; border-collapse: collapse; }
+    .table-eco th, .table-eco td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: .9rem; }
+    .table-eco th { font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: .72rem; letter-spacing: 1px; }
+    .tag { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: .74rem; font-weight: 700; background: var(--soft); color: var(--secondary); }
+    .tag.warn { background: #fef3c7; color: #92400e; }
+    .tag.err { background: #fee2e2; color: #991b1b; }
+    .tag.info { background: #dbeafe; color: #1e40af; }
+    .row-actions button { background: none; border: none; color: var(--muted); cursor: pointer; padding: 6px; border-radius: 6px; }
+    .row-actions button:hover { background: var(--soft); color: var(--secondary); }
+    .pagination-eco { display: flex; gap: 6px; justify-content: center; margin-top: 16px; }
+    .pagination-eco button { min-width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-weight: 700; cursor: pointer; }
+    .pagination-eco button.active { background: var(--grad); color: #fff; border-color: transparent; }
+    .input-eco { position: relative; margin-bottom: 14px; }
+    .input-eco label { position: absolute; top: 14px; left: 16px; color: var(--muted); font-size: .88rem; pointer-events: none; transition: all .2s; padding: 0 4px; }
+    .input-eco input { width: 100%; padding: 18px 16px 8px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--text); outline: none; font-size: .95rem; transition: all .25s; }
+    .input-eco input:focus, .input-eco input:not(:placeholder-shown) { border-color: var(--primary); }
+    .input-eco input:focus + label, .input-eco input:not(:placeholder-shown) + label { top: 4px; font-size: .7rem; color: var(--primary); font-weight: 700; }
+    .form-select-eco { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; color: var(--text); font-weight: 600; font-size: .9rem; cursor: pointer; outline: none; }
+    .form-select-eco:focus { border-color: var(--primary); }
+    .eco-modal { position: fixed; inset: 0; z-index: 1070; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .eco-modal.show { display: flex; animation: fadeIn .3s ease; }
+    .eco-modal-bg { position: absolute; inset: 0; background: rgba(10,30,18,.55); backdrop-filter: blur(6px); }
+    .eco-modal-content { position: relative; background: var(--card); border-radius: 22px; max-width: 920px; width: 100%; max-height: 90vh; overflow: auto; box-shadow: var(--shadow-lg); border: 1px solid var(--border); animation: popIn .35s cubic-bezier(.22,1,.36,1); }
+    .eco-modal-content.sm { max-width: 480px; }
+    .eco-modal-content.md { max-width: 640px; }
+    .modal-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: var(--soft); color: var(--secondary); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 5; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes popIn { from { transform: scale(.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+    .toast-eco { pointer-events: auto; background: var(--card); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-radius: 14px; padding: 14px 16px 14px 18px; box-shadow: 0 16px 48px -12px rgba(0,0,0,.3); min-width: 340px; max-width: 440px; display: flex; align-items: flex-start; gap: 12px; color: var(--text); font-size: .88rem; border: 1px solid var(--border); position: relative; overflow: hidden; line-height: 1.4; animation: toastSlideIn .35s cubic-bezier(.22,1,.36,1); }
+    .toast-eco .toast-icon { width: 32px; height: 32px; min-width: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0; }
+    .toast-eco.success .toast-icon { background: #dcfce7; color: #16a34a; }
+    .toast-eco.error .toast-icon { background: #fee2e2; color: #dc2626; }
+    .toast-eco.warn .toast-icon { background: #fef3c7; color: #f59e0b; }
+    .toast-eco.info .toast-icon { background: #dbeafe; color: #2563eb; }
+    [data-theme="dark"] .toast-eco.success .toast-icon { background: #052e16; color: #22c55e; }
+    [data-theme="dark"] .toast-eco.error .toast-icon { background: #2e0505; color: #ef4444; }
+    [data-theme="dark"] .toast-eco.warn .toast-icon { background: #2e2405; color: #fbbf24; }
+    [data-theme="dark"] .toast-eco.info .toast-icon { background: #051b2e; color: #60a5fa; }
+    .toast-eco .toast-body { flex: 1; min-width: 0; padding-top: 2px; }
+    .toast-eco .toast-body .toast-msg { font-weight: 600; font-size: .88rem; }
+    .toast-eco .toast-body .toast-time { font-size: .7rem; color: var(--muted); margin-top: 2px; }
+    .toast-eco .toast-close { width: 24px; height: 24px; min-width: 24px; border-radius: 8px; border: none; background: transparent; color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: .75rem; transition: all .2s; padding: 0; margin-top: 2px; }
+    .toast-eco .toast-close:hover { background: var(--soft); color: var(--text); }
+    .toast-eco .toast-bar { position: absolute; bottom: 0; left: 0; height: 3px; border-radius: 0 0 0 14px; animation: toastShrink linear forwards; }
+    .toast-eco.success .toast-bar { background: #16a34a; }
+    .toast-eco.error .toast-bar { background: #dc2626; }
+    .toast-eco.warn .toast-bar { background: #f59e0b; }
+    .toast-eco.info .toast-bar { background: #2563eb; }
+    @keyframes toastSlideIn { from { transform: translateX(calc(100% + 30px)) scale(.92); opacity: 0; } to { transform: translateX(0) scale(1); opacity: 1; } }
+    @keyframes toastShrink { from { width: 100%; } to { width: 0%; } }
+    .chat-template { display:inline-block; padding:4px 12px; border-radius:14px; background:var(--soft); color:var(--secondary); font-size:.78rem; cursor:pointer; border:1px solid var(--border); transition:all .2s; white-space:nowrap; max-width:200px; overflow:hidden; text-overflow:ellipsis; }
+    .chat-template:hover { background:var(--primary); color:#fff; border-color:var(--primary); }
+  </style>
+</head>
+<body>
+  <div id="toasts"></div>
+  <div id="app"></div>
+
+  <div class="eco-modal" id="genericModal">
+    <div class="eco-modal-bg" onclick="closeModal('genericModal')"></div>
+    <div class="eco-modal-content md">
+      <button class="modal-close" onclick="closeModal('genericModal')"><i class="fa-solid fa-xmark"></i></button>
+      <div id="genericBody" style="padding: 30px"></div>
+    </div>
+  </div>
+
+  <script>
+    const DB_KEY = "ecoshop_db_v1";
+    let DB = { users: [], products: [], cart: [], orders: [], payments: [], suppliers: [], certifications: [], tracking: [], settings: {}, session: null, favorites: [], promo: null, categories: [], promoCodes: [], listingOrders: [], wallets: {}, appeals: [], reports: [], notifications: {}, reviews: [], farmNotify: [] };
+
+    function saveDB() {
+      const sess = DB.session;
+      DB.session = null;
+      localStorage.setItem(DB_KEY, JSON.stringify(DB));
+      DB.session = sess;
+      if (sess) sessionStorage.setItem("eco_session", JSON.stringify(sess));
+      else sessionStorage.removeItem("eco_session");
+    }
+    function loadDB() {
+      const raw = localStorage.getItem(DB_KEY);
+      if (raw) { try { DB = JSON.parse(raw); } catch (e) {} }
+      const sess = sessionStorage.getItem("eco_session");
+      if (sess) { try { DB.session = JSON.parse(sess); } catch (e) { DB.session = null; } } else DB.session = null;
+      if (!DB.products || !DB.products.length || !DB._v || DB._v < 2) { seedDB(); }
+      DB.users.forEach(u => {
+        if (u.banned === undefined) u.banned = false;
+        if (u.banType === undefined) u.banType = null;
+        if (u.banMessage === undefined) u.banMessage = null;
+        if (u.banExpiresAt === undefined) u.banExpiresAt = null;
+        if (u.bannedAt === undefined) u.bannedAt = null;
+        if (u.banReason === undefined) u.banReason = '';
+        if (u.membershipType === undefined) u.membershipType = 'Thường';
+        if (u.membershipPlan === undefined) u.membershipPlan = null;
+        if (u.membershipPlanName === undefined) u.membershipPlanName = null;
+        if (u.membershipStartDate === undefined) u.membershipStartDate = null;
+        if (u.membershipEndDate === undefined) u.membershipEndDate = null;
+        if (u.membershipDiscount === undefined) u.membershipDiscount = 0;
+        if (u.membershipFreeShipping === undefined) u.membershipFreeShipping = 0;
+      });
+      if (!DB.appeals) DB.appeals = [];
+      const _now = Date.now();
+      DB.users.forEach(u => {
+        if (u.banned && u.banType === "ban" && u.banExpiresAt && u.banExpiresAt <= _now) {
+          u.banned = false; u.banType = null; u.banMessage = null; u.banExpiresAt = null; u.bannedAt = null;
+        }
+      });
+      const oldAdmin = DB.users.find(u => u.username === "admin" || u.email === "admin@ecoshop.com");
+      if (oldAdmin) { oldAdmin.username = "admeco"; oldAdmin.email = "admeco@ecoshop.com"; if (oldAdmin.password === "admin123") oldAdmin.password = "eco123"; saveDB(); }
+      if (!DB.listings) DB.listings = [];
+      DB.listings.forEach(l => {
+        if (l.status === undefined) l.status = "pending";
+        if (l.adminNote === undefined) l.adminNote = "";
+      });
+      if (!DB.categories) DB.categories = [];
+      if (!DB.listingOrders) DB.listingOrders = [];
+      if (!DB.wallets) DB.wallets = {};
+      if (!DB.reports) DB.reports = [];
+      if (!DB.reviews) DB.reviews = [];
+      if (!DB.farmNotify) DB.farmNotify = [];
+      if (!DB.notifications) DB.notifications = {};
+      if (DB.settings.platformFeeRate === undefined) DB.settings.platformFeeRate = 0.1;
+    }
+    function seedDB() {
+      DB.certifications = [{ id: "cert1", name: "USDA Organic", color: "#16A34A" }, { id: "cert2", name: "EU Bio", color: "#0ea5e9" }, { id: "cert3", name: "Rainforest Alliance", color: "#84cc16" }, { id: "cert4", name: "Fair Trade", color: "#f59e0b" }, { id: "cert5", name: "Non-GMO Verified", color: "#a855f7" }];
+      DB.suppliers = [{ id: "sup1", name: "GreenValley Farms", country: "USA", rating: 4.9 }, { id: "sup2", name: "Mediterranean Bio", country: "Italy", rating: 4.8 }, { id: "sup3", name: "Tropic Harvest Co.", country: "Vietnam", rating: 4.7 }, { id: "sup4", name: "Andes Organics", country: "Peru", rating: 4.9 }, { id: "sup5", name: "Nordic Pure", country: "Sweden", rating: 4.8 }];
+      DB.categories = [{ id: "c1", name: "Fruits & Vegetables", icon: "fa-apple-whole" }, { id: "c2", name: "Pantry & Grains", icon: "fa-wheat-awn" }, { id: "c3", name: "Dairy & Eggs", icon: "fa-egg" }, { id: "c4", name: "Beverages", icon: "fa-mug-hot" }, { id: "c5", name: "Snacks", icon: "fa-cookie-bite" }, { id: "c6", name: "Home & Beauty", icon: "fa-soap" }];
+      const P = (id, name, cat, price, old, img, cert, sup, stock, origin, rating, featured, desc) => ({ id, name, category: cat, price, oldPrice: old, image: img, certificationId: cert, supplierId: sup, stock, origin, rating, featured, desc, sold: Math.floor(Math.random() * 500) + 50 });
+      DB.products = [
+        P("p1","Organic Hass Avocado","c1",3.99,4.99,"https://images.unsplash.com/photo-1601039641847-7857b994d704?w=600&q=80","cert1","sup1",120,"California, USA",4.8,true,"Creamy Hass avocados, harvested at peak ripeness."),
+        P("p2","Wild Raw Honey 500g","c2",12.5,15.0,"https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&q=80","cert2","sup2",60,"Tuscany, Italy",4.9,true,"Unfiltered, unpasteurized raw wildflower honey."),
+        P("p3","Heirloom Tomatoes 1kg","c1",5.49,null,"https://images.unsplash.com/photo-1582284540020-8acbe03f4924?w=600&q=80","cert1","sup1",80,"California, USA",4.7,true,"Mixed heirloom varieties, vine-ripened."),
+        P("p4","Quinoa Rainbow 500g","c2",7.2,8.5,"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80","cert5","sup4",200,"Cusco, Peru",4.9,true,"Tri-color quinoa, high protein, gluten-free."),
+        P("p5","Cold-Pressed Olive Oil 750ml","c2",18.9,22.0,"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=600&q=80","cert2","sup2",45,"Sicily, Italy",5.0,true,"Single-origin extra virgin olive oil."),
+        P("p6","Organic Bananas 1kg","c1",2.49,null,"https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=600&q=80","cert3","sup3",300,"Mekong, Vietnam",4.6,false,"Fair trade certified, naturally ripened."),
+        P("p7","Almond Butter 340g","c5",9.99,11.5,"https://images.unsplash.com/photo-1612257999928-44c2e93b35ff?w=600&q=80","cert1","sup1",75,"California, USA",4.8,false,"100% raw almonds, no added sugar."),
+        P("p8","Matcha Green Tea 100g","c4",24.0,28.0,"https://images.unsplash.com/photo-1582793988951-9aed5509eb97?w=600&q=80","cert2","sup5",55,"Uji, Japan",4.9,true,"Ceremonial grade stone-ground matcha."),
+        P("p9","Free-Range Eggs (12)","c3",6.2,null,"https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=600&q=80","cert1","sup1",90,"Vermont, USA",4.7,false,"Pasture-raised, organic-fed hens."),
+        P("p10","Cashew Milk 1L","c3",4.5,null,"https://images.unsplash.com/photo-1626078299034-94a4dadd6e8e?w=600&q=80","cert5","sup3",110,"Vietnam",4.5,false,"Unsweetened, no carrageenan."),
+        P("p11","Dark Chocolate 70% 100g","c5",5.8,7.0,"https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=600&q=80","cert4","sup4",180,"Andes, Peru",4.8,true,"Single-origin fair trade cacao."),
+        P("p12","Cold Brew Coffee 250g","c4",16.5,null,"https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&q=80","cert3","sup4",65,"Cajamarca, Peru",4.7,false,"Slow-roasted arabica beans."),
+        P("p13","Bamboo Toothbrush Set","c6",8.99,12.0,"https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=600&q=80","cert3","sup3",250,"Vietnam",4.6,false,"4-pack biodegradable bamboo toothbrushes."),
+        P("p14","Organic Strawberries 500g","c1",6.99,null,"https://images.unsplash.com/photo-1543158181-e6f9f6712055?w=600&q=80","cert1","sup1",70,"California, USA",4.8,true,"Sweet, sun-ripened strawberries."),
+        P("p15","Whole Grain Oats 1kg","c2",4.2,5.0,"https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=600&q=80","cert5","sup5",220,"Sweden",4.7,false,"Steel-cut rolled oats."),
+        P("p16","Lavender Soap Bar","c6",6.5,null,"https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=600&q=80","cert2","sup2",140,"Provence (Italy blend)",4.9,false,"Handmade with cold-pressed oils."),
+        P("p17","Greek Yogurt 500g","c3",5.99,null,"https://images.unsplash.com/photo-1571212515416-fef01fc43637?w=600&q=80","cert2","sup2",95,"Italy",4.6,false,"Strained, probiotic-rich whole milk yogurt."),
+        P("p18","Hibiscus Tea 80g","c4",9.4,null,"https://images.unsplash.com/photo-1597318267226-9da6e34d36e8?w=600&q=80","cert3","sup4",88,"Peru",4.7,false,"Caffeine-free floral tea."),
+        P("p19","Mixed Nuts Trail 400g","c5",13.2,15.0,"https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=600&q=80","cert5","sup1",130,"USA",4.8,true,"Almonds, cashews, walnuts, cranberries."),
+        P("p20","Organic Carrots 1kg","c1",2.99,null,"https://images.unsplash.com/photo-1582515073490-39981397c445?w=600&q=80","cert1","sup1",160,"Vermont, USA",4.5,false,"Sweet, crunchy baby carrots."),
+        P("p21","Coconut Sugar 500g","c2",5.5,null,"https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=600&q=80","cert3","sup3",180,"Vietnam",4.6,false,"Low-glycemic natural sweetener."),
+        P("p22","Reusable Glass Straws (6)","c6",11.99,14.0,"https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=600&q=80","cert3","sup5",200,"Sweden",4.9,false,"Borosilicate glass with cleaning brush."),
+      ];
+      DB.settings = { currency: "$", taxRate: 0.08, freeShippingOver: 50, platformFeeRate: 0.1, shippingFees: { ghn: 3.99, ghtk: 4.99, viettel: 5.99, jt: 6.99, cod: 0 } };
+      DB.users = [
+        { id: "U-admin", username: "admeco", email: "admeco@ecoshop.com", phone: "", fullName: "Admin", password: "eco123", role: "admin", banned: false, banType: null, banMessage: null, banExpiresAt: null, bannedAt: null, createdAt: Date.now(), avatar: "A", address: "HQ", membershipType: 'Thường', membershipPlan: null, membershipPlanName: null, membershipStartDate: null, membershipEndDate: null, membershipDiscount: 0, membershipFreeShipping: 0 },
+        { id: "U-john", username: "john", email: "john@example.com", phone: "0909123456", fullName: "John Doe", password: "123", role: "user", banned: false, banType: null, banMessage: null, banExpiresAt: null, bannedAt: null, createdAt: Date.now() - 86400000 * 30, avatar: "J", address: "123 Green St, Hanoi", membershipType: 'Thường', membershipPlan: null, membershipPlanName: null, membershipStartDate: null, membershipEndDate: null, membershipDiscount: 0, membershipFreeShipping: 0 },
+        { id: "U-jane", username: "jane", email: "jane@example.com", phone: "0909987654", fullName: "Jane Smith", password: "123", role: "user", banned: false, banType: null, banMessage: null, banExpiresAt: null, bannedAt: null, createdAt: Date.now() - 86400000 * 15, avatar: "J", address: "456 Oak Ave, HCMC", membershipType: 'Thường', membershipPlan: null, membershipPlanName: null, membershipStartDate: null, membershipEndDate: null, membershipDiscount: 0, membershipFreeShipping: 0 },
+      ];
+      DB.orders = [
+        { id: "ECO-1001", userId: "U-admin", items: [{ id: "p1", qty: 2, name: "Organic Hass Avocado", price: 3.99, image: "https://images.unsplash.com/photo-1601039641847-7857b994d704?w=200&q=80" }], total: 7.98, status: "shipping", carrier: "GHN", createdAt: Date.now() - 86400000 * 2, shipping: { name: "Demo", address: "123 Green St", city: "Hanoi" }, payment: "qr" },
+        { id: "ECO-1002", userId: "U-john", items: [{ id: "p5", qty: 1, name: "Cold-Pressed Olive Oil 750ml", price: 18.9, image: "" }], total: 18.9, status: "delivered", carrier: "GHTK", createdAt: Date.now() - 86400000 * 10, shipping: { name: "John Doe", address: "123 Green St", city: "Hanoi" }, payment: "cod" },
+        { id: "ECO-1003", userId: "U-jane", items: [{ id: "p8", qty: 2, name: "Matcha Green Tea 100g", price: 24.0, image: "" }], total: 48.0, status: "confirmed", carrier: "Viettel", createdAt: Date.now() - 86400000 * 3, shipping: { name: "Jane Smith", address: "456 Oak Ave", city: "HCMC" }, payment: "qr" },
+      ];
+      DB.listings = [];
+      DB.listingOrders = [];
+      DB.wallets = {};
+      DB._v = 2;
+      saveDB();
+    }
+
+    function createItem(coll, item) { item.id = item.id || coll.slice(0, 3).toUpperCase() + "-" + Date.now() + Math.floor(Math.random() * 1000); DB[coll].push(item); saveDB(); return item; }
+    function updateItem(coll, id, patch) { const i = DB[coll].findIndex(x => x.id === id); if (i > -1) { DB[coll][i] = { ...DB[coll][i], ...patch }; saveDB(); } }
+    function deleteItem(coll, id) {
+      if (coll === "users" && DB.session?.id === id) { toast("Bạn không thể tự xóa chính mình.", "error", 4000); return; }
+      if (coll === "users") {
+        const u = getItem("users", id);
+        if (u?.role === "admin" && DB.users.filter(u => u.role === "admin").length <= 1) {
+          toast("Không thể xóa tài khoản quản trị cuối cùng.", "error", 4000);
+          return;
+        }
+      }
+      DB[coll] = DB[coll].filter(x => x.id !== id); saveDB();
+    }
+    function getItem(coll, id) { return DB[coll].find(x => x.id === id); }
+    const money = n => (DB.settings?.currency || "$") + Number(n || 0).toFixed(2);
+    const uid = (p = "ECO") => p + "-" + (1000 + Math.floor(Math.random() * 9000));
+    function escapeHtml(s) { return String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]); }
+    function slugify(s) { return String(s || '').toLowerCase().replace(/đ/g,'d').replace(/[àáạảãâầấậẩẫăằắặẳẵ]/g,'a').replace(/[èéẹẻẽêềếệểễ]/g,'e').replace(/[ìíịỉĩ]/g,'i').replace(/[òóọỏõôồốộổỗơờớợởỡ]/g,'o').replace(/[ùúụủũưừứựửữ]/g,'u').replace(/[ỳýỵỷỹ]/g,'y').replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,''); }
+    function toast(msg, type = "success", ms = 3000) {
+      const icons = { success: "fa-check", error: "fa-xmark", warn: "fa-exclamation", info: "fa-info" };
+      const now = new Date();
+      const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+      const t = $(`<div class="toast-eco ${type}"><div class="toast-icon"><i class="fa-solid ${icons[type]}"></i></div><div class="toast-body"><div class="toast-msg">${msg}</div><div class="toast-time">${timeStr}</div></div><button class="toast-close" onclick="$(this).closest('.toast-eco').remove();"><i class="fa-solid fa-xmark"></i></button><div class="toast-bar" style="animation-duration:${ms}ms"></div></div>`);
+      $("#toasts").append(t);
+      setTimeout(() => {
+        t.css({ opacity: 0, transform: "translateX(calc(100% + 30px)) scale(.92)", transition: "all .3s ease" });
+        setTimeout(() => t.remove(), 300);
+      }, ms);
+      t.on("mouseenter", () => t.find(".toast-bar").css("animation-play-state", "paused"));
+      t.on("mouseleave", () => t.find(".toast-bar").css("animation-play-state", "running"));
+    }
+    function openModal(id) { $("#" + id).addClass("show"); $("body").css("overflow", "hidden"); }
+    function closeModal(id) { $("#" + id).removeClass("show"); $("body").css("overflow", ""); }
+
+    let ADMIN_TAB = "dashboard", ADMIN_PAGE = 1, adminSearch = "";
+    window.__charts = [];
+    function destroyCharts() { window.__charts.forEach(c => c.destroy()); window.__charts = []; }
+
+    function renderPage() {
+      if (!DB.session || DB.session.role !== "admin") { window.location.href = "index.html"; return; }
+      $("#app").html(`
+    <div class="admin-shell">
+      <aside class="admin-side" id="adminSide">
+        <div class="logo-a"><div class="brand-logo" style="width:38px;height:38px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;box-shadow:0 8px 20px -6px rgba(22,163,74,.5)"><i class="fa-solid fa-leaf"></i></div> EcoShop Quản trị</div>
+        <div class="admin-nav active" data-atab="dashboard"><i class="fa-solid fa-gauge-high"></i>Tổng quan</div>
+        <div class="admin-nav" data-atab="products"><i class="fa-solid fa-box-open"></i>Sản phẩm</div>
+        <div class="admin-nav" data-atab="orders"><i class="fa-solid fa-receipt"></i>Đơn hàng</div>
+        <div class="admin-nav" data-atab="users"><i class="fa-solid fa-users"></i>Người dùng</div>
+        <div class="admin-nav" data-atab="accounts"><i class="fa-solid fa-database"></i>Quản lý tài khoản</div>
+        <div class="admin-nav" data-atab="suppliers"><i class="fa-solid fa-truck-arrow-right"></i>Nhà cung cấp</div>
+        <div class="admin-nav" data-atab="certs"><i class="fa-solid fa-certificate"></i>Chứng nhận</div>
+        <div class="admin-nav" data-atab="promocodes"><i class="fa-solid fa-tags"></i>Mã giảm giá</div>
+        <div class="admin-nav" data-atab="reviews"><i class="fa-solid fa-star"></i>Đánh giá <span id="reviewsBadge" style="margin-left:auto;background:#f59e0b;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700">0</span></div>
+        <div class="admin-nav" data-atab="tickets"><i class="fa-solid fa-ticket"></i>Phiếu hỗ trợ <span id="pendingTicketsBadge" style="margin-left:auto;background:#f59e0b;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700">0</span></div>
+        <div class="admin-nav" data-atab="chat"><i class="fa-solid fa-comments"></i>Hộp thư trực tiếp <span id="chatBadge" style="margin-left:auto;background:#dc2626;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700;display:none">0</span></div>
+        <div class="admin-nav" data-atab="listings"><i class="fa-solid fa-store"></i>Ký gửi <span id="pendingListingsBadge" style="margin-left:auto;background:#f59e0b;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700">0</span></div>
+        <div class="admin-nav" data-atab="withdrawals"><i class="fa-solid fa-money-bill-transfer"></i>Rút tiền chợ <span id="pendingWdBadge" style="margin-left:auto;background:#f59e0b;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700">0</span></div>
+        <div class="admin-nav" data-atab="analytics"><i class="fa-solid fa-chart-line"></i>Phân tích</div>
+        <div class="admin-nav" data-atab="vip"><i class="fa-solid fa-crown"></i>Quản lý Gói Hội Viên</div>
+        <div class="admin-nav" data-atab="marketing"><i class="fa-solid fa-bullhorn"></i>Quản lý Tiếp thị & Banner</div>
+        <div class="admin-nav" data-atab="adrequests"><i class="fa-solid fa-rectangle-ad"></i>Đơn đăng ký QC <span id="pendingAdBadge" style="margin-left:auto;background:#f59e0b;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700">0</span></div>
+        <div class="admin-nav" data-atab="appeals"><i class="fa-solid fa-scale-balanced"></i>Khiếu nại <span id="pendingAppealBadge" style="margin-left:auto;background:#f59e0b;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700">0</span></div>
+        <div class="admin-nav" data-atab="reports"><i class="fa-solid fa-flag"></i>Báo cáo <span id="pendingReportsBadge" style="margin-left:auto;background:#dc2626;color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700">0</span></div>
+        <div class="admin-nav" data-atab="settings"><i class="fa-solid fa-gear"></i>Cài đặt</div>
+        <div style="margin-top:auto">
+          <div class="admin-nav" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Đăng xuất</div>
+        </div>
+      </aside>
+      <div class="admin-main" id="adminMain"></div>
+    </div>`);
+      const pCount = DB.listings.filter(l => l.status === "pending").length;
+      $("#pendingListingsBadge").text(pCount);
+      $(".admin-nav[data-atab]").on("click", function () { ADMIN_TAB = $(this).data("atab"); ADMIN_PAGE = 1; renderAdmin(); });
+      renderAdmin();
+    }
+
+    function logout() { DB.session = null; saveDB(); window.location.href = "index.html"; }
+
+    function renderAdmin() {
+      document.getElementById('adminMain')?.scrollTo(0, 0);
+      $(".admin-nav").removeClass("active").filter(`[data-atab="${ADMIN_TAB}"]`).addClass("active");
+      stopWdPoll();
+      if (ADMIN_TAB === "dashboard") renderDashboard();
+      else if (ADMIN_TAB === "products") renderProducts();
+      else if (ADMIN_TAB === "orders") renderOrders();
+      else if (ADMIN_TAB === "users") renderUsers();
+      else if (ADMIN_TAB === "accounts") renderServerAccounts();
+      else if (ADMIN_TAB === "suppliers") renderCrud("suppliers", ["name", "country", "rating"]);
+      else if (ADMIN_TAB === "certs") renderCrud("certifications", ["name", "color"]);
+      else if (ADMIN_TAB === "promocodes") renderPromoCodes();
+      else if (ADMIN_TAB === "reviews") renderReviews();
+      else if (ADMIN_TAB === "tickets") renderTickets();
+      else if (ADMIN_TAB === "chat") renderChat();
+      else if (ADMIN_TAB === "listings") renderListings();
+      else if (ADMIN_TAB === "withdrawals") { renderWithdrawals(); startWdPoll(); }
+      else if (ADMIN_TAB === "analytics") renderAnalytics();
+      else if (ADMIN_TAB === "vip") renderVipManagement();
+      else if (ADMIN_TAB === "marketing") renderMarketing();
+      else if (ADMIN_TAB === "adrequests") renderAdRequests();
+      else if (ADMIN_TAB === "appeals") renderAppeals();
+      else if (ADMIN_TAB === "reports") renderReports();
+      else if (ADMIN_TAB === "settings") renderSettings();
+    }
+    function renderDashboard() {
+      const rev = DB.orders.reduce((s, o) => s + o.total, 0);
+      const lowStock = DB.products.filter(p => p.stock < 40).length;
+      const customers = DB.users.filter(u => u.role !== "admin");
+      const activeUsers = customers.filter(u => !u.banned);
+      $("#adminMain").html(`
+    <div class="admin-top"><h2>Tổng quan</h2><div>${new Date().toLocaleDateString()}</div></div>
+    <div class="kpi-grid">
+      <div class="kpi"><small>Tổng doanh thu</small><strong>${money(rev)}</strong><span>+12% theo tháng</span></div>
+      <div class="kpi"><small>Đơn hàng</small><strong>${DB.orders.length}</strong><span>+5 hôm nay</span></div>
+      <div class="kpi"><small>Sản phẩm</small><strong>${DB.products.length}</strong><span>${lowStock} sắp hết</span></div>
+      <div class="kpi"><small>Khách hàng</small><strong>${activeUsers.length} / ${customers.length}</strong><span>${customers.length - activeUsers.length} bị cấm</span></div>
+    </div>
+    <div class="panel"><h5 style="font-weight:800">Doanh thu (7 ngày qua)</h5><canvas id="revChart" height="80"></canvas></div>
+    <div class="panel"><h5 style="font-weight:800">Đơn hàng gần đây</h5>
+      <table class="table-eco"><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Tổng</th><th>Trạng thái</th></tr></thead>
+      <tbody>${DB.orders.slice(-6).reverse().map(o => `<tr><td>${o.id}</td><td>${escapeHtml(o.shipping?.name || "—")}</td><td>${money(o.total)}</td><td><span class="tag">${o.status}</span></td></tr>`).join("")}</tbody></table>
+    </div>`);
+      const ctx = document.getElementById("revChart");
+      if (ctx) {
+        destroyCharts();
+        const labels = Array.from({ length: 7 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() - (6 - i)); return d.toLocaleDateString(undefined, { weekday: "short" }); });
+        window.__charts.push(new Chart(ctx, { type: "line", data: { labels, datasets: [{ label: "Doanh thu $", data: labels.map(() => Math.floor(200 + Math.random() * 900)), fill: true, borderColor: "#16A34A", backgroundColor: "rgba(34,197,94,.15)", tension: 0.4, pointBackgroundColor: "#16A34A" }] }, options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } }));
+      }
+    }
+
+    function renderProducts() {
+      const q = (adminSearch || "").toLowerCase();
+      const list = DB.products.filter(p => !q || p.name.toLowerCase().includes(q));
+      const per = 8, total = Math.ceil(list.length / per), pg = Math.min(ADMIN_PAGE, total || 1);
+      const slice = list.slice((pg - 1) * per, pg * per);
+      $("#adminMain").html(`
+    <div class="admin-top"><h2>Sản phẩm</h2>
+      <div style="display:flex;gap:8px"><input class="form-select-eco" placeholder="Tìm kiếm..." oninput="adminSearch=this.value;ADMIN_PAGE=1;renderAdmin()" value="${escapeHtml(adminSearch || "")}">
+      <button class="btn-eco" onclick="editProduct()"><i class="fa-solid fa-plus"></i> Thêm sản phẩm</button></div></div>
+    <div class="panel"><table class="table-eco"><thead><tr><th></th><th>Tên sản phẩm</th><th>Danh mục</th><th>Giá</th><th>Tồn kho</th><th>Nhà cung cấp</th><th></th></tr></thead>
+    <tbody>${slice.map(p => { const c = getItem("categories", p.category), s = getItem("suppliers", p.supplierId); return `<tr><td><img src="${p.image}" style="width:42px;height:42px;border-radius:8px;object-fit:cover" onerror="this.src='https://placehold.co/40/16A34A/fff'"></td><td><strong>${escapeHtml(p.name)}</strong></td><td>${c?.name || ""}</td><td>${money(p.price)}</td><td><span class="tag ${p.stock < 40 ? "warn" : ""}">${p.stock}</span></td><td>${s?.name || ""}</td><td class="row-actions"><button onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen"></i></button><button onclick="confirmDelete('products','${p.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; }).join("")}</tbody></table>
+    <div class="pagination-eco">${Array.from({ length: total || 1 }, (_, i) => `<button class="${pg === i + 1 ? "active" : ""}" onclick="ADMIN_PAGE=${i + 1};renderAdmin()">${i + 1}</button>`).join("")}</div>
+    </div>`);
+    }
+
+    function editProduct(id) {
+      const p = id ? getItem("products", id) : { name: "", category: "c1", price: 0, stock: 0, image: "", certificationId: "cert1", supplierId: "sup1", origin: "", rating: 5, desc: "", featured: false };
+      $("#genericBody").html(`<h4 style="font-weight:800">${id ? "Sửa" : "Thêm"} sản phẩm</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+      <div class="input-eco" style="grid-column:1/-1"><input id="ap_name" value="${escapeHtml(p.name)}" placeholder=" "><label>Tên sản phẩm</label></div>
+      <div class="input-eco" style="grid-column:1/-1"><input id="ap_image" value="${escapeHtml(p.image)}" placeholder=" "><label>URL hình ảnh</label></div>
+      <select class="form-select-eco" id="ap_cat">${DB.categories.map(c => `<option value="${c.id}" ${c.id === p.category ? "selected" : ""}>${c.name}</option>`).join("")}</select>
+      <select class="form-select-eco" id="ap_sup">${DB.suppliers.map(s => `<option value="${s.id}" ${s.id === p.supplierId ? "selected" : ""}>${s.name}</option>`).join("")}</select>
+      <select class="form-select-eco" id="ap_cert">${DB.certifications.map(c => `<option value="${c.id}" ${c.id === p.certificationId ? "selected" : ""}>${c.name}</option>`).join("")}</select>
+      <div class="input-eco"><input id="ap_origin" value="${escapeHtml(p.origin || "")}" placeholder=" "><label>Xuất xứ</label></div>
+      <div class="input-eco"><input id="ap_price" type="number" step="0.01" value="${p.price}" placeholder=" "><label>Giá</label></div>
+      <div class="input-eco"><input id="ap_stock" type="number" value="${p.stock}" placeholder=" "><label>Tồn kho</label></div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+      <button class="btn-ghost" onclick="closeModal('genericModal')">Hủy</button>
+      <button class="btn-eco" onclick="saveProduct('${id || ""}')">Lưu</button>
+    </div>`);
+      openModal("genericModal");
+    }
+
+    function saveProduct(id) {
+      const data = { name: $("#ap_name").val(), image: $("#ap_image").val(), category: $("#ap_cat").val(), supplierId: $("#ap_sup").val(), certificationId: $("#ap_cert").val(), origin: $("#ap_origin").val(), price: parseFloat($("#ap_price").val()) || 0, stock: parseInt($("#ap_stock").val()) || 0 };
+      if (!data.name || !data.image) return toast("Vui lòng nhập tên và hình ảnh", "error");
+      if (id) updateItem("products", id, data);
+      else { data.rating = 5; data.sold = 0; data.featured = false; data.desc = ""; createItem("products", data); }
+      closeModal("genericModal"); toast("Đã lưu sản phẩm", "success"); renderAdmin();
+    }
+
+    function renderOrders() {
+      let serverOrdersHtml = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Đang tải...</td></tr>';
+      $.ajax({
+        url: '/api/orders',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          if (data && data.length) {
+            serverOrdersHtml = data.slice().reverse().map(o => {
+              const items = (o.items || []).map(i => `${i.name} x${i.qty} ($${Number(i.price).toFixed(2)})`).join('<br>');
+              return `<tr>
+                <td><strong>${escapeHtml(o.id || '—')}</strong></td>
+                <td>${escapeHtml(o.customer || '—')}</td>
+                <td style="font-size:.82rem">${items}</td>
+                <td>${money(o.total)}</td>
+                <td>${escapeHtml(o.payment || '—')}</td>
+                <td>${o.createdAt ? new Date(o.createdAt).toLocaleString('vi-VN') : '—'}</td>
+              </tr>`;
+            }).join('');
+          } else {
+            serverOrdersHtml = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Chưa có đơn hàng từ khách.</td></tr>';
+          }
+          $('#serverOrdersBody').html(serverOrdersHtml);
+        },
+        error: function () {
+          $('#serverOrdersBody').html('<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">Không thể kết nối server.</td></tr>');
+        }
+      });
+      $("#adminMain").html(`<div class="admin-top"><h2>Đơn hàng</h2></div>
+    <div class="panel">
+      <h5 style="font-weight:800;margin-bottom:12px">Đơn hàng từ khách (server)</h5>
+      <table class="table-eco"><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Sản phẩm (tên x sl, đơn giá)</th><th>Tổng tiền</th><th>Thanh toán</th><th>Ngày đặt</th></tr></thead>
+      <tbody id="serverOrdersBody">${serverOrdersHtml}</tbody></table>
+    </div>
+    <div class="panel"><h5 style="font-weight:800;margin-bottom:12px">Đơn hàng nội bộ</h5><table class="table-eco"><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Số lượng</th><th>Tổng</th><th>Vận chuyển</th><th>Trạng thái</th><th></th></tr></thead>
+    <tbody>${DB.orders.slice().reverse().map(o => `<tr><td><strong>${o.id}</strong></td><td>${escapeHtml(o.shipping?.name || "—")}</td><td>${o.items.reduce((s, i) => s + i.qty, 0)}</td><td>${money(o.total)}</td><td>${o.carrier || "—"}</td>
+    <td><select class="form-select-eco" onchange="updateItem('orders','${o.id}',{status:this.value});toast('Đã cập nhật đơn hàng','success')">${["confirmed","preparing","shipping","delivering","delivered","cancelled"].map(s => `<option ${o.status === s ? "selected" : ""}>${s}</option>`).join("")}</select></td>
+    <td class="row-actions"><button onclick="confirmDelete('orders','${o.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`).join("")}</tbody></table></div>`);
+    }
+
+    function renderUsers() {
+      const _now = Date.now();
+      var changed = false;
+      DB.users.forEach(u => {
+        if (u.banned && u.banType === "ban" && u.banExpiresAt && u.banExpiresAt <= _now) {
+          u.banned = false; u.banType = null; u.banMessage = null; u.banExpiresAt = null; u.bannedAt = null; u.banReason = null;
+          changed = true;
+        }
+      });
+      if (changed) saveDB();
+      var localUsers = DB.users.filter(u => u.role !== "admin");
+      $("#adminMain").html(`<div class="admin-top"><h2>Người dùng</h2><div style="display:flex;gap:8px;align-items:center"><button class="btn-eco" onclick="showAddAdmin()" style="font-size:.85rem;padding:9px 16px"><i class="fa-solid fa-shield"></i> Thêm quản trị</button><span style="color:var(--muted);font-size:.9rem" id="userCount">${localUsers.length} tài khoản</span></div></div>
+    <div class="panel"><table class="table-eco"><thead><tr><th>Tên đăng nhập</th><th>Họ tên</th><th>Email</th><th>Đơn hàng</th><th>Tổng chi tiêu</th><th>Trạng thái</th><th>Ngày tham gia</th><th>Nguồn</th><th></th></tr></thead>
+    <tbody id="usersBody">${renderUserRows(localUsers, _now, 'local')}</tbody></table></div>`);
+      $.ajax({
+        url: '/api/users',
+        method: 'GET',
+        dataType: 'json',
+        success: function (serverUsers) {
+          if (serverUsers && serverUsers.length) {
+            var merged = serverUsers.slice();
+            var localIds = new Set();
+            localUsers.forEach(function(lu) {
+              if (lu.id_server) localIds.add(String(lu.id_server));
+            });
+            var newFromServer = merged.filter(function(su) { return su.role !== 'admin' && !localIds.has(String(su.id)); });
+            if (newFromServer.length > 0) {
+              newFromServer.forEach(function(su) {
+                var exists = localUsers.find(function(lu) { return lu.username === su.username || lu.email === su.email; });
+                if (!exists) {
+                  var mapped = {
+                    id: 'U' + su.id,
+                    id_server: su.id,
+                    fullName: su.fullName || su.username,
+                    username: su.username,
+                    email: su.email,
+                    phone: su.phone || '',
+                    password: su.password,
+                    role: su.role || 'user',
+                    banned: su.banned || false,
+                    banType: su.banType || null,
+                    banMessage: su.banMessage || null,
+                    banExpiresAt: su.banExpiresAt || null,
+                    bannedAt: su.bannedAt || null,
+                    createdAt: su.createdAt ? new Date(su.createdAt).getTime() : Date.now(),
+                    avatar: (su.fullName || su.username)[0].toUpperCase(),
+                    address: ''
+                  };
+                  DB.users.push(mapped);
+                  localUsers.push(mapped);
+                  changed = true;
+                }
+              });
+              if (changed) saveDB();
+              var allUsers = localUsers;
+              $('#usersBody').html(renderUserRows(allUsers, _now, 'local'));
+              $('#userCount').text(allUsers.length + ' tài khoản');
+            }
+          }
+        }
+      });
+    }
+    function renderUserRows(users, _now, source) {
+      return users.map(function(u) {
+        const userOrders = DB.orders.filter(o => o.userId === u.id);
+        const spent = userOrders.reduce((s, o) => s + o.total, 0);
+        let st = "Hoạt động", stDetail = "", sc = "", ss = "background:var(--soft);color:var(--secondary)";
+        if (u.banned) {
+          if (u.banType === "delete") {
+            st = "Đã xóa vĩnh viễn"; sc = "err"; ss = "";
+            if (u.bannedAt) {
+              const appealRemain = 172800000 - (_now - u.bannedAt);
+              if (appealRemain > 0) {
+                const h = Math.floor(appealRemain / 3600000);
+                const m = Math.floor((appealRemain % 3600000) / 60000);
+                stDetail = '<br><span style="font-size:.72rem;color:#f59e0b;font-weight:600">⏳ Khiếu nại: ' + h + 'h' + m + 'm</span>';
+              } else {
+                stDetail = '<br><span style="font-size:.72rem;color:var(--muted)">⏳ Hết hạn khiếu nại</span>';
+              }
+            }
+          } else if (u.banExpiresAt && u.banExpiresAt < Infinity) {
+            const r = u.banExpiresAt - _now;
+            if (r > 0) { const h = Math.floor(r / 3600000), m = Math.floor((r % 3600000) / 60000); st = 'Bị cấm (' + h + 'h' + m + 'm)'; sc = "err"; ss = ""; }
+            else { st = "Hoạt động"; sc = ""; ss = "background:var(--soft);color:var(--secondary)"; }
+          } else { st = "Bị cấm"; sc = "err"; ss = ""; }
+        }
+        var srcBadge = u.id_server ? '<span style="font-size:.7rem;color:var(--muted);background:var(--soft);padding:2px 8px;border-radius:6px">Server</span>' : '<span style="font-size:.7rem;color:var(--muted);background:var(--soft);padding:2px 8px;border-radius:6px">Local</span>';
+        return '<tr><td><strong>' + escapeHtml(u.username) + '</strong></td><td>' + escapeHtml(u.fullName || "—") + '</td><td>' + escapeHtml(u.email) + '</td><td>' + userOrders.length + '</td><td>' + money(spent) + '</td><td><span class="tag ' + sc + '" style="' + ss + '">' + st + stDetail + '</span></td><td>' + new Date(u.createdAt).toLocaleDateString() + '</td><td>' + srcBadge + '</td><td class="row-actions" style="white-space:nowrap">' +
+          (u.banned
+            ? '<button onclick="unbanUser(\'' + u.id + '\')" style="color:var(--primary)" title="Bỏ cấm / Khôi phục"><i class="fa-solid fa-unlock"></i></button>'
+            : '<button onclick="showBanDialog(\'' + u.id + '\')" style="color:#f59e0b" title="Cấm"><i class="fa-solid fa-ban"></i></button>') +
+          '<button onclick="confirmDeleteUser(\'' + u.id + '\')" style="color:#dc2626" title="Xóa"><i class="fa-solid fa-trash"></i></button>' +
+        '</td></tr>';
+      }).join('');
+    }
+
+    function renderServerAccounts() {
+      $("#adminMain").html(`<div class="admin-top"><h2><i class="fa-solid fa-database" style="color:var(--primary)"></i> Quản lý tài khoản</h2>
+        <span style="display:flex;gap:8px;align-items:center">
+          <button class="btn-ghost" onclick="renderServerAccounts()" style="font-size:.85rem;padding:9px 14px"><i class="fa-solid fa-rotate"></i> Làm mới</button>
+          <span id="accountCount" style="color:var(--muted);font-size:.9rem">Đang tải...</span>
+        </span>
+      </div>
+      <div class="panel" style="overflow-x:auto">
+        <table class="table-eco" style="min-width:900px">
+          <thead>
+            <tr>
+              <th style="width:50px">#</th>
+              <th>Tên đăng nhập</th>
+              <th>Mật khẩu</th>
+              <th>Số điện thoại</th>
+              <th>Gmail</th>
+              <th>Ngày giờ đăng ký</th>
+              <th style="width:100px">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="accountsBody">
+            <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)"><i class="fa-solid fa-spinner fa-spin"></i> Đang kết nối server...</td></tr>
+          </tbody>
+        </table>
+      </div>`);
+      $.ajax({
+        url: '/api/users/accounts',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          if (data && data.length) {
+            var html = data.map(function(u, i) {
+              var dateStr = '—';
+              if (u.createdAt) {
+                try { dateStr = new Date(u.createdAt).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }); } catch(e) { dateStr = u.createdAt; }
+              }
+              var statusBadge = '';
+              if (u.banned) {
+                statusBadge = '<span class="tag err" style="margin-left:6px">' + (u.banType === 'delete' ? 'Đã xóa' : 'Bị cấm') + '</span>';
+              }
+              return '<tr>' +
+                '<td style="color:var(--muted);font-size:.82rem">' + (i + 1) + '</td>' +
+                '<td><strong>' + escapeHtml(u.username) + '</strong>' + statusBadge + '</td>' +
+                '<td><code style="background:var(--soft);padding:4px 10px;border-radius:6px;font-size:.82rem;color:var(--secondary)">' + escapeHtml(u.password) + '</code></td>' +
+                '<td>' + escapeHtml(u.phone || '—') + '</td>' +
+                '<td><a href="mailto:' + escapeHtml(u.email) + '" style="color:var(--primary);text-decoration:none">' + escapeHtml(u.email) + '</a></td>' +
+                '<td style="font-size:.82rem;color:var(--muted)">' + dateStr + '</td>' +
+                '<td class="row-actions" style="white-space:nowrap">' +
+                  '<button onclick="viewAccount(\'' + u.id + '\')" title="Xem chi tiết"><i class="fa-solid fa-eye" style="color:var(--primary)"></i></button>' +
+                  '<button onclick="changeAccountPassword(\'' + u.id + '\',\'' + escapeHtml(u.username) + '\')" title="Đổi mật khẩu"><i class="fa-solid fa-key" style="color:#f59e0b"></i></button>' +
+                '</td>' +
+              '</tr>';
+            }).join('');
+            $('#accountsBody').html(html);
+            $('#accountCount').text(data.length + ' tài khoản');
+          } else {
+            $('#accountsBody').html('<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)"><i class="fa-regular fa-folder-open" style="font-size:2rem;display:block;margin-bottom:8px"></i>Chưa có tài khoản nào trên server.</td></tr>');
+            $('#accountCount').text('0 tài khoản');
+          }
+        },
+        error: function () {
+          $('#accountsBody').html('<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626"><i class="fa-solid fa-triangle-exclamation" style="font-size:2rem;display:block;margin-bottom:8px"></i>Không thể kết nối server. Vui lòng kiểm tra server đã chạy chưa.</td></tr>');
+          $('#accountCount').text('Lỗi kết nối');
+        }
+      });
+    }
+
+    function viewAccount(id) {
+      $.ajax({
+        url: '/api/users/accounts',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          var u = null;
+          for (var i = 0; i < data.length; i++) { if (String(data[i].id) === String(id)) { u = data[i]; break; } }
+          if (!u) { toast('Không tìm thấy tài khoản', 'error'); return; }
+          var dateStr = '—';
+          if (u.createdAt) {
+            try { dateStr = new Date(u.createdAt).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }); } catch(e) { dateStr = u.createdAt; }
+          }
+          var statusHtml = u.banned
+            ? '<span class="tag err">' + (u.banType === 'delete' ? 'Đã xóa vĩnh viễn' : 'Bị cấm') + '</span>'
+            : '<span class="tag" style="background:#dcfce7;color:#16a34a">Hoạt động</span>';
+          $('#genericBody').html(
+            '<div style="max-width:500px;margin:0 auto">' +
+              '<div style="text-align:center;margin-bottom:20px">' +
+                '<div style="width:64px;height:64px;border-radius:50%;background:var(--grad);margin:0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.8rem;font-weight:800">' + escapeHtml(u.username.charAt(0).toUpperCase()) + '</div>' +
+                '<h4 style="font-weight:800;margin:10px 0 4px">' + escapeHtml(u.username) + '</h4>' +
+                '<div>' + statusHtml + '</div>' +
+              '</div>' +
+              '<div style="background:var(--soft);border-radius:12px;padding:16px">' +
+                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+                  '<div><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Tên đăng nhập</div><div style="font-weight:700;margin-top:2px">' + escapeHtml(u.username) + '</div></div>' +
+                  '<div><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Mật khẩu</div><div style="font-weight:700;margin-top:2px"><code style="background:var(--card);padding:4px 10px;border-radius:6px;font-size:.85rem">' + escapeHtml(u.password) + '</code></div></div>' +
+                  '<div><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Số điện thoại</div><div style="font-weight:700;margin-top:2px">' + escapeHtml(u.phone || '—') + '</div></div>' +
+                  '<div><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Gmail</div><div style="font-weight:700;margin-top:2px">' + escapeHtml(u.email) + '</div></div>' +
+                  '<div style="grid-column:1/-1"><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Ngày giờ đăng ký</div><div style="font-weight:700;margin-top:2px">' + dateStr + '</div></div>' +
+                  '<div style="grid-column:1/-1"><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">ID tài khoản</div><div style="font-weight:400;margin-top:2px;color:var(--muted);font-size:.85rem">' + escapeHtml(String(u.id)) + '</div></div>' +
+                '</div>' +
+              '</div>' +
+              '<div style="display:flex;gap:10px;justify-content:center;margin-top:16px">' +
+                '<button class="btn-ghost" onclick="closeModal(\'genericModal\')">Đóng</button>' +
+              '</div>' +
+            '</div>'
+          );
+          openModal('genericModal');
+        },
+        error: function () { toast('Không thể tải thông tin tài khoản', 'error'); }
+      });
+    }
+
+    function changeAccountPassword(id, username) {
+      $('#genericBody').html(
+        '<h4 style="font-weight:800"><i class="fa-solid fa-key" style="color:#f59e0b"></i> Đổi mật khẩu: ' + escapeHtml(username) + '</h4>' +
+        '<p style="color:var(--muted);margin:6px 0 14px">Nhập mật khẩu mới cho tài khoản này.</p>' +
+        '<div class="input-eco"><input id="newPassInput" type="text" placeholder=" "><label>Mật khẩu mới</label></div>' +
+        '<div style="font-size:.8rem;color:var(--muted);margin-top:6px">Mật khẩu phải có ít nhất 6 ký tự.</div>' +
+        '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">' +
+        '<button class="btn-ghost" onclick="closeModal(\'genericModal\')">Hủy</button>' +
+        '<button class="btn-eco" onclick="saveNewPassword(\'' + id + '\',\'' + escapeHtml(username) + '\')"><i class="fa-solid fa-save"></i> Lưu mật khẩu</button></div>'
+      );
+      openModal('genericModal');
+      setTimeout(function() { $('#newPassInput').focus(); }, 200);
+    }
+
+    function saveNewPassword(id, username) {
+      var newPass = $('#newPassInput').val().trim();
+      if (!newPass || newPass.length < 6) { toast('Mật khẩu phải có ít nhất 6 ký tự', 'error'); return; }
+      var u = DB.users.find(function(x) { return x.id === id; });
+      if (u) { u.password = newPass; saveDB(); }
+      $.ajax({
+        url: '/api/users/change-password',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ id: id, password: newPass }),
+        success: function() { toast('Đã đổi mật khẩu cho ' + escapeHtml(username), 'success'); closeModal('genericModal'); },
+        error: function() { toast('Không thể đồng bộ lên server, nhưng đã lưu local', 'warn'); closeModal('genericModal'); }
+      });
+      renderServerAccounts();
+    }
+
+    function showBanDialog(id) {
+      const u = getItem("users", id);
+      if (!u || u.role === "admin") return;
+      window._banDuration = null; window._banUserId = id;
+      $("#genericBody").html(`<h4 style="font-weight:800">Cấm người dùng: ${escapeHtml(u.fullName || u.username)}</h4>
+    <p style="color:var(--muted);margin:6px 0 14px">Chọn lý do cấm và thời gian. Người dùng sẽ nhận thông báo ngay lập tức.</p>
+
+    <div style="margin-bottom:14px">
+      <div style="font-weight:700;font-size:.82rem;margin-bottom:6px;color:var(--text)"><i class="fa-solid fa-circle-exclamation" style="color:#f59e0b"></i> Lý do cấm</div>
+      <div style="display:flex;flex-direction:column;gap:6px" id="banReasonsWrap">
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'Vi phạm chính sách mua bán')">
+          <input type="radio" name="banReason" value="Vi phạm chính sách mua bán" style="accent-color:var(--primary)"> Vi phạm chính sách mua bán
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'Gian lận, lừa đảo')">
+          <input type="radio" name="banReason" value="Gian lận, lừa đảo" style="accent-color:var(--primary)"> Gian lận, lừa đảo
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'Spam, quảng cáo trái phép')">
+          <input type="radio" name="banReason" value="Spam, quảng cáo trái phép" style="accent-color:var(--primary)"> Spam, quảng cáo trái phép
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'Quấy rối người dùng khác')">
+          <input type="radio" name="banReason" value="Quấy rối người dùng khác" style="accent-color:var(--primary)"> Quấy rối người dùng khác
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'Thông tin cá nhân giả mạo')">
+          <input type="radio" name="banReason" value="Thông tin cá nhân giả mạo" style="accent-color:var(--primary)"> Thông tin cá nhân giả mạo
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'Gửi hàng không đúng mô tả')">
+          <input type="radio" name="banReason" value="Gửi hàng không đúng mô tả" style="accent-color:var(--primary)"> Gửi hàng không đúng mô tả
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'Từ chối giao hàng nhiều lần')">
+          <input type="radio" name="banReason" value="Từ chối giao hàng nhiều lần" style="accent-color:var(--primary)"> Từ chối giao hàng nhiều lần
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'Tạo nhiều đơn ảo')">
+          <input type="radio" name="banReason" value="Tạo nhiều đơn ảo" style="accent-color:var(--primary)"> Tạo nhiều đơn ảo
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'Sử dụng mã giảm giá trái phép')">
+          <input type="radio" name="banReason" value="Sử dụng mã giảm giá trái phép" style="accent-color:var(--primary)"> Sử dụng mã giảm giá trái phép
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickBanReason(this,'other')">
+          <input type="radio" name="banReason" value="other" style="accent-color:var(--primary)"> Lý do khác...
+        </label>
+      </div>
+      <div id="banOtherReasonWrap" style="display:none;margin-top:8px">
+        <div class="input-eco"><input id="banOtherReason" type="text" placeholder=" " oninput="window._banReason=this.value"><label>Nhập lý do cấm</label></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <div style="font-weight:700;font-size:.82rem;margin-bottom:6px;color:var(--text)"><i class="fa-solid fa-clock" style="color:#f59e0b"></i> Thời gian cấm</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button class="btn-ghost" onclick="pickBanDur(this,1)" style="text-align:center">1 giờ</button>
+        <button class="btn-ghost" onclick="pickBanDur(this,6)" style="text-align:center">6 giờ</button>
+        <button class="btn-ghost" onclick="pickBanDur(this,12)" style="text-align:center">12 giờ</button>
+        <button class="btn-ghost" onclick="pickBanDur(this,24)" style="text-align:center">1 ngày</button>
+        <button class="btn-ghost" onclick="pickBanDur(this,72)" style="text-align:center">3 ngày</button>
+        <button class="btn-ghost" onclick="pickBanDur(this,168)" style="text-align:center">7 ngày</button>
+        <button class="btn-ghost" onclick="pickBanDur(this,720)" style="text-align:center">30 ngày</button>
+        <button class="btn-ghost" onclick="pickBanDur(this,-1)" style="text-align:center">Tùy chỉnh</button>
+      </div>
+      <div id="banCustomWrap" style="display:none;margin-top:8px">
+        <div class="input-eco"><input id="banCustomH" type="number" placeholder=" " min="1"><label>Số giờ cấm</label></div>
+      </div>
+    </div>
+    <p style="font-size:.85rem;color:var(--muted);background:var(--soft);padding:10px;border-radius:10px;display:flex;align-items:center;gap:8px"><i class="fa-solid fa-info-circle"></i> <span id="banPreview">Chưa chọn thời gian</span></p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+      <button class="btn-ghost" onclick="closeModal('genericModal')">Hủy</button>
+      <button class="btn-eco" id="banConfirmBtn" disabled onclick="execBan('${id}')">Xác nhận cấm</button>
+    </div>`);
+      openModal("genericModal");
+    }
+    function pickBanReason(el, reason) {
+      $('#banReasonsWrap label').css({'background':'transparent','border-color':'var(--border)'});
+      $(el).css({'background':'var(--soft)','border-color':'var(--primary)'});
+      $(el).find('input').prop('checked', true);
+      if (reason === 'other') {
+        $('#banOtherReasonWrap').show();
+        window._banReason = $('#banOtherReason').val().trim() || 'Vi phạm chính sách';
+        $('#banOtherReason').focus();
+      } else {
+        $('#banOtherReasonWrap').hide();
+        window._banReason = reason;
+      }
+    }
+    function pickBanDur(el, h) {
+      $("[onclick*='pickBanDur']").css({"background":"transparent","color":"var(--secondary)","border":"1.5px solid var(--primary)","font-weight":"700"});
+      if (h === -1) {
+        $(el).css({"background":"var(--primary)","color":"#fff","border-color":"var(--primary)"});
+        $("#banCustomWrap").show(); $("#banPreview").text("Nhập số giờ cấm"); window._banDuration = null;
+        $("#banConfirmBtn").prop("disabled", true); return;
+      }
+      $(el).css({"background":"var(--primary)","color":"#fff","border-color":"var(--primary)"});
+      $("#banCustomWrap").hide();
+      window._banDuration = h;
+      const label = h >= 24 ? `${h/24} ngày` : `${h} giờ`;
+      $("#banPreview").text(`Cấm ${label} - Tự động mở khóa sau ${label}.`);
+      $("#banConfirmBtn").prop("disabled", false);
+    }
+    function execBan(id) {
+      const dur = window._banDuration;
+      if (!dur || dur <= 0) return toast("Chọn thời gian cấm", "error");
+      const reason = window._banReason;
+      if (!reason) return toast("Chọn lý do cấm", "error");
+      const u = DB.users.find(x => x.id === id);
+      if (u) { u.banned = true; u.banType = "ban"; u.banMessage = reason; u.banExpiresAt = Date.now() + dur * 3600000; u.bannedAt = Date.now(); u.banReason = reason; }
+      saveDB(); closeModal("genericModal");
+      // Sync to server (dùng id_server nếu có)
+      const serverId = u ? u.id_server || u.id : id;
+      $.ajax({
+        url: '/api/users/ban',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ id: serverId, durationHours: dur, message: reason, banReason: reason }),
+        error: function() {}
+      });
+      const label = dur >= 24 ? `${dur/24} ngày` : `${dur} giờ`;
+      toast(`Đã cấm ${label}: ${reason}`, "error"); renderAdmin();
+    }
+    function unbanUser(id) {
+      const u = DB.users.find(x => x.id === id);
+      if (u) { u.banned = false; u.banType = null; u.banMessage = null; u.banExpiresAt = null; u.bannedAt = null; u.banReason = null; }
+      saveDB();
+      const serverId = u ? u.id_server || u.id : id;
+      $.ajax({ url: '/api/users/unban', method: 'POST', contentType: 'application/json', data: JSON.stringify({ id: serverId }), error: function() {} });
+      toast("Đã bỏ cấm", "success"); renderAdmin();
+    }
+    function confirmDeleteUser(id) {
+      const u = getItem("users", id);
+      if (!u || u.role === "admin") { toast("Không thể xóa quản trị viên", "error"); return; }
+      window._deleteUserId = id; window._deleteReason = null; window._deleteReasonCustom = '';
+      $("#genericBody").html(`<h4 style="font-weight:800;color:#dc2626"><i class="fa-solid fa-trash"></i> Xóa người dùng</h4>
+    <p>Tài khoản <strong>${escapeHtml(u.fullName || u.username)}</strong> sẽ bị xóa vĩnh viễn.</p>
+    <div style="margin:14px 0">
+      <div style="font-weight:700;font-size:.82rem;margin-bottom:6px;color:var(--text)"><i class="fa-solid fa-circle-exclamation" style="color:#dc2626"></i> Chọn lý do xóa</div>
+      <div style="display:flex;flex-direction:column;gap:6px" id="deleteReasonsWrap">
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickDeleteReason(this,'Vi phạm chính sách nghiêm trọng')">
+          <input type="radio" name="deleteReason" value="Vi phạm chính sách nghiêm trọng" style="accent-color:var(--primary)"> Vi phạm chính sách nghiêm trọng
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickDeleteReason(this,'Lừa đảo, chiếm đoạt tài sản')">
+          <input type="radio" name="deleteReason" value="Lừa đảo, chiếm đoạt tài sản" style="accent-color:var(--primary)"> Lừa đảo, chiếm đoạt tài sản
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickDeleteReason(this,'Giả mạo thông tin, danh tính')">
+          <input type="radio" name="deleteReason" value="Giả mạo thông tin, danh tính" style="accent-color:var(--primary)"> Giả mạo thông tin, danh tính
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickDeleteReason(this,'Đăng nội dung độc hại, vi phạm pháp luật')">
+          <input type="radio" name="deleteReason" value="Đăng nội dung độc hại, vi phạm pháp luật" style="accent-color:var(--primary)"> Đăng nội dung độc hại, vi phạm pháp luật
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickDeleteReason(this,'Quấy rối, đe dọa người dùng khác')">
+          <input type="radio" name="deleteReason" value="Quấy rối, đe dọa người dùng khác" style="accent-color:var(--primary)"> Quấy rối, đe dọa người dùng khác
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickDeleteReason(this,'Tạo nhiều tài khoản ảo')">
+          <input type="radio" name="deleteReason" value="Tạo nhiều tài khoản ảo" style="accent-color:var(--primary)"> Tạo nhiều tài khoản ảo
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;font-size:.85rem" onclick="pickDeleteReason(this,'other')">
+          <input type="radio" name="deleteReason" value="other" style="accent-color:var(--primary)"> Lý do khác...
+        </label>
+      </div>
+      <div id="deleteOtherReasonWrap" style="display:none;margin-top:8px">
+        <div class="input-eco"><input id="deleteOtherReason" type="text" placeholder=" " oninput="window._deleteReason=this.value||'Vi phạm chính sách'"><label>Nhập lý do xóa</label></div>
+      </div>
+    </div>
+    <p style="background:#fee2e2;padding:12px;border-radius:10px;font-size:.85rem;color:#991b1b;display:flex;align-items:flex-start;gap:8px"><i class="fa-solid fa-triangle-exclamation" style="margin-top:2px"></i> <span id="deletePreview">Chưa chọn lý do xóa</span></p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px"><button class="btn-ghost" onclick="closeModal('genericModal')">Hủy</button><button class="btn-eco" id="deleteConfirmBtn" disabled style="background:#dc2626" onclick="execDeleteUser('${id}')"><i class="fa-solid fa-trash"></i> Xác nhận xóa</button></div>`);
+      openModal("genericModal");
+    }
+    function pickDeleteReason(el, reason) {
+      $('#deleteReasonsWrap label').css({'background':'transparent','border-color':'var(--border)'});
+      $(el).css({'background':'#fef2f2','border-color':'#dc2626'});
+      $(el).find('input').prop('checked', true);
+      if (reason === 'other') {
+        $('#deleteOtherReasonWrap').show();
+        window._deleteReason = $('#deleteOtherReason').val().trim() || 'Vi phạm chính sách';
+        $('#deleteOtherReason').focus();
+      } else {
+        $('#deleteOtherReasonWrap').hide();
+        window._deleteReason = reason;
+      }
+      $('#deletePreview').text('Lý do: ' + window._deleteReason);
+      $('#deleteConfirmBtn').prop('disabled', false);
+    }
+    function execDeleteUser(id) {
+      const reason = window._deleteReason;
+      if (!reason) { toast('Vui lòng chọn lý do xóa', 'error'); return; }
+      const u = DB.users.find(x => x.id === id);
+      if (u) { u.banned = true; u.banType = "delete"; u.banMessage = "T�i kho?n d� b? x�a vinh vi?n. L� do: " + reason + ". Vui l�ng li�n h? Admin n?u c� th?c m?c."; u.banReason = reason; u.banExpiresAt = Infinity; u.bannedAt = Date.now(); }
+      saveDB(); closeModal("genericModal");
+      const serverId = u ? u.id_server || u.id : id;
+      $.ajax({ url: '/api/users/delete', method: 'POST', contentType: 'application/json', data: JSON.stringify({ id: serverId }), error: function() {} });
+      toast("Đã xóa tài khoản - Lý do: " + reason, "warn"); renderAdmin();
+    }
+
+    function showAddAdmin() {
+      const username = prompt("Nhập tên đăng nhập cho quản trị viên mới:");
+      if (!username || username.trim().length < 3) return toast("Tên đăng nhập phải có ít nhất 3 ký tự", "error");
+      if (DB.users.find(u => u.username === username.trim())) return toast("Tên đăng nhập đã tồn tại", "error");
+      const email = prompt("Nhập email quản trị viên mới:");
+      if (!email || !email.includes('@')) return toast("Email không hợp lệ", "error");
+      if (DB.users.find(u => u.email === email.trim())) return toast("Email đã tồn tại", "error");
+      const password = prompt("Nhập mật khẩu cho quản trị viên mới (ít nhất 4 ký tự):");
+      if (!password || password.length < 4) return toast("Mật khẩu phải có ít nhất 4 ký tự", "error");
+      if (!confirm(`Xác nhận thêm quản trị viên:\nTên: ${username.trim()}\nEmail: ${email.trim()}`)) return;
+      const newAdmin = {
+        id: 'U-' + Date.now() + Math.floor(Math.random() * 1000),
+        username: username.trim(),
+        email: email.trim(),
+        phone: '',
+        fullName: 'Admin ' + username.trim(),
+        password: password,
+        role: 'admin',
+        banned: false,
+        banType: null,
+        banMessage: null,
+        banExpiresAt: null,
+        bannedAt: null,
+        createdAt: Date.now(),
+        avatar: (username.trim())[0].toUpperCase(),
+        address: '',
+        membershipType: 'Thường',
+        membershipPlan: null,
+        membershipPlanName: null,
+        membershipStartDate: null,
+        membershipEndDate: null,
+        membershipDiscount: 0,
+        membershipFreeShipping: 0
+      };
+      DB.users.push(newAdmin);
+      saveDB();
+      toast("Đã thêm quản trị viên: " + newAdmin.username, "success");
+      renderAdmin();
+    }
+
+    const VI_COL = { suppliers: "Nhà cung cấp", certifications: "Chứng nhận", products: "Sản phẩm", orders: "Đơn hàng", users: "Người dùng" };
+    const VI_FLD = { name: "Tên", country: "Quốc gia", rating: "Đánh giá", color: "Màu sắc", id: "Mã" };
+
+    function renderCrud(coll, fields) {
+      const title = VI_COL[coll] || coll;
+      $("#adminMain").html(`<div class="admin-top"><h2>${title}</h2>
+    <button class="btn-eco" onclick="editCrud('${coll}','${fields.join(",")}','')"><i class="fa-solid fa-plus"></i> Thêm</button></div>
+    <div class="panel"><table class="table-eco"><thead><tr>${fields.map(f => `<th>${VI_FLD[f] || f}</th>`).join("")}<th></th></tr></thead>
+    <tbody>${DB[coll].map(it => `<tr>${fields.map(f => `<td>${escapeHtml(String(it[f] || ""))}</td>`).join("")}<td class="row-actions"><button onclick="editCrud('${coll}','${fields.join(",")}','${it.id}')"><i class="fa-solid fa-pen"></i></button><button onclick="confirmDelete('${coll}','${it.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`).join("")}</tbody></table></div>`);
+    }
+
+    function editCrud(coll, fields, id) {
+      const list = fields.split(",");
+      const it = id ? getItem(coll, id) : {};
+      const title = VI_COL[coll] || coll;
+      $("#genericBody").html(`<h4 style="font-weight:800">${id ? "Sửa" : "Thêm"} ${title}</h4>
+    ${list.map(f => `<div class="input-eco" style="margin-top:10px"><input id="cf_${f}" value="${escapeHtml(it[f] || "")}" placeholder=" "><label>${VI_FLD[f] || f}</label></div>`).join("")}
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px"><button class="btn-ghost" onclick="closeModal('genericModal')">Hủy</button><button class="btn-eco" onclick="saveCrud('${coll}','${fields}','${id || ""}')">Lưu</button></div>`);
+      openModal("genericModal");
+    }
+
+    function saveCrud(coll, fields, id) {
+      const data = {}; fields.split(",").forEach(f => data[f] = $("#cf_" + f).val());
+      if (id) updateItem(coll, id, data); else createItem(coll, data);
+      closeModal("genericModal"); toast("Đã lưu", "success"); renderAdmin();
+    }
+
+    function renderAnalytics() {
+      $("#adminMain").html(`<div class="admin-top"><h2>Phân tích</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
+    <div class="panel"><h5 style="font-weight:800">Doanh số theo danh mục</h5><canvas id="catChart" height="200"></canvas></div>
+    <div class="panel"><h5 style="font-weight:800">Sản phẩm bán chạy</h5><canvas id="topChart" height="200"></canvas></div></div>`);
+      destroyCharts();
+      window.__charts.push(new Chart(document.getElementById("catChart"), { type: "doughnut", data: { labels: DB.categories.map(c => c.name), datasets: [{ data: DB.categories.map(c => DB.products.filter(p => p.category === c.id).length), backgroundColor: ["#16A34A","#22C55E","#BBF7D0","#15803D","#84cc16","#0ea5e9"] }] } }));
+      const top = DB.products.slice().sort((a, b) => b.sold - a.sold).slice(0, 5);
+      window.__charts.push(new Chart(document.getElementById("topChart"), { type: "bar", data: { labels: top.map(p => p.name.slice(0, 12)), datasets: [{ label: "Đã bán", data: top.map(p => p.sold), backgroundColor: "#16A34A" }] }, options: { plugins: { legend: { display: false } } } }));
+    }
+
+    function renderVipManagement() {
+      var vipLocal = DB.users.filter(function(u) { return u.membershipType === 'VIP'; });
+      var vipServerHtml = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)"><i class="fa-solid fa-spinner fa-spin"></i> Đang kết nối server...</td></tr>';
+      var vipTxHtml = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</td></tr>';
+      $.ajax({
+        url: '/api/vip/list',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          if (data && data.length) {
+            vipServerHtml = data.map(function(u) {
+              var planBadge = '';
+              if (u.membershipPlan === 'eco-forest') planBadge = '<span class="tag" style="background:#14532d;color:#fff">Đại Ngàn</span>';
+              else if (u.membershipPlan === 'eco-leaf') planBadge = '<span class="tag" style="background:#16a34a;color:#fff">Lá Đơm</span>';
+              else if (u.membershipPlan === 'eco-sprout') planBadge = '<span class="tag" style="background:#22c55e;color:#fff">Mầm Xanh</span>';
+              else planBadge = '<span class="tag">' + escapeHtml(u.membershipPlanName || u.membershipPlan || '—') + '</span>';
+              var startDate = u.membershipStartDate ? new Date(u.membershipStartDate).toLocaleString('vi-VN') : '—';
+              var endDate = u.membershipEndDate ? new Date(u.membershipEndDate).toLocaleString('vi-VN') : '—';
+              var expired = u.membershipEndDate && new Date(u.membershipEndDate).getTime() < Date.now();
+              return '<tr>' +
+                '<td><strong>' + escapeHtml(u.username) + '</strong></td>' +
+                '<td>' + planBadge + '</td>' +
+                '<td style="font-size:.82rem;color:var(--muted)">' + startDate + '</td>' +
+                '<td style="font-size:.82rem;color:var(--muted)">' + endDate + '</td>' +
+                '<td>' + (expired ? '<span class="tag err">Hết hạn</span>' : '<span class="tag" style="background:#dcfce7;color:#16a34a">Hiệu lực</span>') + '</td>' +
+                '<td class="row-actions" style="white-space:nowrap">' +
+                  '<button onclick="cancelServerVip(\'' + u.id + '\')" style="color:#dc2626" title="Hủy tư cách VIP"><i class="fa-solid fa-ban"></i></button>' +
+                  '<button onclick="extendServerVip(\'' + u.id + '\')" style="color:var(--primary)" title="Gia hạn gói"><i class="fa-solid fa-plus-circle"></i></button>' +
+                '</td></tr>';
+            }).join('');
+          } else {
+            vipServerHtml = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Chưa có hội viên VIP nào trên server.</td></tr>';
+          }
+          $('#vipServerBody').html(vipServerHtml);
+        },
+        error: function () {
+          $('#vipServerBody').html('<tr><td colspan="7" style="text-align:center;padding:40px;color:#dc2626">Không thể kết nối server.</td></tr>');
+        }
+      });
+      $.ajax({
+        url: '/api/vip/transactions',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          if (data && data.length) {
+            vipTxHtml = data.slice().reverse().map(function(tx) {
+              var payLabels = { banking: 'Banking', visa: 'Visa', usdt: 'USDT', wallet: 'Số dư ví' };
+              return '<tr>' +
+                '<td>' + escapeHtml(tx.username || '—') + '</td>' +
+                '<td>' + escapeHtml(tx.planName || tx.planId || '—') + '</td>' +
+                '<td><strong>$' + Number(tx.amount || 0).toFixed(2) + '</strong></td>' +
+                '<td>' + (payLabels[tx.paymentMethod] || tx.paymentMethod || '—') + '</td>' +
+                '<td>' + (tx.createdAt ? new Date(tx.createdAt).toLocaleString('vi-VN') : '—') + '</td>' +
+              '</tr>';
+            }).join('');
+          } else {
+            vipTxHtml = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--muted)">Chưa có giao dịch nào.</td></tr>';
+          }
+          $('#vipTxBody').html(vipTxHtml);
+        },
+        error: function () {
+          $('#vipTxBody').html('<tr><td colspan="5" style="text-align:center;padding:40px;color:#dc2626">Không thể kết nối server.</td></tr>');
+        }
+      });
+      var localHtml = vipLocal.length ? vipLocal.map(function(u) {
+        var planBadge = '';
+        if (u.membershipPlan === 'eco-forest') planBadge = '<span class="tag" style="background:#14532d;color:#fff">Đại Ngàn</span>';
+        else if (u.membershipPlan === 'eco-leaf') planBadge = '<span class="tag" style="background:#16a34a;color:#fff">Lá Đơm</span>';
+        else if (u.membershipPlan === 'eco-sprout') planBadge = '<span class="tag" style="background:#22c55e;color:#fff">Mầm Xanh</span>';
+        else planBadge = '<span class="tag">' + escapeHtml(u.membershipPlanName || u.membershipPlan || '—') + '</span>';
+        var startDate = u.membershipStartDate ? new Date(u.membershipStartDate).toLocaleString('vi-VN') : '—';
+        var endDate = u.membershipEndDate ? new Date(u.membershipEndDate).toLocaleString('vi-VN') : '—';
+        var expired = u.membershipEndDate && new Date(u.membershipEndDate).getTime() < Date.now();
+        return '<tr>' +
+          '<td><strong>' + escapeHtml(u.username) + '</strong></td>' +
+          '<td>' + planBadge + '</td>' +
+          '<td style="font-size:.82rem;color:var(--muted)">' + startDate + '</td>' +
+          '<td style="font-size:.82rem;color:var(--muted)">' + endDate + '</td>' +
+          '<td>' + (expired ? '<span class="tag err">Hết hạn</span>' : '<span class="tag" style="background:#dcfce7;color:#16a34a">Hiệu lực</span>') + '</td>' +
+          '<td class="row-actions" style="white-space:nowrap">' +
+            '<button onclick="cancelLocalVip(\'' + u.id + '\')" style="color:#dc2626" title="Hủy tư cách VIP"><i class="fa-solid fa-ban"></i></button>' +
+            '<button onclick="extendLocalVip(\'' + u.id + '\')" style="color:var(--primary)" title="Gia hạn gói"><i class="fa-solid fa-plus-circle"></i></button>' +
+          '</td></tr>';
+      }).join('') : '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--muted)">Chưa có hội viên VIP nội bộ.</td></tr>';
+      $("#adminMain").html('<div class="admin-top"><h2><i class="fa-solid fa-crown" style="color:#f59e0b"></i> Quản lý Gói Hội Viên</h2></div>' +
+        '<div class="panel">' +
+          '<h5 style="font-weight:800;margin-bottom:12px"><i class="fa-solid fa-server" style="color:var(--primary)"></i> Danh sách VIP từ Server</h5>' +
+          '<div style="overflow-x:auto"><table class="table-eco" style="min-width:800px"><thead><tr>' +
+            '<th>Tài khoản</th><th>Gói hội viên</th><th>Ngày đăng ký</th><th>Ngày hết hạn</th><th>Trạng thái</th><th>Thao tác</th>' +
+          '</tr></thead><tbody id="vipServerBody">' + vipServerHtml + '</tbody></table></div>' +
+        '</div>' +
+        '<div class="panel">' +
+          '<h5 style="font-weight:800;margin-bottom:12px"><i class="fa-solid fa-database" style="color:#f59e0b"></i> Danh sách VIP nội bộ</h5>' +
+          '<div style="overflow-x:auto"><table class="table-eco" style="min-width:800px"><thead><tr>' +
+            '<th>Tài khoản</th><th>Gói hội viên</th><th>Ngày đăng ký</th><th>Ngày hết hạn</th><th>Trạng thái</th><th>Thao tác</th>' +
+          '</tr></thead><tbody>' + localHtml + '</tbody></table></div>' +
+        '</div>' +
+        '<div class="panel">' +
+          '<h5 style="font-weight:800;margin-bottom:12px"><i class="fa-solid fa-clock-rotate-left" style="color:var(--primary)"></i> Lịch sử giao dịch đăng ký VIP</h5>' +
+          '<div style="overflow-x:auto"><table class="table-eco" style="min-width:800px"><thead><tr>' +
+            '<th>Tài khoản</th><th>Gói hội viên</th><th>Số tiền</th><th>Phương thức thanh toán</th><th>Thời gian đăng ký</th>' +
+          '</tr></thead><tbody id="vipTxBody">' + vipTxHtml + '</tbody></table></div>' +
+        '</div>');
+    }
+
+    function cancelServerVip(id) {
+      if (!confirm('Xác nhận hủy tư cách VIP của người dùng này?')) return;
+      $.ajax({
+        url: '/api/vip/cancel',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ userId: id }),
+        success: function () { toast('Đã hủy tư cách VIP', 'success'); renderVipManagement(); },
+        error: function () { toast('Lỗi kết nối server', 'error'); }
+      });
+    }
+
+    function extendServerVip(id) {
+      if (!confirm('Xác nhận gia hạn gói VIP thêm 30 ngày?')) return;
+      $.ajax({
+        url: '/api/vip/extend',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ userId: id }),
+        success: function () { toast('Đã gia hạn gói VIP', 'success'); renderVipManagement(); },
+        error: function () { toast('Lỗi kết nối server', 'error'); }
+      });
+    }
+
+    function cancelLocalVip(id) {
+      if (!confirm('Xác nhận hủy tư cách VIP của người dùng này?')) return;
+      var u = DB.users.find(function(x) { return x.id === id; });
+      if (u) {
+        u.membershipType = 'Thường';
+        u.membershipPlan = null;
+        u.membershipPlanName = null;
+        u.membershipStartDate = null;
+        u.membershipEndDate = null;
+        u.membershipDiscount = 0;
+        u.membershipFreeShipping = 0;
+        if (DB.session && DB.session.id === id) {
+          Object.assign(DB.session, { membershipType: 'Thường', membershipPlan: null, membershipPlanName: null, membershipStartDate: null, membershipEndDate: null, membershipDiscount: 0, membershipFreeShipping: 0 });
+        }
+        saveDB();
+        toast('Đã hủy tư cách VIP', 'success');
+        renderVipManagement();
+      }
+    }
+
+    function extendLocalVip(id) {
+      if (!confirm('Xác nhận gia hạn gói VIP thêm 30 ngày?')) return;
+      var u = DB.users.find(function(x) { return x.id === id; });
+      if (u) {
+        var currentEnd = u.membershipEndDate ? new Date(u.membershipEndDate).getTime() : Date.now();
+        var newEnd = new Date(currentEnd + 30 * 24 * 60 * 60 * 1000).toISOString();
+        u.membershipEndDate = newEnd;
+        if (!u.membershipType || u.membershipType === 'Thường') u.membershipType = 'VIP';
+        if (DB.session && DB.session.id === id) {
+          DB.session.membershipEndDate = newEnd;
+          DB.session.membershipType = 'VIP';
+        }
+        saveDB();
+        toast('Đã gia hạn gói VIP thêm 30 ngày', 'success');
+        renderVipManagement();
+      }
+    }
+
+    function renderMarketing() {
+      var bannerListHtml = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</td></tr>';
+      $.ajax({
+        url: '/api/banners',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          var list = data || [];
+          if (list.length) {
+            bannerListHtml = list.map(function(b) {
+              var activeHtml = b.active
+                ? '<span class="tag" style="background:#dcfce7;color:#16a34a">Đang hiển thị</span>'
+                : '<span class="tag warn">Chờ thêm ra trang chủ</span>';
+              var thumbHtml = b.image
+                ? '<img src="' + escapeHtml(b.image) + '" style="width:60px;height:40px;border-radius:6px;object-fit:cover;background:var(--soft)" onerror="this.src=\'https://placehold.co/60x40/16A34A/fff?text=No+Img\'">'
+                : '<span style="color:var(--muted)">—</span>';
+              var linkDisplay = b.link ? b.link : '—';
+              var linkShort = b.link ? (b.link.length > 30 ? b.link.substring(0, 27) + '...' : b.link) : '—';
+              var supplierDisplay = b.supplierName ? escapeHtml(b.supplierName) : '<span style="color:var(--muted)">—</span>';
+              return '<tr>' +
+                '<td>' + thumbHtml + '</td>' +
+                '<td><strong>' + escapeHtml(b.title || '—') + '</strong></td>' +
+                '<td>' + supplierDisplay + '</td>' +
+                '<td style="font-size:.82rem;max-width:180px;word-break:break-all"><a href="' + escapeHtml(b.link || '#') + '" target="_blank" style="color:var(--primary);text-decoration:none;font-weight:600" title="' + escapeHtml(b.link || '') + '">' + escapeHtml(linkShort) + ' <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:.6rem"></i></a></td>' +
+                '<td>' + activeHtml + '</td>' +
+                '<td>' + (b.createdAt ? new Date(b.createdAt).toLocaleString('vi-VN') : '—') + '</td>' +
+                '<td class="row-actions" style="white-space:nowrap">' +
+                  '<button onclick="toggleBanner(\'' + b.id + '\')" style="color:' + (b.active ? '#f59e0b' : 'var(--primary)') + '" title="' + (b.active ? 'Tắt hiển thị' : 'Kích hoạt hiển thị') + '"><i class="fa-solid fa-power-off"></i></button>' +
+                  '<button onclick="editBanner(\'' + escapeHtml(b.id) + '\',\'' + escapeHtml(b.title) + '\',\'' + escapeHtml(b.image) + '\',\'' + escapeHtml(b.link) + '\',\'' + escapeHtml(b.supplierName || '') + '\')" title="Sửa"><i class="fa-solid fa-pen" style="color:var(--primary)"></i></button>' +
+                  '<button onclick="deleteBanner(\'' + b.id + '\')" style="color:#dc2626" title="Xóa"><i class="fa-solid fa-trash"></i></button>' +
+                '</td></tr>';
+            }).join('');
+          } else {
+            bannerListHtml = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Chưa có banner nào. Hãy thêm banner mới!</td></tr>';
+          }
+          $('#bannerTableBody').html(bannerListHtml);
+        },
+        error: function () {
+          $('#bannerTableBody').html('<tr><td colspan="7" style="text-align:center;padding:20px;color:#dc2626">Không thể kết nối server. Vui lòng khởi động server.</td></tr>');
+        }
+      });
+      $("#adminMain").html(
+        '<div class="admin-top">' +
+          '<h2><i class="fa-solid fa-bullhorn" style="color:var(--primary)"></i> Quản lý Tiếp thị & Banner</h2>' +
+          '<button class="btn-eco" onclick="showAddBanner()"><i class="fa-solid fa-plus"></i> Thêm banner mới</button>' +
+        '</div>' +
+        '<div class="panel">' +
+          '<h5 style="font-weight:800;margin-bottom:12px"><i class="fa-solid fa-image" style="color:var(--primary)"></i> Danh sách Banner</h5>' +
+          '<div style="overflow-x:auto"><table class="table-eco" style="min-width:850px">' +
+            '<thead><tr><th>Ảnh</th><th>Tiêu đề</th><th>Nhà cung cấp / KH thuê QC</th><th>Đường dẫn đích</th><th>Trạng thái</th><th>Ngày tạo</th><th>Thao tác</th></tr></thead>' +
+            '<tbody id="bannerTableBody">' + bannerListHtml + '</tbody></table></div>' +
+        '</div>'
+      );
+    }
+
+    function showAddBanner() {
+      $("#genericBody").html(
+        '<h4 style="font-weight:800"><i class="fa-solid fa-plus-circle" style="color:var(--primary)"></i> Thêm banner mới</h4>' +
+        '<p style="color:var(--muted);margin:6px 0 14px">Nhập thông tin cho banner quảng cáo mới. Banner sẽ ở trạng thái <strong>Chờ thêm ra trang chủ</strong>, bạn cần kích hoạt thủ công sau khi tạo.</p>' +
+        '<div class="input-eco"><input id="bn_title" placeholder=" "><label>Tiêu đề quảng cáo</label></div>' +
+        '<div class="input-eco"><input id="bn_image" placeholder=" "><label>Link hình ảnh (URL)</label></div>' +
+        '<div class="input-eco"><input id="bn_supplier" placeholder=" "><label>Tên nhà cung cấp / Khách hàng thuê quảng cáo</label></div>' +
+        '<div class="input-eco"><input id="bn_link" placeholder=" "><label>Đường dẫn đích (VD: /shop/ten-doanh-nghiep)</label></div>' +
+        '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">' +
+          '<button class="btn-ghost" onclick="closeModal(\'genericModal\')">Hủy</button>' +
+          '<button class="btn-eco" onclick="saveNewBanner()"><i class="fa-solid fa-upload"></i> Đăng tải</button>' +
+        '</div>'
+      );
+      openModal("genericModal");
+      setTimeout(function() { $('#bn_title').focus(); }, 200);
+    }
+
+    function saveNewBanner() {
+      var title = $('#bn_title').val().trim();
+      var image = $('#bn_image').val().trim();
+      var link = $('#bn_link').val().trim() || '/shop';
+      var supplierName = $('#bn_supplier').val().trim();
+      if (!title || !image) { toast('Vui lòng nhập tiêu đề và link hình ảnh', 'error'); return; }
+      $.ajax({
+        url: '/api/banners',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ title: title, image: image, link: link, supplierName: supplierName, active: false }),
+        success: function () {
+          closeModal('genericModal');
+          toast('Đã đăng tải banner thành công!', 'success');
+          renderMarketing();
+        },
+        error: function () { toast('Lỗi khi thêm banner', 'error'); }
+      });
+    }
+
+    function toggleBanner(id) {
+      $.ajax({
+        url: '/api/banners/toggle',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ id: id }),
+        success: function () {
+          toast('Đã thay đổi trạng thái banner', 'success');
+          renderMarketing();
+        },
+        error: function () { toast('Lỗi khi thay đổi trạng thái', 'error'); }
+      });
+    }
+
+    function editBanner(id, title, image, link, supplierName) {
+      $("#genericBody").html(
+        '<h4 style="font-weight:800"><i class="fa-solid fa-pen" style="color:var(--primary)"></i> Sửa banner</h4>' +
+        '<div class="input-eco"><input id="bn_edit_title" value="' + escapeHtml(title) + '" placeholder=" "><label>Tiêu đề quảng cáo</label></div>' +
+        '<div class="input-eco"><input id="bn_edit_image" value="' + escapeHtml(image) + '" placeholder=" "><label>Link hình ảnh (URL)</label></div>' +
+        '<div class="input-eco"><input id="bn_edit_supplier" value="' + escapeHtml(supplierName || '') + '" placeholder=" "><label>Tên nhà cung cấp / Khách hàng thuê quảng cáo</label></div>' +
+        '<div class="input-eco"><input id="bn_edit_link" value="' + escapeHtml(link) + '" placeholder=" "><label>Đường dẫn đích (VD: /shop/ten-doanh-nghiep)</label></div>' +
+        '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">' +
+          '<button class="btn-ghost" onclick="closeModal(\'genericModal\')">Hủy</button>' +
+          '<button class="btn-eco" onclick="saveEditBanner(\'' + escapeHtml(id) + '\')"><i class="fa-solid fa-save"></i> Lưu</button>' +
+        '</div>'
+      );
+      openModal("genericModal");
+    }
+
+    function saveEditBanner(id) {
+      var title = $('#bn_edit_title').val().trim();
+      var image = $('#bn_edit_image').val().trim();
+      var link = $('#bn_edit_link').val().trim() || '/shop';
+      var supplierName = $('#bn_edit_supplier').val().trim();
+      if (!title || !image) { toast('Vui lòng nhập tiêu đề và link hình ảnh', 'error'); return; }
+      $.ajax({
+        url: '/api/banners/update',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ id: id, title: title, image: image, link: link, supplierName: supplierName }),
+        success: function () {
+          closeModal('genericModal');
+          toast('Đã cập nhật banner!', 'success');
+          renderMarketing();
+        },
+        error: function () { toast('Lỗi khi cập nhật', 'error'); }
+      });
+    }
+
+    function deleteBanner(id) {
+      if (!confirm('Xác nhận xóa banner này?')) return;
+      $.ajax({
+        url: '/api/banners/delete/' + encodeURIComponent(id),
+        method: 'DELETE',
+        success: function () {
+          toast('Đã xóa banner', 'warn');
+          renderMarketing();
+        },
+        error: function () { toast('Lỗi khi xóa', 'error'); }
+      });
+    }
+
+    function renderAdRequests() {
+      var listHtml = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải...</td></tr>';
+      $.ajax({
+        url: '/api/ad-requests',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          var list = data || [];
+          var pendingCount = list.filter(function(r) { return r.status === 'pending'; }).length;
+          $('#pendingAdBadge').text(pendingCount);
+          if (list.length) {
+            listHtml = list.slice().reverse().map(function(r) {
+              var statusHtml = r.status === 'pending' ? '<span class="tag warn">Chờ duyệt</span>' :
+                r.status === 'approved' ? '<span class="tag" style="background:#dcfce7;color:#16a34a">Đã duyệt</span>' :
+                '<span class="tag err">Từ chối</span>';
+              var adminNote = r.adminNote ? '<br><span style="font-size:.75rem;color:var(--muted)">Ghi chú: ' + escapeHtml(r.adminNote) + '</span>' : '';
+              return '<tr>' +
+                '<td><strong>' + escapeHtml(r.businessName) + '</strong></td>' +
+                '<td>' + escapeHtml(r.contactPerson) + '</td>' +
+                '<td>' + escapeHtml(r.phone) + '</td>' +
+                '<td>' + (r.email ? escapeHtml(r.email) : '<span style="color:var(--muted)">—</span>') + '</td>' +
+                '<td style="max-width:200px;font-size:.82rem">' + (r.adContent ? escapeHtml(r.adContent) : '<span style="color:var(--muted)">—</span>') + '</td>' +
+                '<td>' + statusHtml + adminNote + '</td>' +
+                '<td class="row-actions" style="white-space:nowrap">' +
+                  (r.status === 'pending'
+                    ? '<button onclick="showApproveAdModal(\'' + r.id + '\')" style="color:#16a34a" title="Duyệt"><i class="fa-solid fa-check"></i></button>' +
+                      '<button onclick="showRejectAdModal(\'' + r.id + '\')" style="color:#dc2626" title="Từ chối"><i class="fa-solid fa-xmark"></i></button>'
+                    : '') +
+                  '<button onclick="viewAdRequest(\'' + r.id + '\')" title="Xem chi tiết"><i class="fa-solid fa-eye" style="color:var(--primary)"></i></button>' +
+                '</td></tr>';
+            }).join('');
+          } else {
+            listHtml = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Chưa có đơn đăng ký quảng cáo nào.</td></tr>';
+          }
+          $('#adRequestsBody').html(listHtml);
+        },
+        error: function () {
+          $('#adRequestsBody').html('<tr><td colspan="7" style="text-align:center;padding:20px;color:#dc2626">Không thể kết nối server.</td></tr>');
+        }
+      });
+      $("#adminMain").html(
+        '<div class="admin-top">' +
+          '<h2><i class="fa-solid fa-rectangle-ad" style="color:var(--primary)"></i> Đơn đăng ký quảng cáo</h2>' +
+          '<span style="color:var(--muted);font-size:.9rem">Dành cho doanh nghiệp, tổ chức buôn bán nhỏ lẻ</span>' +
+        '</div>' +
+        '<div class="panel" style="overflow-x:auto">' +
+          '<table class="table-eco" style="min-width:900px">' +
+            '<thead><tr>' +
+              '<th>Tên doanh nghiệp</th><th>Người liên hệ</th><th>SĐT</th><th>Email</th><th>Nội dung QC</th><th>Trạng thái</th><th>Thao tác</th>' +
+            '</tr></thead>' +
+            '<tbody id="adRequestsBody">' + listHtml + '</tbody>' +
+          '</table>' +
+        '</div>'
+      );
+    }
+
+    function viewAdRequest(id) {
+      $.ajax({
+        url: '/api/ad-requests',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          var r = null;
+          for (var i = 0; i < data.length; i++) { if (data[i].id === id) { r = data[i]; break; } }
+          if (!r) { toast('Không tìm thấy đơn đăng ký', 'error'); return; }
+          var statusHtml = r.status === 'pending' ? '<span class="tag warn">Chờ duyệt</span>' :
+            r.status === 'approved' ? '<span class="tag" style="background:#dcfce7;color:#16a34a">Đã duyệt</span>' :
+            '<span class="tag err">Từ chối</span>';
+          $('#genericBody').html(
+            '<div style="max-width:520px;margin:0 auto">' +
+              '<h4 style="font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px">' +
+                '<i class="fa-solid fa-rectangle-ad" style="color:var(--primary)"></i> Chi tiết đơn QC' +
+              '</h4>' +
+              '<div style="background:var(--soft);border-radius:12px;padding:16px">' +
+                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">' +
+                  '<div style="grid-column:1/-1"><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Tên doanh nghiệp / tổ chức</div><div style="font-weight:700;margin-top:2px">' + escapeHtml(r.businessName) + '</div></div>' +
+                  '<div><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Người liên hệ</div><div style="font-weight:600;margin-top:2px">' + escapeHtml(r.contactPerson) + '</div></div>' +
+                  '<div><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Số điện thoại</div><div style="font-weight:600;margin-top:2px">' + escapeHtml(r.phone) + '</div></div>' +
+                  '<div><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Email</div><div style="font-weight:600;margin-top:2px">' + (r.email ? escapeHtml(r.email) : '<span style="color:var(--muted)">—</span>') + '</div></div>' +
+                  '<div style="grid-column:1/-1"><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Nội dung quảng cáo mong muốn</div><div style="font-weight:400;margin-top:2px;white-space:pre-wrap">' + (r.adContent ? escapeHtml(r.adContent) : '<span style="color:var(--muted)">—</span>') + '</div></div>' +
+                  (r.notes ? '<div style="grid-column:1/-1"><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Ghi chú thêm</div><div style="font-weight:400;margin-top:2px;white-space:pre-wrap">' + escapeHtml(r.notes) + '</div></div>' : '') +
+                  (r.images && r.images.length ? '<div style="grid-column:1/-1"><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Hình ảnh</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">' + r.images.map(function(img) { return '<img src="' + img.path + '" style="width:80px;height:80px;border-radius:8px;object-fit:cover;border:1px solid var(--border);background:var(--soft)">'; }).join('') + '</div></div>' : '') +
+                  (r.adminNote ? '<div style="grid-column:1/-1"><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Phản hồi từ Admin</div><div style="font-weight:400;margin-top:2px">' + escapeHtml(r.adminNote) + '</div></div>' : '') +
+                  '<div style="grid-column:1/-1"><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px">Trạng thái</div><div style="margin-top:2px">' + statusHtml + '</div></div>' +
+                '</div>' +
+              '</div>' +
+              '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">' +
+                (r.status === 'pending'
+                  ? '<button class="btn-eco" onclick="closeModal(\'genericModal\');showApproveAdModal(\'' + r.id + '\')"><i class="fa-solid fa-check"></i> Duyệt</button>' +
+                    '<button class="btn-eco" style="background:#dc2626" onclick="closeModal(\'genericModal\');showRejectAdModal(\'' + r.id + '\')"><i class="fa-solid fa-xmark"></i> Từ chối</button>'
+                  : '<button class="btn-ghost" onclick="closeModal(\'genericModal\')">Đóng</button>') +
+              '</div>' +
+            '</div>'
+          );
+          openModal('genericModal');
+        },
+        error: function () { toast('Không thể tải thông tin đơn', 'error'); }
+      });
+    }
+
+    function showApproveAdModal(id) {
+      $.ajax({
+        url: '/api/ad-requests',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          var req = null;
+          for (var i = 0; i < data.length; i++) { if (data[i].id === id) { req = data[i]; break; } }
+          if (!req) { toast('Không tìm thấy đơn đăng ký', 'error'); return; }
+          var defaultImage = '';
+          if (req.images && req.images.length) {
+            defaultImage = req.images[0].path || req.images[0].fileName || req.images[0];
+          }
+          if (!defaultImage) {
+            defaultImage = 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&q=80';
+          }
+          var imagesPreview = '';
+          if (req.images && req.images.length) {
+            imagesPreview = req.images.map(function(img) {
+              return '<img src="' + img.path + '" style="height:60px;border-radius:6px;cursor:pointer;border:2px solid transparent" class="adr-img-select" data-src="' + img.path + '">';
+            }).join('');
+          }
+          $('#genericBody').html(
+            '<div style="max-width:520px;margin:0 auto">' +
+              '<h4 style="font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px">' +
+                '<i class="fa-solid fa-check-circle" style="color:#16a34a"></i> Duyệt đơn QC & tạo banner' +
+              '</h4>' +
+              '<div style="background:var(--soft);border-radius:12px;padding:16px;margin-bottom:14px">' +
+                '<div style="font-size:.82rem;margin-bottom:8px"><strong>' + escapeHtml(req.businessName) + '</strong> — ' + escapeHtml(req.adContent || '') + '</div>' +
+                (imagesPreview ? '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">' + imagesPreview + '</div>' : '') +
+              '</div>' +
+              '<div class="input-eco"><input id="apr_image" value="' + escapeHtml(defaultImage) + '" placeholder=" "><label>URL hình ảnh banner</label></div>' +
+              '<div class="input-eco" style="margin-top:10px"><input id="apr_link" value="/shop/' + escapeHtml(slugify(req.businessName)) + '" placeholder=" "><label>Đường dẫn banner (gian hàng doanh nghiệp)</label></div>' +
+              '<div class="input-eco" style="margin-top:10px"><textarea id="apr_note" placeholder=" " style="width:100%;padding:18px 16px 8px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);outline:none;font-size:.88rem;resize:vertical;min-height:60px;font-family:inherit"></textarea><label style="top:14px">Ghi chú (hiển thị trong đơn)</label></div>' +
+              '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">' +
+                '<button class="btn-ghost" onclick="closeModal(\'genericModal\')">Hủy</button>' +
+                '<button class="btn-eco" onclick="execApproveAd(\'' + id + '\')"><i class="fa-solid fa-check"></i> Xác nhận duyệt</button>' +
+              '</div>' +
+            '</div>'
+          );
+          // Click image to set as banner image
+          setTimeout(function() {
+            $('.adr-img-select').on('click', function() {
+              $('#apr_image').val($(this).data('src'));
+              $('.adr-img-select').css('border-color', 'transparent');
+              $(this).css('border-color', 'var(--primary)');
+            });
+          }, 50);
+          openModal('genericModal');
+        },
+        error: function () { toast('Không thể tải thông tin đơn', 'error'); }
+      });
+    }
+
+    function execApproveAd(id) {
+      var image = $('#apr_image').val().trim();
+      var link = $('#apr_link').val().trim() || '/shop';
+      var note = $('#apr_note').val().trim();
+      if (!image) { toast('Vui lòng nhập URL hình ảnh cho banner', 'warn'); return; }
+      // Update status
+      $.ajax({
+        url: '/api/ad-requests/status',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ id: id, status: 'approved', adminNote: note }),
+        success: function () {
+          // Get request to fetch title
+          $.ajax({
+            url: '/api/ad-requests',
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+              var req = null;
+              for (var i = 0; i < data.length; i++) { if (data[i].id === id) { req = data[i]; break; } }
+              var title = req ? (req.adContent || 'Quảng cáo từ ' + req.businessName) : 'Quảng cáo';
+              // Create banner
+              $.ajax({
+                url: '/api/banners',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                  title: title,
+                  image: image,
+                  link: link,
+                  supplierName: req ? req.businessName : '',
+                  active: false
+                }),
+                success: function () {
+                  toast('Đã duyệt và tạo banner quảng cáo thành công!', 'success');
+                  closeModal('genericModal');
+                  renderAdRequests();
+                },
+                error: function () {
+                  toast('Đã duyệt đơn nhưng lỗi tạo banner', 'warn');
+                  closeModal('genericModal');
+                  renderAdRequests();
+                }
+              });
+            },
+            error: function () {
+              // Fallback: create banner without title
+              $.ajax({
+                url: '/api/banners',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ title: 'Quảng cáo', image: image, link: link, active: false }),
+                success: function () {
+                  toast('Đã duyệt và tạo banner!', 'success');
+                  closeModal('genericModal');
+                  renderAdRequests();
+                }
+              });
+            }
+          });
+        },
+        error: function () { toast('Lỗi khi cập nhật đơn', 'error'); }
+      });
+    }
+
+    function showRejectAdModal(id) {
+      $.ajax({
+        url: '/api/ad-requests',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          var req = null;
+          for (var i = 0; i < data.length; i++) { if (data[i].id === id) { req = data[i]; break; } }
+          if (!req) { toast('Không tìm thấy đơn đăng ký', 'error'); return; }
+          $('#genericBody').html(
+            '<div style="max-width:420px;margin:0 auto">' +
+              '<h4 style="font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:#dc2626">' +
+                '<i class="fa-solid fa-xmark-circle"></i> Từ chối đơn QC' +
+              '</h4>' +
+              '<p style="color:var(--muted);margin-bottom:14px">Từ chối đơn của <strong>' + escapeHtml(req.businessName) + '</strong></p>' +
+              '<div class="input-eco"><textarea id="rej_note" placeholder=" " style="width:100%;padding:18px 16px 8px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);outline:none;font-size:.88rem;resize:vertical;min-height:80px;font-family:inherit">Không phù hợp</textarea><label style="top:14px">Lý do từ chối</label></div>' +
+              '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">' +
+                '<button class="btn-ghost" onclick="closeModal(\'genericModal\')">Hủy</button>' +
+                '<button class="btn-eco" style="background:#dc2626" onclick="execRejectAd(\'' + id + '\')"><i class="fa-solid fa-xmark"></i> Xác nhận từ chối</button>' +
+              '</div>' +
+            '</div>'
+          );
+          openModal('genericModal');
+        }
+      });
+    }
+
+    function execRejectAd(id) {
+      var note = $('#rej_note').val().trim() || 'Không phù hợp';
+      $.ajax({
+        url: '/api/ad-requests/status',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ id: id, status: 'rejected', adminNote: note }),
+        success: function () {
+          toast('Đã từ chối đơn đăng ký', 'warn');
+          closeModal('genericModal');
+          renderAdRequests();
+        },
+        error: function () { toast('Lỗi khi cập nhật', 'error'); }
+      });
+    }
+
+    function renderAppeals() {
+      var list = DB.appeals || [];
+      list.sort(function(a, b) { return b.createdAt - a.createdAt; });
+      var pendingCount = list.filter(function(a) { return a.status === 'pending'; }).length;
+      $('#pendingAppealBadge').text(pendingCount);
+      var catColors = { 'Tôi không vi phạm': '#22c55e', 'Vi phạm nhẹ, xin cơ hội': '#f59e0b', 'Nhầm lẫn tài khoản': '#3b82f6', 'Đã khắc phục hậu quả': '#8b5cf6', 'Khác': '#6b7280' };
+      $('#adminMain').html(
+        '<div class="admin-top"><h2><i class="fa-solid fa-scale-balanced" style="color:var(--primary)"></i> Khiếu nại người dùng</h2>' +
+        '<span style="color:var(--muted);font-size:.9rem">' + list.length + ' khiếu nại</span></div>' +
+        '<div class="panel" style="overflow-x:auto">' +
+        '<table class="table-eco" style="min-width:950px">' +
+        '<thead><tr><th>Mã</th><th>Người dùng</th><th>Loại</th><th>Liên hệ</th><th>Nội dung</th><th>Ngày gửi</th><th>Trạng thái</th><th></th></tr></thead>' +
+        '<tbody>' +
+        (list.length ? list.map(function(a) {
+          var statusHtml = a.status === 'pending' ? '<span class="tag warn">Chờ xử lý</span>' :
+            a.status === 'resolved' ? '<span class="tag" style="background:#dcfce7;color:#16a34a">Đã giải quyết</span>' :
+            '<span class="tag err">Từ chối</span>';
+          var catLabel = a.reasonCat || '—';
+          var catColor = catColors[catLabel] || '#6b7280';
+          var contentPreview = a.content.length > 60 ? escapeHtml(a.content.substring(0, 60)) + '...' : escapeHtml(a.content);
+          return '<tr>' +
+            '<td><strong>' + escapeHtml(a.id) + '</strong></td>' +
+            '<td>' + escapeHtml(a.fullName || a.username || a.userId) + '</td>' +
+            '<td><span style="display:inline-block;padding:2px 8px;border-radius:6px;font-size:.72rem;font-weight:700;color:#fff;background:' + catColor + '">' + escapeHtml(catLabel) + '</span></td>' +
+            '<td style="font-size:.82rem">' + escapeHtml(a.contact || '—') + '</td>' +
+            '<td style="font-size:.82rem;max-width:220px">' + contentPreview + '</td>' +
+            '<td style="font-size:.82rem;color:var(--muted)">' + new Date(a.createdAt).toLocaleString('vi-VN') + '</td>' +
+            '<td>' + statusHtml + '</td>' +
+            '<td class="row-actions">' +
+            '<button onclick="viewAppeal(\'' + a.id + '\')" title="Xem chi tiết"><i class="fa-solid fa-eye" style="color:var(--primary)"></i></button>' +
+            (a.status === 'pending' ?
+              '<button onclick="resolveAppeal(\'' + a.id + '\',\'resolved\')" title="Chấp nhận"><i class="fa-solid fa-check" style="color:#16a34a"></i></button>' +
+              '<button onclick="resolveAppeal(\'' + a.id + '\',\'rejected\')" title="Từ chối"><i class="fa-solid fa-xmark" style="color:#dc2626"></i></button>'
+            : '') +
+            '</td></tr>';
+        }).join('') : '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">Chưa có khiếu nại nào.</td></tr>') +
+        '</tbody></table></div>'
+      );
+    }
+
+    function viewAppeal(id) {
+      var a = (DB.appeals || []).find(function(x) { return x.id === id; });
+      if (!a) { toast('Không tìm thấy khiếu nại', 'error'); return; }
+      var statusHtml = a.status === 'pending' ? '<span class="tag warn">Chờ xử lý</span>' :
+        a.status === 'resolved' ? '<span class="tag" style="background:#dcfce7;color:#16a34a">Đã giải quyết</span>' :
+        '<span class="tag err">Từ chối</span>';
+      var catLabel = a.reasonCat || 'Không xác định';
+      var catColors = { 'Tôi không vi phạm': '#22c55e', 'Vi phạm nhẹ, xin cơ hội': '#f59e0b', 'Nhầm lẫn tài khoản': '#3b82f6', 'Đã khắc phục hậu quả': '#8b5cf6', 'Khác': '#6b7280' };
+      var catColor = catColors[catLabel] || '#6b7280';
+      var evidenceHtml = a.evidence ? '<div style="margin-top:10px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0"><div style="font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:4px">BẰNG CHỨNG / MINH CHỨNG</div><p style="font-size:.85rem;line-height:1.5;white-space:pre-wrap;margin:0;color:var(--secondary)">' + escapeHtml(a.evidence) + '</p></div>' : '';
+      var contactHtml = a.contact ? '<div style="background:var(--soft);border-radius:10px;padding:8px 14px;flex:1"><div style="font-size:.72rem;color:var(--muted)">Liên hệ</div><div style="font-weight:600;font-size:.85rem">' + escapeHtml(a.contact) + '</div></div>' : '';
+      $('#genericBody').html(
+        '<div style="max-width:540px">' +
+        '<h4 style="font-weight:800;display:flex;align-items:center;gap:8px">' +
+        '<span style="width:32px;height:32px;border-radius:8px;background:' + catColor + '20;color:' + catColor + ';display:inline-flex;align-items:center;justify-content:center;font-size:.9rem"><i class="fa-solid fa-scale-balanced"></i></span>' +
+        'Khiếu nại <span style="font-size:.78rem;font-weight:400;color:var(--muted)">' + escapeHtml(a.id) + '</span></h4>' +
+        '<div style="display:flex;gap:8px;margin:8px 0 12px">' +
+        '<div style="background:var(--soft);border-radius:10px;padding:8px 14px;flex:1"><div style="font-size:.72rem;color:var(--muted)">Người dùng</div><div style="font-weight:700;font-size:.9rem">' + escapeHtml(a.fullName || a.username || a.userId) + '</div></div>' +
+        contactHtml +
+        '</div>' +
+        '<div style="display:flex;gap:8px;margin-bottom:12px">' +
+        '<div style="background:var(--soft);border-radius:10px;padding:8px 14px;flex:1"><div style="font-size:.72rem;color:var(--muted)">Loại khiếu nại</div><div><span style="display:inline-block;padding:3px 10px;border-radius:6px;font-size:.78rem;font-weight:700;color:#fff;background:' + catColor + '">' + escapeHtml(catLabel) + '</span></div></div>' +
+        '<div style="background:var(--soft);border-radius:10px;padding:8px 14px;flex:1"><div style="font-size:.72rem;color:var(--muted)">Ngày gửi</div><div style="font-weight:600;font-size:.85rem">' + new Date(a.createdAt).toLocaleString('vi-VN') + '</div></div>' +
+        '</div>' +
+        '<div style="background:var(--soft);border-radius:12px;padding:14px 16px;margin-bottom:10px">' +
+        '<div style="font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:4px">NỘI DUNG KHIẾU NẠI</div>' +
+        '<p style="font-size:.9rem;line-height:1.6;white-space:pre-wrap">' + escapeHtml(a.content) + '</p>' +
+        evidenceHtml +
+        '</div>' +
+        '<div style="margin-bottom:10px;display:flex;align-items:center;gap:8px">Trạng thái: ' + statusHtml + '</div>' +
+        '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">' +
+        (a.status === 'pending' ?
+          '<button class="btn-eco" onclick="closeModal(\'genericModal\');resolveAppeal(\'' + a.id + '\',\'resolved\')"><i class="fa-solid fa-check"></i> Chấp nhận & mở khóa</button>' +
+          '<button class="btn-eco" style="background:#dc2626" onclick="closeModal(\'genericModal\');resolveAppeal(\'' + a.id + '\',\'rejected\')"><i class="fa-solid fa-xmark"></i> Từ chối</button>'
+        : '<button class="btn-ghost" onclick="closeModal(\'genericModal\')">Đóng</button>') +
+        '</div></div>'
+      );
+      openModal('genericModal');
+    }
+
+    function resolveAppeal(id, status) {
+      var a = (DB.appeals || []).find(function(x) { return x.id === id; });
+      if (!a) return;
+      a.status = status;
+      a.resolvedAt = Date.now();
+      saveDB();
+      if (status === 'resolved') {
+        var u = DB.users.find(function(x) { return x.id === a.userId; });
+        if (u) { u.banned = false; u.banType = null; u.banMessage = null; u.banExpiresAt = null; u.bannedAt = null; u.banReason = null; }
+        saveDB();
+        toast('Đã chấp nhận khiếu nại và mở khóa tài khoản', 'success');
+      } else {
+        toast('Đã từ chối khiếu nại', 'warn');
+      }
+      renderAppeals();
+    }
+
+    function renderReports() {
+      var list = DB.reports || [];
+      list.sort(function(a, b) { return b.createdAt - a.createdAt; });
+      var pendingCount = list.filter(function(a) { return a.status === 'pending'; }).length;
+      $("#pendingReportsBadge").text(pendingCount);
+      var typeLabels = { user: 'Người dùng', listing: 'Sản phẩm chợ', product: 'Sản phẩm' };
+      var typeIcons = { user: 'fa-user', listing: 'fa-store', product: 'fa-box' };
+      var reasonLabels = { spam: 'Spam', fake: 'Giả mạo', harassment: 'Quấy rối', scam: 'Lừa đảo', inappropriate: 'Nội dung không phù hợp', other: 'Khác', fake_product: 'Hàng giả, hàng nhái', wrong_desc: 'Mô tả sai lệch', no_delivery: 'Không giao hàng', damaged: 'Hàng hư hỏng', overpriced: 'Định giá quá cao', prohibited: 'Sản phẩm bị cấm', impersonation: 'Giả mạo thương hiệu' };
+      $("#adminMain").html(
+        '<div class="admin-top"><h2><i class="fa-solid fa-flag" style="color:#dc2626"></i> Báo cáo người dùng</h2>' +
+        '<span style="color:var(--muted);font-size:.9rem">' + list.length + ' báo cáo</span></div>' +
+        '<div class="panel" style="overflow-x:auto">' +
+        '<table class="table-eco" style="min-width:950px">' +
+        '<thead><tr><th>Mã</th><th>Người báo cáo</th><th>Người bị báo cáo</th><th>Loại</th><th>Lý do</th><th>Nội dung</th><th>Ngày gửi</th><th>Trạng thái</th><th></th></tr></thead>' +
+        '<tbody>' +
+        (list.length ? list.map(function(r) {
+          var statusHtml = r.status === 'pending' ? '<span class="tag warn">Chờ xử lý</span>' :
+            r.status === 'resolved' ? '<span class="tag" style="background:#dcfce7;color:#16a34a">Đã xử lý</span>' :
+            '<span class="tag err">Từ chối</span>';
+          var typeHtml = '<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:.72rem;font-weight:700;color:#fff;background:#6b7280"><i class="fa-solid ' + (typeIcons[r.type] || 'fa-flag') + '"></i> ' + (typeLabels[r.type] || r.type) + '</span>';
+          var reasonLabel = reasonLabels[r.reason] || r.reason || '—';
+          var contentPreview = r.content.length > 60 ? escapeHtml(r.content.substring(0, 60)) + '...' : escapeHtml(r.content);
+          return '<tr>' +
+            '<td><strong>' + escapeHtml(r.id) + '</strong></td>' +
+            '<td>' + escapeHtml(r.reporterName || r.reporterUserId || '—') + '</td>' +
+            '<td>' + escapeHtml(r.reportedName || r.reportedUserId || '—') + '</td>' +
+            '<td>' + typeHtml + '</td>' +
+            '<td style="font-size:.82rem">' + escapeHtml(reasonLabel) + '</td>' +
+            '<td style="font-size:.82rem;max-width:200px">' + contentPreview + '</td>' +
+            '<td style="font-size:.82rem;color:var(--muted)">' + new Date(r.createdAt).toLocaleString('vi-VN') + '</td>' +
+            '<td>' + statusHtml + '</td>' +
+            '<td class="row-actions">' +
+            '<button onclick="viewReport(\'' + r.id + '\')" title="Xem chi tiết"><i class="fa-solid fa-eye" style="color:var(--primary)"></i></button>' +
+            (r.status === 'pending' ?
+              '<button onclick="resolveReport(\'' + r.id + '\',\'resolved\')" title="Chấp nhận"><i class="fa-solid fa-check" style="color:#16a34a"></i></button>' +
+              '<button onclick="resolveReport(\'' + r.id + '\',\'rejected\')" title="Từ chối"><i class="fa-solid fa-xmark" style="color:#dc2626"></i></button>'
+            : '') +
+            '</td></tr>';
+        }).join('') : '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted)">Chưa có báo cáo nào.</td></tr>') +
+        '</tbody></table></div>'
+      );
+    }
+
+    function viewReport(id) {
+      var r = (DB.reports || []).find(function(x) { return x.id === id; });
+      if (!r) { toast('Không tìm thấy báo cáo', 'error'); return; }
+      var statusHtml = r.status === 'pending' ? '<span class="tag warn">Chờ xử lý</span>' :
+        r.status === 'resolved' ? '<span class="tag" style="background:#dcfce7;color:#16a34a">Đã xử lý</span>' :
+        '<span class="tag err">Từ chối</span>';
+      var typeLabels = { user: 'Người dùng', listing: 'Sản phẩm chợ', product: 'Sản phẩm' };
+      var typeIcons = { user: 'fa-user', listing: 'fa-store', product: 'fa-box' };
+      var typeIcon = typeIcons[r.type] || 'fa-flag';
+      var typeLabel = typeLabels[r.type] || r.type;
+      var reasonLabels = { spam: 'Spam', fake: 'Giả mạo', harassment: 'Quấy rối', scam: 'Lừa đảo', inappropriate: 'Nội dung không phù hợp', other: 'Khác', fake_product: 'Hàng giả, hàng nhái', wrong_desc: 'Mô tả sai lệch', no_delivery: 'Không giao hàng', damaged: 'Hàng hư hỏng', overpriced: 'Định giá quá cao', prohibited: 'Sản phẩm bị cấm', impersonation: 'Giả mạo thương hiệu' };
+      var reasonLabel = reasonLabels[r.reason] || r.reason || 'Không xác định';
+      var isListingReport = r.type === 'listing';
+      var evidenceHtml = '';
+      if (r.evidence && r.evidence.length) {
+        evidenceHtml = '<div style="margin:10px 0"><div style="font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:6px">MINH CHỨNG</div><div style="display:flex;gap:8px;flex-wrap:wrap">';
+        for (var ei = 0; ei < r.evidence.length; ei++) {
+          evidenceHtml += '<a href="' + r.evidence[ei] + '" target="_blank" style="display:block;width:80px;height:80px;border-radius:10px;overflow:hidden;border:1px solid var(--border)"><img src="' + r.evidence[ei] + '" style="width:100%;height:100%;object-fit:cover"></a>';
+        }
+        evidenceHtml += '</div></div>';
+      }
+      var listingInfo = '';
+      if (isListingReport && r.itemId) {
+        var reportedListing = (DB.listings || []).find(function(l) { return l.id === r.itemId; });
+        if (reportedListing) {
+          listingInfo = '<div style="background:var(--soft);border-radius:10px;padding:10px 14px;margin-bottom:10px"><div style="font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:4px">SẢN PHẨM BỊ BÁO CÁO</div>' +
+            '<div style="display:flex;align-items:center;gap:10px">' +
+            (reportedListing.images && reportedListing.images[0] ? '<img src="' + reportedListing.images[0] + '" style="width:48px;height:48px;border-radius:8px;object-fit:cover;border:1px solid var(--border)">' : '') +
+            '<div><strong>' + escapeHtml(reportedListing.title) + '</strong><br><span style="font-size:.82rem;color:var(--muted)">' + escapeHtml(reportedListing.condition || '') + ' · ' + money(reportedListing.price) + '</span></div></div></div>';
+        }
+      }
+      $("#genericBody").html(
+        '<div style="max-width:540px">' +
+        '<h4 style="font-weight:800;display:flex;align-items:center;gap:8px">' +
+        '<span style="width:32px;height:32px;border-radius:8px;background:#fee2e2;color:#dc2626;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem"><i class="fa-solid fa-flag"></i></span>' +
+        'Báo cáo <span style="font-size:.78rem;font-weight:400;color:var(--muted)">' + escapeHtml(r.id) + '</span></h4>' +
+        '<div style="display:flex;gap:8px;margin:8px 0 12px">' +
+        '<div style="background:var(--soft);border-radius:10px;padding:8px 14px;flex:1"><div style="font-size:.72rem;color:var(--muted)">Người báo cáo</div><div style="font-weight:700;font-size:.9rem">' + escapeHtml(r.reporterName || r.reporterUserId || '—') + '</div></div>' +
+        '<div style="background:var(--soft);border-radius:10px;padding:8px 14px;flex:1"><div style="font-size:.72rem;color:var(--muted)">Người bị báo cáo</div><div style="font-weight:700;font-size:.9rem">' + escapeHtml(r.reportedName || r.reportedUserId || '—') + '</div></div>' +
+        '</div>' +
+        '<div style="display:flex;gap:8px;margin-bottom:12px">' +
+        '<div style="background:var(--soft);border-radius:10px;padding:8px 14px;flex:1"><div style="font-size:.72rem;color:var(--muted)">Loại</div><div><span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:.78rem;font-weight:700;color:#fff;background:#6b7280"><i class="fa-solid ' + typeIcon + '"></i> ' + escapeHtml(typeLabel) + '</span></div></div>' +
+        '<div style="background:var(--soft);border-radius:10px;padding:8px 14px;flex:1"><div style="font-size:.72rem;color:var(--muted)">Lý do</div><div style="font-weight:600;font-size:.85rem">' + escapeHtml(reasonLabel) + '</div></div>' +
+        '</div>' +
+        listingInfo +
+        (r.itemName && !listingInfo ? '<div style="background:var(--soft);border-radius:10px;padding:8px 14px;margin-bottom:10px"><div style="font-size:.72rem;color:var(--muted)">Sản phẩm</div><div style="font-weight:600">' + escapeHtml(r.itemName) + '</div></div>' : '') +
+        '<div style="background:var(--soft);border-radius:12px;padding:14px 16px;margin-bottom:10px">' +
+        '<div style="font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:4px">NỘI DUNG BÁO CÁO</div>' +
+        '<p style="font-size:.9rem;line-height:1.6;white-space:pre-wrap">' + escapeHtml(r.content) + '</p>' +
+        evidenceHtml +
+        (r.adminNote ? '<div style="margin-top:10px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0"><div style="font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:4px">GHI CHÚ QUẢN TRỊ</div><p style="font-size:.85rem;line-height:1.5;white-space:pre-wrap;margin:0;color:var(--secondary)">' + escapeHtml(r.adminNote) + '</p></div>' : '') +
+        '</div>' +
+        '<div style="margin-bottom:10px;display:flex;align-items:center;gap:8px">Trạng thái: ' + statusHtml + '</div>' +
+        '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap">' +
+        (r.status === 'pending' ?
+          (isListingReport ?
+            '<button class="btn-eco" onclick="closeModal(\'genericModal\');resolveReport(\'' + r.id + '\',\'resolved\')" style="background:#f59e0b"><i class="fa-solid fa-check"></i> Cảnh cáo người bán</button>' +
+            '<button class="btn-eco" style="background:#dc2626" onclick="closeModal(\'genericModal\');resolveReport(\'' + r.id + '\',\'resolved_delete\')"><i class="fa-solid fa-trash"></i> Xóa sản phẩm & Cảnh cáo</button>' +
+            '<button class="btn-ghost" style="border-color:#dc2626;color:#dc2626" onclick="closeModal(\'genericModal\');resolveReport(\'' + r.id + '\',\'rejected\')">Từ chối</button>'
+          :
+            '<button class="btn-eco" onclick="closeModal(\'genericModal\');resolveReport(\'' + r.id + '\',\'resolved\')"><i class="fa-solid fa-check"></i> Xác nhận xử lý</button>' +
+            '<button class="btn-eco" style="background:#dc2626" onclick="closeModal(\'genericModal\');resolveReport(\'' + r.id + '\',\'rejected\')"><i class="fa-solid fa-xmark"></i> Từ chối</button>')
+        : '<button class="btn-ghost" onclick="closeModal(\'genericModal\')">Đóng</button>') +
+        '</div></div>'
+      );
+      openModal('genericModal');
+    }
+
+    function resolveReport(id, status) {
+      var r = (DB.reports || []).find(function(x) { return x.id === id; });
+      if (!r) return;
+      r.status = status === 'resolved_delete' ? 'resolved' : status;
+      r.resolvedAt = Date.now();
+      saveDB();
+      // Handle listing-specific actions
+      if (r.type === 'listing' && r.itemId) {
+        var reportedListing = (DB.listings || []).find(function(l) { return l.id === r.itemId; });
+        if (status === 'resolved_delete' && reportedListing) {
+          DB.listings = DB.listings.filter(function(l) { return l.id !== r.itemId; });
+          r.adminNote = (r.adminNote ? r.adminNote + ' | ' : '') + 'Đã xóa sản phẩm khỏi chợ';
+          saveDB();
+        }
+      }
+      // Warn the reported user
+      var reportedUser = DB.users.find(function(x) { return x.id === r.reportedUserId; });
+      if (reportedUser && (status === 'resolved' || status === 'resolved_delete')) {
+        if (!reportedUser.reportCount) reportedUser.reportCount = 0;
+        reportedUser.reportCount++;
+        reportedUser.lastWarning = 'Vi phạm: ' + (r.reason || 'không xác định') + ' - ' + new Date().toLocaleString('vi-VN');
+        saveDB();
+        // Send notification to seller
+        var reasonLabel = { fake_product: 'Hàng giả, hàng nhái', wrong_desc: 'Mô tả sai lệch', no_delivery: 'Không giao hàng', damaged: 'Hàng hư hỏng', overpriced: 'Định giá quá cao', prohibited: 'Sản phẩm bị cấm', impersonation: 'Giả mạo thương hiệu' };
+        var rl = reasonLabel[r.reason] || r.reason || 'không xác định';
+        var notif = {
+          id: 'NOTIF-' + Date.now() + Math.floor(Math.random() * 1000),
+          type: status === 'resolved_delete' ? 'listing_deleted' : 'warning',
+          title: status === 'resolved_delete' ? 'Sản phẩm đã bị xóa khỏi chợ' : 'Cảnh cáo từ Admin',
+          body: 'Lý do: ' + rl + (r.content ? ' - ' + r.content : '') + (status === 'resolved_delete' && r.itemName ? ' | Sản phẩm: ' + r.itemName : ''),
+          createdAt: Date.now(),
+          read: false
+        };
+        if (!DB.notifications) DB.notifications = {};
+        if (!DB.notifications[r.reportedUserId]) DB.notifications[r.reportedUserId] = [];
+        DB.notifications[r.reportedUserId].push(notif);
+        saveDB();
+      }
+      if (status === 'resolved' || status === 'resolved_delete') {
+        toast(status === 'resolved_delete' ? 'Đã xóa sản phẩm và cảnh cáo người bán' : 'Đã xác nhận xử lý báo cáo', 'success');
+      } else {
+        toast('Đã từ chối báo cáo', 'warn');
+      }
+      renderReports();
+    }
+
+    function renderSettings() {
+      $("#adminMain").html(`<div class="admin-top"><h2>Cài đặt</h2></div>
+    <div class="panel"><h5 style="font-weight:800">Cài đặt cửa hàng</h5>
+      <div class="input-eco" style="margin-top:14px"><input id="set_tax" type="number" step="0.01" value="${DB.settings.taxRate}" placeholder=" "><label>Thuế suất (0-1)</label></div>
+      <div class="input-eco"><input id="set_ship" type="number" value="${DB.settings.freeShippingOver}" placeholder=" "><label>Miễn phí ship trên ($)</label></div>
+      <button class="btn-eco" onclick="DB.settings.taxRate=parseFloat($('#set_tax').val());DB.settings.freeShippingOver=parseFloat($('#set_ship').val());saveDB();toast('Đã lưu','success')">Lưu</button>
+    </div>
+    <div class="panel"><h5 style="font-weight:800">Khu vực nguy hiểm</h5><button class="btn-ghost" style="border-color:#dc2626;color:#dc2626" onclick="if(confirm('Đặt lại toàn bộ dữ liệu?')){localStorage.removeItem(DB_KEY);sessionStorage.removeItem('eco_session');location.reload()}">Đặt lại dữ liệu</button></div>`);
+    }
+
+    function renderPromoCodes() {
+      const list = DB.promoCodes || [];
+      const now = Date.now();
+      $("#adminMain").html(`<div class="admin-top"><h2>Mã giảm giá</h2>
+        <button class="btn-eco" onclick="editPromo()"><i class="fa-solid fa-plus"></i> Thêm mã</button></div>
+      <div class="panel"><table class="table-eco"><thead><tr><th>Mã</th><th>Giảm</th><th>Hết hạn</th><th>Đã dùng / Giới hạn</th><th>Trạng thái</th><th></th></tr></thead>
+      <tbody>${list.map(pc => {
+        const expired = pc.expiresAt <= now;
+        const full = pc.usedCount >= pc.usageLimit;
+        const status = expired ? "Hết hạn" : full ? "Hết lượt" : "Còn hiệu lực";
+        const sc = expired || full ? "err" : "";
+        return `<tr><td><strong>${escapeHtml(pc.code)}</strong></td><td>${Math.round(pc.discountRate * 100)}%</td><td>${new Date(pc.expiresAt).toLocaleDateString()}</td><td>${pc.usedCount} / ${pc.usageLimit}</td><td><span class="tag ${sc}">${status}</span></td>
+        <td class="row-actions"><button onclick="editPromo('${pc.code}')"><i class="fa-solid fa-pen"></i></button><button onclick="confirmDeletePromo('${pc.code}')"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+      }).join("") || '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:30px">Chưa có mã giảm giá nào.</td></tr>'}</tbody></table></div>`);
+    }
+    function editPromo(code) {
+      const pc = code ? (DB.promoCodes || []).find(p => p.code === code) : null;
+      const d = pc || { code: "", discountRate: 10, expiresAt: Date.now() + 86400000 * 30, usageLimit: 100, usedCount: 0 };
+      $("#genericBody").html(`<h4 style="font-weight:800">${pc ? "Sửa" : "Thêm"} mã giảm giá</h4>
+      <div class="input-eco" style="margin-top:10px"><input id="pm_code" value="${escapeHtml(d.code)}" placeholder=" "><label>Mã giảm giá</label></div>
+      <div class="input-eco"><input id="pm_rate" type="number" step="1" value="${Math.round(d.discountRate * 100)}" placeholder=" "><label>% giảm (0-100)</label></div>
+      <div class="input-eco"><input id="pm_limit" type="number" value="${d.usageLimit}" placeholder=" "><label>Giới hạn lượt dùng</label></div>
+      <div class="input-eco"><input id="pm_expires" type="date" value="${new Date(d.expiresAt).toISOString().split("T")[0]}" placeholder=" "><label>Ngày hết hạn</label></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px"><button class="btn-ghost" onclick="closeModal('genericModal')">Hủy</button><button class="btn-eco" onclick="savePromo('${escapeHtml(code || "")}')">Lưu</button></div>`);
+      openModal("genericModal");
+    }
+    function savePromo(code) {
+      const codeVal = $("#pm_code").val().trim().toUpperCase();
+      if (!codeVal) return toast("Nhập mã giảm giá", "error");
+      const rate = parseInt($("#pm_rate").val()) || 0;
+      if (rate <= 0 || rate > 100) return toast("% giảm từ 1-100", "error");
+      const limit = parseInt($("#pm_limit").val()) || 0;
+      if (limit <= 0) return toast("Giới hạn lượt dùng phải > 0", "error");
+      const expires = new Date($("#pm_expires").val());
+      if (isNaN(expires.getTime())) return toast("Chọn ngày hết hạn", "error");
+      const data = { code: codeVal, discountRate: rate / 100, expiresAt: expires.getTime(), usageLimit: limit, usedCount: 0 };
+      if (code) {
+        const idx = (DB.promoCodes || []).findIndex(p => p.code === code);
+        if (idx > -1) { data.usedCount = DB.promoCodes[idx].usedCount; DB.promoCodes[idx] = { ...DB.promoCodes[idx], ...data }; }
+      } else {
+        if (!DB.promoCodes) DB.promoCodes = [];
+        if (DB.promoCodes.find(p => p.code === codeVal)) return toast("Mã đã tồn tại", "error");
+        DB.promoCodes.push(data);
+      }
+      saveDB(); closeModal("genericModal"); toast("Đã lưu mã giảm giá", "success"); renderPromoCodes();
+    }
+    function confirmDeletePromo(code) {
+      $("#genericBody").html(`<h4 style="font-weight:800">Xóa mã giảm giá</h4><p>Xóa mã <strong>${escapeHtml(code)}</strong>?</p><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px"><button class="btn-ghost" onclick="closeModal('genericModal')">Hủy</button><button class="btn-eco" style="background:#dc2626" onclick="DB.promoCodes = DB.promoCodes.filter(p => p.code !== '${escapeHtml(code)}');saveDB();closeModal('genericModal');toast('Đã xóa','warn');renderPromoCodes()">Xóa</button></div>`);
+      openModal("genericModal");
+    }
+    function renderListings() {
+      const filter = $("#listingFilter").val() || "all";
+      let list = DB.listings.slice().sort((a, b) => b.createdAt - a.createdAt);
+      if (filter !== "all") list = list.filter(l => l.status === filter);
+      const pendingCount = DB.listings.filter(l => l.status === "pending").length;
+      $("#pendingListingsBadge").text(pendingCount);
+      const userMap = {};
+      DB.users.forEach(u => userMap[u.id] = u);
+      const statusLabel = { pending: '<span class="tag warn">Chờ duyệt</span>', approved: '<span class="tag">Đã duyệt</span>', rejected: '<span class="tag err">Từ chối</span>', sold: '<span class="tag info">Đã bán</span>' };
+      $("#adminMain").html(`
+        <div class="admin-top"><h2>Sản phẩm ký gửi <span class="tag warn" style="font-size:.85rem">${pendingCount} chờ duyệt</span></h2>
+          <select class="form-select-eco" id="listingFilter" onchange="renderListings()">
+            <option value="all">Tất cả (${DB.listings.length})</option>
+            <option value="pending">Chờ duyệt (${pendingCount})</option>
+            <option value="approved">Đã duyệt</option>
+            <option value="rejected">Từ chối</option>
+            <option value="sold">Đã bán</option>
+          </select>
+        </div>
+        <div class="panel"><table class="table-eco"><thead><tr><th>Người gửi</th><th>Sản phẩm</th><th>Danh mục</th><th>Tình trạng</th><th>Giá</th><th>Trạng thái</th><th>Ngày gửi</th><th></th></tr></thead>
+        <tbody>${list.length ? list.map(l => {
+          const u = userMap[l.userId] || {};
+          const cat = getItem("categories", l.category);
+          return `<tr>
+            <td><strong>${escapeHtml(u.fullName || u.username || "—")}</strong></td>
+            <td>${escapeHtml(l.title)}</td>
+            <td>${cat?.name || "—"}</td>
+            <td>${l.condition === "new" ? "Mới" : l.condition === "like_new" ? "Như mới" : "Đã qua sử dụng"}</td>
+            <td>${money(l.price)}</td>
+            <td>${statusLabel[l.status] || ""}</td>
+            <td>${new Date(l.createdAt).toLocaleDateString()}</td>
+            <td class="row-actions" style="white-space:nowrap">
+              ${l.status === "pending" ? `<button onclick="approveListing('${l.id}')" style="color:var(--primary)" title="Duyệt"><i class="fa-solid fa-check"></i></button><button onclick="rejectListing('${l.id}')" style="color:#dc2626" title="Từ chối"><i class="fa-solid fa-xmark"></i></button>` : ""}
+              ${l.adminNote ? `<button onclick="toast('Lý do: ${escapeHtml(l.adminNote)}','info',5000)" title="Xem ghi chú"><i class="fa-solid fa-note-sticky"></i></button>` : ""}
+            </td></tr>`;
+        }).join("") : '<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:30px">Chưa có sản phẩm ký gửi nào.</td></tr>'}</tbody></table></div>`);
+      // set filter select value
+      $("#listingFilter").val(filter);
+    }
+
+    function approveListing(id) {
+      updateItem("listings", id, { status: "approved" });
+      toast("Đã duyệt sản phẩm", "success");
+      renderListings();
+    }
+
+    function rejectListing(id) {
+      const l = getItem("listings", id);
+      if (!l) return;
+      $("#genericBody").html(`<h4 style="font-weight:800">Từ chối sản phẩm</h4>
+        <p style="color:var(--muted);margin:8px 0">Sản phẩm: <strong>${escapeHtml(l.title)}</strong></p>
+        <div class="input-eco" style="margin-top:10px"><input id="rejectReason" placeholder=" "><label>Lý do từ chối</label></div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px"><button class="btn-ghost" onclick="closeModal('genericModal')">Hủy</button><button class="btn-eco" style="background:#dc2626" onclick="execRejectListing('${id}')">Xác nhận từ chối</button></div>`);
+      openModal("genericModal");
+    }
+
+    function execRejectListing(id) {
+      const reason = $("#rejectReason").val().trim();
+      if (!reason) return toast("Vui lòng nhập lý do từ chối", "error");
+      updateItem("listings", id, { status: "rejected", adminNote: reason });
+      closeModal("genericModal");
+      toast("Đã từ chối sản phẩm", "warn");
+      renderListings();
+    }
+
+
+
+    let serverWithdrawals = [];
+    var wdTab = 'pending';
+    var wdPollTimer = null;
+
+    function switchWdTab(tab) {
+      wdTab = tab;
+      renderWithdrawals();
+    }
+
+    function startWdPoll() {
+      if (wdPollTimer) clearInterval(wdPollTimer);
+      wdPollTimer = setInterval(function() {
+        var raw = localStorage.getItem('eco_pending_withdrawals') || '[]';
+        var serverRaw = localStorage.getItem('eco_server_withdrawals');
+        if (serverRaw) { try { serverWithdrawals = JSON.parse(serverRaw); } catch(e) {} }
+        $.ajax({
+          url: '/api/withdrawals',
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            if (data && data.length) {
+              serverWithdrawals = data;
+              try { localStorage.setItem('eco_server_withdrawals', JSON.stringify(data)); } catch(e) {}
+            }
+          },
+          error: function() {}
+        });
+        renderWithdrawals();
+      }, 5000);
+    }
+
+    function stopWdPoll() {
+      if (wdPollTimer) { clearInterval(wdPollTimer); wdPollTimer = null; }
+    }
+
+    function renderWithdrawals() {
+      const methodLabels = { bank: 'Ngân hàng nội địa', ewallet: 'Ví điện tử' };
+      const statusLabels = { 'Chờ duyệt': '<span class="tag warn">Chờ duyệt</span>', 'Đã duyệt': '<span class="tag" style="background:#dbeafe;color:#2563eb">Đã duyệt - Chờ thanh toán</span>', 'Đã thanh toán': '<span class="tag" style="background:#dcfce7;color:#16a34a">Đã thanh toán</span>', 'Từ chối': '<span class="tag err">Từ chối</span>' };
+      const allRequests = [];
+
+      serverWithdrawals.forEach(w => allRequests.push({ source: 'server', ...w }));
+      const localRaw = localStorage.getItem('eco_pending_withdrawals') || '[]';
+      let localWd = [];
+      try { localWd = JSON.parse(localRaw); } catch(e) {}
+      localWd.forEach(w => {
+        if (!allRequests.find(r => r.id === w.id)) allRequests.push({ source: 'local', ...w });
+      });
+
+      allRequests.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      const pendingCount = allRequests.filter(r => r.status === 'Chờ duyệt').length;
+      const payCount = allRequests.filter(r => r.status === 'Đã duyệt').length;
+      const totalActive = pendingCount + payCount;
+      $("#pendingWdBadge").text(totalActive);
+
+      var filtered = [];
+      if (wdTab === 'pending') filtered = allRequests.filter(function(w) { return w.status === 'Chờ duyệt'; });
+      else if (wdTab === 'payment') filtered = allRequests.filter(function(w) { return w.status === 'Đã duyệt'; });
+      else filtered = allRequests.filter(function(w) { return w.status === 'Đã thanh toán' || w.status === 'Từ chối'; });
+
+      const detailHtml = (w) => {
+        if (w.method === 'bank') {
+          const d = w.accountDetails || {};
+          return 'NH: ' + escapeHtml(d.bankName || '') + ' STK: ' + escapeHtml(d.accountNumber || '') + ' TK: ' + escapeHtml(d.accountHolder || '');
+        } else if (w.method === 'ewallet') {
+          const d = w.accountDetails || {};
+          return 'V\u00ed: ' + escapeHtml(d.ewalletName || '') + ' SDT: ' + escapeHtml(d.phone || '') + ' TK: ' + escapeHtml(d.accountHolder || '');
+        }
+        return '';
+      };
+
+      $("#adminMain").html(
+        '<div class="admin-top">' +
+          '<h2><i class="fa-solid fa-money-bill-transfer" style="color:var(--primary)"></i> Qu\u1ea3n l\u00fd l\u1ec7nh r\u00fat ti\u1ec1n ch\u1ee3</h2>' +
+          '<div style="display:flex;gap:8px;align-items:center">' +
+            '<span style="color:var(--muted);font-size:.9rem">' + allRequests.length + ' y\u00eau c\u1ea7u</span>' +
+            '<button class="btn-ghost" onclick="renderWithdrawals()" style="font-size:.85rem;padding:9px 14px"><i class="fa-solid fa-rotate"></i> L\u00e0m m\u1edbi</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="wd-tabs" style="display:flex;gap:0;margin-bottom:16px;background:var(--bg);border-radius:12px;padding:3px;border:1px solid var(--border)">' +
+          '<div class="wd-tab' + (wdTab === 'pending' ? ' active' : '') + '" onclick="switchWdTab(\'pending\')" style="flex:1;padding:9px 16px;text-align:center;font-weight:700;font-size:.82rem;border-radius:10px;cursor:pointer;transition:all .2s;' + (wdTab === 'pending' ? 'background:var(--card);color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.05)' : 'color:var(--muted)') + '">' +
+            '<i class="fa-solid fa-clock"></i> Ch\u1edd duy\u1ec7t ' + (pendingCount ? '<span style="display:inline-block;background:#f59e0b;color:#fff;font-size:.7rem;padding:1px 8px;border-radius:10px;margin-left:4px">' + pendingCount + '</span>' : '') +
+          '</div>' +
+          '<div class="wd-tab' + (wdTab === 'payment' ? ' active' : '') + '" onclick="switchWdTab(\'payment\')" style="flex:1;padding:9px 16px;text-align:center;font-weight:700;font-size:.82rem;border-radius:10px;cursor:pointer;transition:all .2s;' + (wdTab === 'payment' ? 'background:var(--card);color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.05)' : 'color:var(--muted)') + '">' +
+            '<i class="fa-solid fa-coins"></i> Ch\u1edd thanh to\u00e1n ' + (payCount ? '<span style="display:inline-block;background:#2563eb;color:#fff;font-size:.7rem;padding:1px 8px;border-radius:10px;margin-left:4px">' + payCount + '</span>' : '') +
+          '</div>' +
+          '<div class="wd-tab' + (wdTab === 'history' ? ' active' : '') + '" onclick="switchWdTab(\'history\')" style="flex:1;padding:9px 16px;text-align:center;font-weight:700;font-size:.82rem;border-radius:10px;cursor:pointer;transition:all .2s;' + (wdTab === 'history' ? 'background:var(--card);color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.05)' : 'color:var(--muted)') + '">' +
+            '<i class="fa-solid fa-list"></i> L\u1ecbch s\u1eed' +
+          '</div>' +
+        '</div>' +
+        '<div class="panel" style="overflow-x:auto">' +
+          '<table class="table-eco" style="min-width:1100px">' +
+            '<thead><tr>' +
+              '<th>M\u00e3 y\u00eau c\u1ea7u</th>' +
+              '<th>Ng\u01b0\u1eddi r\u00fat</th>' +
+              '<th>S\u1ed1 ti\u1ec1n</th>' +
+              '<th>Ph\u01b0\u01a1ng th\u1ee9c</th>' +
+              '<th>Chi ti\u1ebft t\u00e0i kho\u1ea3n</th>' +
+              '<th>Th\u1eddi gian</th>' +
+              '<th>Tr\u1ea1ng th\u00e1i</th>' +
+              '<th></th>' +
+            '</tr></thead>' +
+            '<tbody>' +
+              (filtered.length ? filtered.map(function(w) { return (
+                '<tr>' +
+                  '<td><strong>' + escapeHtml(w.id) + '</strong></td>' +
+                  '<td>' + escapeHtml(w.userName || '\u2014') + '</td>' +
+                  '<td><strong>' + money(w.amount) + '</strong></td>' +
+                  '<td><span class="tag">' + (methodLabels[w.method] || w.method) + '</span></td>' +
+                  '<td style="font-size:.82rem;max-width:220px;word-break:break-all">' + detailHtml(w) + '</td>' +
+                  '<td style="font-size:.82rem;color:var(--muted)">' + (w.createdAt ? new Date(w.createdAt).toLocaleString('vi-VN') : '\u2014') + '</td>' +
+                  '<td>' + (statusLabels[w.status] || '<span class="tag">' + w.status + '</span>') + '</td>' +
+                  '<td class="row-actions" style="white-space:nowrap">' +
+                    (w.status === 'Ch\u1edd duy\u1ec7t' ?
+                      '<button onclick="approveWithdrawal(\'' + w.id + '\',\'' + w.source + '\')" style="color:var(--primary)" title="Ph\u00ea duy\u1ec7t"><i class="fa-solid fa-check"></i> Duy\u1ec7t</button>' +
+                      '<button onclick="rejectWithdrawal(\'' + w.id + '\',\'' + w.source + '\')" style="color:#dc2626" title="T\u1eeb ch\u1ed1i"><i class="fa-solid fa-xmark"></i> T\u1eeb ch\u1ed1i</button>'
+                    : w.status === '\u0110\u00e3 duy\u1ec7t' ?
+                      '<button onclick="processPayment(\'' + w.id + '\',\'' + w.source + '\')" style="color:#16a34a" title="Thanh to\u00e1n"><i class="fa-solid fa-coins"></i> Thanh to\u00e1n</button>' +
+                      '<button onclick="rejectWithdrawal(\'' + w.id + '\',\'' + w.source + '\')" style="color:#dc2626" title="T\u1eeb ch\u1ed1i"><i class="fa-solid fa-xmark"></i> T\u1eeb ch\u1ed1i</button>'
+                    : '') +
+                  '</td>' +
+                '</tr>'
+              );}).join('') : '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">' +
+                (wdTab === 'pending' ? 'Kh\u00f4ng c\u00f3 y\u00eau c\u1ea7u ch\u1edd duy\u1ec7t.' :
+                wdTab === 'payment' ? 'Kh\u00f4ng c\u00f3 y\u00eau c\u1ea7u ch\u1edd thanh to\u00e1n.' :
+                'Ch\u01b0a c\u00f3 l\u1ecbch s\u1eed r\u00fat ti\u1ec1n.') +
+              '</td></tr>') +
+            '</tbody>' +
+          '</table>' +
+        '</div>'
+      );
+    }
+
+    function updateLocalWithdrawal(id, updates) {
+      const raw = localStorage.getItem('eco_pending_withdrawals') || '[]';
+      let list = JSON.parse(raw);
+      const idx = list.findIndex(w => w.id === id);
+      if (idx > -1) { Object.assign(list[idx], updates); localStorage.setItem('eco_pending_withdrawals', JSON.stringify(list)); }
+      return list[idx];
+    }
+
+    function approveWithdrawal(id, source) {
+      var req = updateLocalWithdrawal(id, { status: 'Đã duyệt' });
+      if (req) {
+        var dbKey = 'ecoshop_db_v1';
+        var dbRaw = localStorage.getItem(dbKey);
+        if (dbRaw) {
+          try {
+            var DB = JSON.parse(dbRaw);
+            if (!DB.notifications) DB.notifications = {};
+            if (!DB.notifications[req.userId]) DB.notifications[req.userId] = [];
+            DB.notifications[req.userId].push({
+              id: 'NOTIF-' + Date.now() + Math.floor(Math.random() * 1000),
+              type: 'withdrawal_approved',
+              title: 'Yêu cầu rút tiền đã được duyệt',
+              body: 'Yêu cầu rút ' + money(req.amount) + ' đã được admin phê duyệt và đang chờ thanh toán.',
+              requestId: req.id,
+              amount: req.amount,
+              createdAt: Date.now(),
+              read: false
+            });
+            localStorage.setItem(dbKey, JSON.stringify(DB));
+          } catch(e) {}
+        }
+      }
+      if (source === 'server') {
+        $.ajax({
+          url: '/api/withdrawals/status',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ id, status: 'Đã duyệt' }),
+          error: function() { console.warn('Lỗi đồng bộ server'); }
+        });
+      }
+      toast('Đã phê duyệt, chuyển sang mục thanh toán', 'success');
+      wdTab = 'payment';
+      renderWithdrawals();
+      try { if (Notification.permission === 'granted') new Notification('EcoShop - Phê duyệt rút tiền', { body: 'Yêu cầu ' + id + ' đã được duyệt, chờ thanh toán.', icon: 'https://cdn-icons-png.flaticon.com/128/1828/1828640.png' }); } catch(e) {}
+    }
+
+    function deductWallet(wd) {
+      const dbKey = 'ecoshop_db_v1';
+      const dbRaw = localStorage.getItem(dbKey);
+      if (!dbRaw) return;
+      try {
+        const DB = JSON.parse(dbRaw);
+        if (!DB.wallets) DB.wallets = {};
+        if (!DB.wallets[wd.userId]) DB.wallets[wd.userId] = { balance: 0, transactions: [] };
+        const wallet = DB.wallets[wd.userId];
+        wallet.balance = (wallet.balance || 0) - wd.amount;
+        if (!wallet.transactions) wallet.transactions = [];
+        wallet.transactions.push({
+          id: 'TXN-' + Date.now() + Math.floor(Math.random() * 1000),
+          type: 'withdrawal',
+          amount: -wd.amount,
+          method: wd.method,
+          note: 'Rút tiền - ' + wd.id + (wd.fee ? ' (Phí: $' + Number(wd.fee).toFixed(2) + ')' : ''),
+          createdAt: Date.now()
+        });
+        localStorage.setItem(dbKey, JSON.stringify(DB));
+      } catch(e) { console.warn('Lỗi trừ tiền ví:', e); }
+    }
+
+    function processPayment(id, source) {
+      if (!confirm('Xác nhận đã chuyển tiền cho yêu cầu này?')) return;
+      const wd = updateLocalWithdrawal(id, { status: 'Đã thanh toán' });
+      if (wd) {
+        deductWallet(wd);
+        var dbKey = 'ecoshop_db_v1';
+        var dbRaw = localStorage.getItem(dbKey);
+        if (dbRaw) {
+          try {
+            var DB = JSON.parse(dbRaw);
+            if (!DB.notifications) DB.notifications = {};
+            if (!DB.notifications[wd.userId]) DB.notifications[wd.userId] = [];
+            DB.notifications[wd.userId].push({
+              id: 'NOTIF-' + Date.now() + Math.floor(Math.random() * 1000),
+              type: 'withdrawal_paid',
+              title: 'Yêu cầu rút tiền đã được thanh toán',
+              body: 'Yêu cầu rút ' + money(wd.amount) + ' đã được admin thanh toán thành công.',
+              requestId: wd.id,
+              amount: wd.amount,
+              createdAt: Date.now(),
+              read: false
+            });
+            localStorage.setItem(dbKey, JSON.stringify(DB));
+          } catch(e) {}
+        }
+      }
+      if (source === 'server') {
+        $.ajax({
+          url: '/api/withdrawals/status',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ id, status: 'Đã thanh toán' }),
+          error: function() { console.warn('Lỗi đồng bộ server'); }
+        });
+      }
+      toast('Đã thanh toán thành công', 'success');
+      renderWithdrawals();
+      try { if (Notification.permission === 'granted') new Notification('EcoShop - Thanh toán rút tiền', { body: 'Đã thanh toán ' + id + ' thành công.', icon: 'https://cdn-icons-png.flaticon.com/128/1828/1828640.png' }); } catch(e) {}
+    }
+
+    function rejectWithdrawal(id, source) {
+      const refundDelay = 30000 + Math.floor(Math.random() * 30000);
+      const refundData = { status: 'Từ chối', rejectedAt: Date.now(), refundDelay: refundDelay, refundStatus: 'pending' };
+      var req = updateLocalWithdrawal(id, refundData);
+      if (req) {
+        var dbKey = 'ecoshop_db_v1';
+        var dbRaw = localStorage.getItem(dbKey);
+        if (dbRaw) {
+          try {
+            var DB = JSON.parse(dbRaw);
+            if (!DB.notifications) DB.notifications = {};
+            if (!DB.notifications[req.userId]) DB.notifications[req.userId] = [];
+            DB.notifications[req.userId].push({
+              id: 'NOTIF-' + Date.now() + Math.floor(Math.random() * 1000),
+              type: 'withdrawal_rejected',
+              title: 'Yêu cầu rút tiền bị từ chối',
+              body: 'Yêu cầu rút ' + money(req.amount) + ' đã bị admin từ chối. Tiền sẽ tự động hoàn lại trong 30-60 giây.',
+              requestId: req.id,
+              amount: req.amount,
+              createdAt: Date.now(),
+              read: false
+            });
+            localStorage.setItem(dbKey, JSON.stringify(DB));
+          } catch(e) {}
+        }
+      }
+      if (source === 'server') {
+        $.ajax({
+          url: '/api/withdrawals/status',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ id, status: 'Từ chối' }),
+          error: function() { console.warn('Lỗi đồng bộ server'); }
+        });
+      }
+      toast('Đã từ chối - Tiền sẽ tự động hoàn lại trong 30-60 giây', 'warn');
+      renderWithdrawals();
+      try { if (Notification.permission === 'granted') new Notification('EcoShop - Từ chối rút tiền', { body: 'Yêu cầu ' + id + ' đã bị từ chối.', icon: 'https://cdn-icons-png.flaticon.com/128/1828/1828640.png' }); } catch(e) {}
+    }
+
+    function renderTickets() {
+      $("#adminMain").html(`<div class="admin-top"><h2>Phiếu hỗ trợ</h2></div>
+    <div class="panel"><table class="table-eco"><thead><tr><th>Mã phiếu</th><th>Họ tên</th><th>Liên hệ</th><th>Tiêu đề</th><th>Mức độ</th><th>Trạng thái</th><th>Ngày gửi</th><th></th></tr></thead>
+    <tbody id="ticketsBody"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">Đang tải...</td></tr></tbody></table></div>`);
+      loadTickets();
+    }
+
+    function loadTickets() {
+      $.ajax({
+        url: '/api/tickets',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          const labels = { pending: 'Chưa xử lý', processing: 'Đang xử lý', done: 'Đã hoàn thành' };
+          const colors = { pending: 'warn', processing: 'info', done: '' };
+          const urgencyLabels = { low: 'Thấp', medium: 'Trung bình', high: 'Cao' };
+          const urgencyColors = { low: '', medium: 'warn', high: 'err' };
+          const pendingCount = data.filter(t => t.status === 'pending').length;
+          $("#pendingTicketsBadge").text(pendingCount);
+          if (data && data.length) {
+            const rows = data.slice().reverse().map(t => {
+              const d = new Date(t.createdAt);
+              const dateStr = d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN');
+              return `<tr>
+                <td><strong>${escapeHtml(t.id)}</strong></td>
+                <td>${escapeHtml(t.fullName)}</td>
+                <td>${escapeHtml(t.contact)}</td>
+                <td>${escapeHtml(t.title)}</td>
+                <td><span class="tag ${urgencyColors[t.urgency] || ''}">${urgencyLabels[t.urgency] || t.urgency}</span></td>
+                <td><select class="form-select-eco" onchange="updateTicketStatus('${t.id}',this.value)">${['pending','processing','done'].map(s => `<option value="${s}" ${t.status === s ? 'selected' : ''}>${labels[s]}</option>`).join('')}</select></td>
+                <td>${dateStr}</td>
+                <td class="row-actions"><button onclick="viewTicket('${t.id}')" style="color:var(--primary)" title="Xem chi tiết"><i class="fa-solid fa-eye"></i></button></td>
+              </tr>`;
+            }).join('');
+            $('#ticketsBody').html(rows);
+          } else {
+            $('#ticketsBody').html('<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:30px">Chưa có phiếu hỗ trợ nào.</td></tr>');
+          }
+        },
+        error: function () {
+          $('#ticketsBody').html('<tr><td colspan="8" style="text-align:center;color:#dc2626;padding:20px">Không thể kết nối server.</td></tr>');
+        }
+      });
+    }
+
+    function updateTicketStatus(id, status) {
+      $.ajax({
+        url: '/api/tickets/status',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ id, status }),
+        success: function () { toast('Đã cập nhật trạng thái phiếu', 'success'); loadTickets(); },
+        error: function () { toast('Lỗi cập nhật', 'error'); }
+      });
+    }
+
+    function viewTicket(id) {
+      $.ajax({
+        url: '/api/tickets',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          const t = data.find(x => x.id === id);
+          if (!t) return toast('Không tìm thấy phiếu', 'error');
+          const d = new Date(t.createdAt);
+          const labels = { pending: 'Chưa xử lý', processing: 'Đang xử lý', done: 'Đã hoàn thành' };
+          const urgencyLabels = { low: 'Thấp', medium: 'Trung bình', high: 'Cao' };
+          const filesHtml = (t.files && t.files.length)
+            ? t.files.map(f => {
+                const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(f.fileName);
+                return isImg
+                  ? `<a href="${f.path}" target="_blank" style="display:inline-block;width:80px;height:80px;border-radius:10px;overflow:hidden;border:1px solid var(--border)"><img src="${f.path}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'"></a>`
+                  : `<a href="${f.path}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;border:1px solid var(--border);background:var(--soft);color:var(--text);text-decoration:none;font-size:.85rem"><i class="fa-solid fa-video"></i> ${escapeHtml(f.originalName || f.fileName)}</a>`;
+              }).join('')
+            : '<span style="color:var(--muted)">Không có file đính kèm</span>';
+          $("#genericBody").html(`<h4 style="font-weight:800">Chi tiết phiếu hỗ trợ</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;font-size:.95rem">
+              <div><strong>Mã phiếu:</strong><br>${escapeHtml(t.id)}</div>
+              <div><strong>Trạng thái:</strong><br>${labels[t.status] || t.status}</div>
+              <div><strong>Họ tên:</strong><br>${escapeHtml(t.fullName)}</div>
+              <div><strong>Liên hệ:</strong><br>${escapeHtml(t.contact)}</div>
+              <div><strong>Tiêu đề:</strong><br>${escapeHtml(t.title)}</div>
+              <div><strong>Mức độ:</strong><br>${urgencyLabels[t.urgency] || t.urgency}</div>
+              <div style="grid-column:1/-1"><strong>Nội dung:</strong><br>${escapeHtml(t.content)}</div>
+              <div style="grid-column:1/-1"><strong>File đính kèm:</strong><br><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">${filesHtml}</div></div>
+              <div style="grid-column:1/-1"><strong>Ngày gửi:</strong><br>${d.toLocaleString('vi-VN')}</div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+              <button class="btn-ghost" onclick="closeModal('genericModal')">Đóng</button>
+            </div>`);
+          openModal("genericModal");
+        },
+        error: function () { toast('Không thể kết nối server', 'error'); }
+      });
+    }
+
+    let chatPollTimer = null;
+
+    function renderChat() {
+      $("#adminMain").html(`<div class="admin-top"><h2>Hộp thư trực tiếp</h2></div>
+    <div class="panel" id="chatConversationsList"><div style="text-align:center;color:var(--muted);padding:20px">Đang tải...</div></div>
+    <div id="chatDetailPanel" style="display:none">
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <h5 style="font-weight:800;margin:0" id="chatDetailTitle">Hội thoại</h5>
+          <button class="btn-ghost" onclick="closeChatDetail()" style="font-size:.85rem">← Quay lại</button>
+        </div>
+        <div id="chatDetailMessages" style="height:400px;overflow-y:auto;background:var(--bg);border-radius:12px;padding:14px;border:1px solid var(--border)"></div>
+        <div id="chatTemplates" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+          <span style="font-size:.75rem;color:var(--muted);align-self:center">Mẫu:</span>
+          <span class="chat-template" onclick="useTemplate(this)">Xin chào, tôi có thể giúp gì cho bạn?</span>
+          <span class="chat-template" onclick="useTemplate(this)">Cảm ơn bạn đã liên hệ! Chúng tôi sẽ xử lý ngay.</span>
+          <span class="chat-template" onclick="useTemplate(this)">Vui lòng cung cấp thêm thông tin về đơn hàng.</span>
+          <span class="chat-template" onclick="useTemplate(this)">Chúng tôi đã ghi nhận yêu cầu và sẽ phản hồi sớm.</span>
+          <span class="chat-template" onclick="useTemplate(this)">Rất tiếc về sự bất tiện này. Chúng tôi sẽ khắc phục ngay.</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="chatAdminInput" type="text" placeholder="Nhập tin nhắn trả lời..." style="flex:1;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);outline:none;font-size:.9rem" onkeydown="if(event.key==='Enter') sendAdminReply()">
+          <button onclick="sendAdminReply()" style="padding:10px 18px;border-radius:12px;background:var(--grad);color:#fff;border:none;cursor:pointer;font-weight:700">Gửi</button>
+        </div>
+      </div>
+    </div>`);
+      loadConversations();
+      startChatPoll();
+    }
+
+    let seenConversations = {};
+
+    function loadConversations() {
+      $.ajax({
+        url: '/api/chat/conversations',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          let newCount = 0;
+          const waitingCount = data.filter(c => c.status === 'waiting_admin').length;
+          data.forEach(c => {
+            const msgCount = c.messageCount || 0;
+            if (!seenConversations[c.id]) {
+              seenConversations[c.id] = msgCount;
+              if (c.status === 'waiting_admin') newCount++;
+            } else if (msgCount > seenConversations[c.id]) {
+              if (c.status === 'waiting_admin') newCount += msgCount - seenConversations[c.id];
+              seenConversations[c.id] = msgCount;
+            }
+          });
+          const badgeCount = waitingCount || newCount || data.length;
+          $("#chatBadge").text(badgeCount).toggle(badgeCount > 0);
+          if (data.length) {
+            const statusLabel = { active: 'Mới', bot_replied: 'Đã trả lời', waiting_admin: 'Chờ CSKH', closed: 'Đã đóng' };
+            const statusColor = { active: '#2563eb', bot_replied: '#f59e0b', waiting_admin: '#dc2626', closed: '#6b7280' };
+            const html = data.map(c => {
+              const lastMsg = c.lastMessage;
+              const preview = lastMsg ? lastMsg.message.slice(0, 60) + (lastMsg.message.length > 60 ? '...' : '') : 'Chưa có tin nhắn';
+              const time = new Date(c.createdAt).toLocaleString('vi-VN');
+              const st = c.status || 'active';
+              const isNew = seenConversations[c.id] === (c.messageCount || 0) && !window._chatOpenedConv;
+              const highlight = (st === 'waiting_admin' || isNew) ? 'border-left:4px solid var(--primary);' : '';
+              return `<div class="panel" style="cursor:pointer;padding:14px;margin-bottom:8px;${highlight}" onclick="openConversation('${c.id}')">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div><strong>${escapeHtml(c.userName || 'Khách')}</strong> <small style="color:var(--muted)">(${escapeHtml(c.userEmail || '—')})</small></div>
+                  <small><span style="background:${statusColor[st]};color:#fff;font-size:.65rem;padding:2px 8px;border-radius:8px;font-weight:700">${statusLabel[st] || st}</span> · ${time}</small>
+                </div>
+                <div style="color:var(--muted);font-size:.85rem;margin-top:4px">${escapeHtml(preview)}</div>
+                <div style="font-size:.78rem;color:var(--primary);margin-top:4px">${c.messageCount || 0} tin nhắn</div>
+              </div>`;
+            }).join('');
+            $('#chatConversationsList').html(html);
+          } else {
+            $('#chatConversationsList').html('<div class="panel" style="text-align:center;padding:40px;color:var(--muted)">Chưa có cuộc trò chuyện nào.</div>');
+          }
+        },
+        error: function () {
+          $('#chatConversationsList').html('<div class="panel" style="text-align:center;padding:20px;color:#dc2626">Không thể kết nối server.</div>');
+        }
+      });
+    }
+
+    let currentConvId = null;
+
+    function openConversation(convId) {
+      currentConvId = convId;
+      $("#chatConversationsList").hide();
+      $("#chatDetailPanel").show();
+      $("#chatDetailTitle").text('Hội thoại: ' + convId);
+      loadMessages(convId);
+    }
+
+    function closeChatDetail() {
+      currentConvId = null;
+      $("#chatDetailPanel").hide();
+      $("#chatConversationsList").show();
+    }
+
+    function loadMessages(convId) {
+      $.ajax({
+        url: '/api/chat/messages?convId=' + encodeURIComponent(convId),
+        method: 'GET',
+        dataType: 'json',
+        success: function (msgs) {
+          const filtered = msgs.filter(m => !m.message.startsWith('__'));
+          if (filtered.length) {
+            const html = filtered.map(m => {
+              const time = new Date(m.createdAt).toLocaleTimeString('vi-VN');
+              const side = m.sender === 'admin' ? 'admin' : (m.sender === 'bot' ? 'bot' : 'user');
+              const align = side === 'admin' || side === 'bot' ? 'flex-start' : 'flex-end';
+              const bg = side === 'admin' ? 'var(--card)' : side === 'bot' ? 'var(--soft)' : 'var(--grad)';
+              const color = side === 'user' ? '#fff' : 'var(--text)';
+              const borderStyle = side === 'admin' ? 'border:1px solid var(--border)' : (side === 'bot' ? 'border:1px solid var(--glow);font-style:italic' : '');
+              return `<div style="display:flex;flex-direction:column;align-items:${align};margin-bottom:10px">
+                <div style="max-width:80%;padding:10px 14px;border-radius:16px;font-size:.88rem;background:${bg};color:${color};${borderStyle};border-bottom-${align === 'flex-start' ? 'left' : 'right'}-radius:4px;word-break:break-word">${escapeHtml(m.message)}</div>
+                <div style="font-size:.68rem;color:var(--muted);margin-top:2px;padding:0 4px">${escapeHtml(m.userName || (side === 'admin' ? 'Admin' : side === 'bot' ? 'EcoBot' : 'Khách'))} · ${time}</div>
+              </div>`;
+            }).join('');
+            $('#chatDetailMessages').html(html);
+            $('#chatDetailMessages').scrollTop($('#chatDetailMessages')[0].scrollHeight);
+          } else {
+            $('#chatDetailMessages').html('<div style="text-align:center;color:var(--muted);padding:30px">Chưa có tin nhắn.</div>');
+          }
+        },
+        error: function () { toast('Lỗi tải tin nhắn', 'error'); }
+      });
+    }
+
+    function useTemplate(el) {
+      $("#chatAdminInput").val($(el).text()).focus();
+    }
+
+    function sendAdminReply() {
+      const msg = $("#chatAdminInput").val().trim();
+      if (!msg || !currentConvId) return;
+      $("#chatAdminInput").val('');
+      $.ajax({
+        url: '/api/chat/reply',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ convId: currentConvId, message: msg }),
+        success: function () { loadMessages(currentConvId); },
+        error: function () { toast('Lỗi gửi tin nhắn', 'error'); }
+      });
+    }
+
+    function renderReviews() {
+      var reviews = DB.reviews || [];
+      var productMap = {};
+      (DB.products || []).forEach(function(p) { productMap[p.id] = p; });
+      var userMap = {};
+      (DB.users || []).forEach(function(u) { userMap[u.id] = u; });
+      var pendingCount = 0;
+      var rows = reviews.map(function(r) {
+        var p = productMap[r.productId] || {};
+        var u = userMap[r.userId] || {};
+        var dateStr = new Date(r.createdAt).toLocaleDateString('vi-VN');
+        var stars = '';
+        for (var i = 0; i < 5; i++) { stars += i < r.rating ? '<i class="fa-solid fa-star" style="color:#f59e0b;font-size:.78rem"></i>' : '<i class="fa-regular fa-star" style="color:#ccc;font-size:.78rem"></i>'; }
+        return '<tr>' +
+          '<td>' + escapeHtml(r.id) + '</td>' +
+          '<td>' + escapeHtml(r.userName || u.fullName || '—') + '</td>' +
+          '<td>' + stars + '</td>' +
+          '<td>' + escapeHtml(r.suggestion || '—') + '</td>' +
+          '<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escapeHtml(r.comment || '—') + '</td>' +
+          '<td>' + escapeHtml(p.name || '—') + '</td>' +
+          '<td>' + dateStr + '</td>' +
+          '<td class="row-actions"><button onclick="viewReview(\'' + r.id + '\')" title="Xem chi tiết"><i class="fa-solid fa-eye"></i></button></td>' +
+        '</tr>';
+      }).join('');
+      if (reviews.length) pendingCount = reviews.length;
+      $("#adminMain").html('<div class="admin-top"><h2><i class="fa-solid fa-star" style="color:#f59e0b"></i> Đánh giá sản phẩm</h2></div>' +
+        '<div class="panel"><table class="table-eco"><thead><tr>' +
+        '<th>Mã đánh giá</th><th>Người dùng</th><th>Đánh giá</th><th>Gợi ý</th><th>Nhận xét</th><th>Sản phẩm</th><th>Ngày</th><th></th>' +
+        '</tr></thead><tbody>' + (rows || '<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px">Chưa có đánh giá nào.</td></tr>') + '</tbody></table></div>');
+      $("#reviewsBadge").text(pendingCount || '0');
+    }
+
+    function viewReview(id) {
+      var r = (DB.reviews || []).find(function(x) { return x.id === id; });
+      if (!r) return;
+      var productMap = {};
+      (DB.products || []).forEach(function(p) { productMap[p.id] = p; });
+      var p = productMap[r.productId] || {};
+      var stars = '';
+      for (var i = 0; i < 5; i++) { stars += i < r.rating ? '<i class="fa-solid fa-star" style="color:#f59e0b"></i>' : '<i class="fa-regular fa-star" style="color:#ccc"></i>'; }
+      var mediaHtml = '';
+      if (r.media && r.media.length) {
+        mediaHtml = '<div style="margin-top:12px"><strong>Ảnh/Video:</strong><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">' +
+          r.media.map(function(m) {
+            return m.startsWith('data:video')
+              ? '<video src="' + m + '" controls style="width:120px;height:120px;border-radius:10px;object-fit:cover;border:1px solid var(--border)"></video>'
+              : '<img src="' + m + '" style="width:120px;height:120px;border-radius:10px;object-fit:cover;border:1px solid var(--border);cursor:pointer" onclick="window.open(\'' + m + '\')">';
+          }).join('') + '</div></div>';
+      }
+      $("#genericBody").html('<div style="max-width:600px">' +
+        '<h4 style="font-weight:800;margin-bottom:14px"><i class="fa-solid fa-star" style="color:#f59e0b"></i> Chi tiết đánh giá</h4>' +
+        '<div style="display:grid;gap:8px;font-size:.92rem">' +
+        '<div><strong>Mã:</strong> ' + escapeHtml(r.id) + '</div>' +
+        '<div><strong>Người dùng:</strong> ' + escapeHtml(r.userName) + '</div>' +
+        '<div><strong>Sản phẩm:</strong> ' + escapeHtml(p.name || '—') + '</div>' +
+        '<div><strong>Đánh giá:</strong> ' + stars + '</div>' +
+        (r.suggestion ? '<div><strong>Gợi ý:</strong> "' + escapeHtml(r.suggestion) + '"</div>' : '') +
+        (r.comment ? '<div><strong>Nhận xét:</strong> ' + escapeHtml(r.comment) + '</div>' : '') +
+        '<div><strong>Ngày:</strong> ' + new Date(r.createdAt).toLocaleDateString('vi-VN') + '</div>' +
+        '</div>' + mediaHtml +
+        '<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button class="btn-ghost" onclick="closeModal(\'genericModal\')">Đóng</button></div>' +
+        '</div>');
+      openModal("genericModal");
+    }
+
+    function startChatPoll() {
+      if (chatPollTimer) clearInterval(chatPollTimer);
+      chatPollTimer = setInterval(function () {
+        if (ADMIN_TAB === 'chat') {
+          if (currentConvId) loadMessages(currentConvId);
+          loadConversations();
+        }
+      }, 5000);
+    }
+
+    function confirmDelete(coll, id) {
+      const title = VI_COL[coll] || coll;
+      $("#genericBody").html(`<h4 style="font-weight:800">Xác nhận xóa</h4><p>Hành động này không thể hoàn tác. Bạn có chắc muốn xóa ${title} này?</p><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px"><button class="btn-ghost" onclick="closeModal('genericModal')">Hủy</button><button class="btn-eco" style="background:#dc2626" onclick="deleteItem('${coll}','${id}');closeModal('genericModal');toast('Đã xóa','warn');renderAdmin()">Xóa</button></div>`);
+      openModal("genericModal");
+    }
+
+    $(function () {
+      loadDB();
+      renderPage();
+      try { if (Notification && Notification.permission !== 'denied') Notification.requestPermission(); } catch(e) {}
+      $(document).on("keydown", e => { if (e.key === "Escape") { $(".eco-modal").removeClass("show"); $("body").css("overflow", ""); } });
+      $(document).on("input", "#banCustomH", function() {
+        const v = parseInt($(this).val());
+        if (v && v > 0) {
+          window._banDuration = v;
+          const label = v >= 24 ? `${v/24} ngày` : `${v} giờ`;
+          $("#banPreview").text(`Cấm ${label} - Tự động mở khóa sau ${label}.`);
+          $("#banConfirmBtn").prop("disabled", false);
+        } else {
+          $("#banPreview").text("Nhập số giờ hợp lệ");
+          $("#banConfirmBtn").prop("disabled", true);
+        }
+      });
+      window.addEventListener("storage", e => {
+        if (e.key === DB_KEY) {
+          const raw = localStorage.getItem(DB_KEY);
+          if (!raw) return;
+          try {
+            const fd = JSON.parse(raw);
+            ["products","users","orders","categories","suppliers","certifications","settings","payments","tracking","favorites","listings","promoCodes","wallets","listingOrders","reviews","farmNotify"].forEach(k => { if (fd[k]) DB[k] = fd[k]; });
+            renderPage();
+          } catch(_) {}
+        }
+      });
+    });
+  </script>
+</body>
+</html>

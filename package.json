@@ -1,0 +1,12 @@
+{
+  "name": "eco-store",
+  "version": "1.0.0",
+  "description": "EcoStore - Website mô phỏng thương mại điện tử",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  }
+}

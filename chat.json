@@ -1,0 +1,302 @@
+{
+  "conv-1780815900941": {
+    "id": "conv-1780815900941",
+    "userName": "kophai",
+    "userEmail": "muahakhongcoem@proton.poppp",
+    "createdAt": "2026-06-07T07:05:03.502Z",
+    "messages": [
+      {
+        "id": "msg-1780815903502303",
+        "sender": "user",
+        "userName": "kophai",
+        "message": "hi",
+        "createdAt": "2026-06-07T07:05:03.503Z"
+      },
+      {
+        "id": "msg-1780815903503312",
+        "sender": "admin",
+        "userName": "EcoBot",
+        "message": "Cảm ơn bạn đã liên hệ! Bộ phận hỗ trợ sẽ phản hồi trong thời gian sớm nhất. Nếu cần gấp, vui lòng gọi hotline 1900-ECO.",
+        "createdAt": "2026-06-07T07:05:03.503Z"
+      },
+      {
+        "id": "msg-1780815922452310",
+        "sender": "admin",
+        "userName": "Admin",
+        "message": "Ecoshop xin phép được hỗ trợ ạ",
+        "createdAt": "2026-06-07T07:05:22.452Z"
+      },
+      {
+        "id": "msg-1780815964865435",
+        "sender": "user",
+        "userName": "kophai",
+        "message": "hii",
+        "createdAt": "2026-06-07T07:06:04.865Z"
+      },
+      {
+        "id": "msg-1780815964865916",
+        "sender": "admin",
+        "userName": "EcoBot",
+        "message": "Cảm ơn bạn đã liên hệ! Bộ phận hỗ trợ sẽ phản hồi trong thời gian sớm nhất. Nếu cần gấp, vui lòng gọi hotline 1900-ECO.",
+        "createdAt": "2026-06-07T07:06:04.865Z"
+      },
+      {
+        "id": "msg-1780816120826429",
+        "sender": "user",
+        "userName": "kophai",
+        "message": "chào ạ",
+        "createdAt": "2026-06-07T07:08:40.826Z"
+      },
+      {
+        "id": "msg-1780816120826301",
+        "sender": "admin",
+        "userName": "EcoBot",
+        "message": "Cảm ơn bạn đã liên hệ! Bộ phận hỗ trợ sẽ phản hồi trong thời gian sớm nhất. Nếu cần gấp, vui lòng gọi hotline 1900-ECO.",
+        "createdAt": "2026-06-07T07:08:40.826Z"
+      },
+      {
+        "id": "msg-1780816133969392",
+        "sender": "admin",
+        "userName": "Admin",
+        "message": "vâng ạ",
+        "createdAt": "2026-06-07T07:08:53.969Z"
+      }
+    ]
+  },
+  "conv-1780816235343": {
+    "id": "conv-1780816235343",
+    "userName": "kophai",
+    "userEmail": "muahakhongcoem@proton.poppp",
+    "createdAt": "2026-06-07T07:10:37.992Z",
+    "status": "bot_replied",
+    "messages": [
+      {
+        "id": "msg-1780816237992421",
+        "sender": "user",
+        "userName": "kophai",
+        "message": "hi",
+        "createdAt": "2026-06-07T07:10:37.992Z"
+      },
+      {
+        "id": "msg-1780816237992895",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__SHOW_OPTIONS__",
+        "createdAt": "2026-06-07T07:10:37.992Z"
+      },
+      {
+        "id": "msg-1780816249533495",
+        "sender": "user",
+        "userName": "kophai",
+        "message": "hi",
+        "createdAt": "2026-06-07T07:10:49.533Z"
+      }
+    ]
+  },
+  "conv-1780816507496": {
+    "id": "conv-1780816507496",
+    "userName": "kophai",
+    "userEmail": "muahakhongcoem@proton.poppp",
+    "createdAt": "2026-06-07T07:15:10.396Z",
+    "status": "waiting_admin",
+    "messages": [
+      {
+        "id": "msg-1780816510396243",
+        "sender": "user",
+        "userName": "kophai",
+        "message": "hi",
+        "createdAt": "2026-06-07T07:15:10.396Z"
+      },
+      {
+        "id": "msg-1780816510396992",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__SHOW_OPTIONS__",
+        "createdAt": "2026-06-07T07:15:10.396Z"
+      },
+      {
+        "id": "msg-1780816513649986",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__CONNECTED_ADMIN__",
+        "createdAt": "2026-06-07T07:15:13.649Z"
+      },
+      {
+        "id": "msg-1780816530158205",
+        "sender": "admin",
+        "userName": "Admin",
+        "message": "xin chào ạ",
+        "createdAt": "2026-06-07T07:15:30.158Z"
+      },
+      {
+        "id": "msg-1780816619385502",
+        "sender": "admin",
+        "userName": "Admin",
+        "message": "Xin chào, tôi có thể giúp gì cho bạn?",
+        "createdAt": "2026-06-07T07:16:59.385Z"
+      }
+    ]
+  },
+  "conv-1780820223430": {
+    "id": "conv-1780820223430",
+    "userName": "kophai",
+    "userEmail": "muahakhongcoem@proton.poppp",
+    "createdAt": "2026-06-07T08:17:14.093Z",
+    "status": "waiting_admin",
+    "messages": [
+      {
+        "id": "msg-1780820234093730",
+        "sender": "user",
+        "userName": "kophai",
+        "message": "tại sao tôi lại bị cấm?",
+        "createdAt": "2026-06-07T08:17:14.094Z"
+      },
+      {
+        "id": "msg-1780820234094249",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__SHOW_OPTIONS__",
+        "createdAt": "2026-06-07T08:17:14.094Z"
+      },
+      {
+        "id": "msg-1780820237334143",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__CONNECTED_ADMIN__",
+        "createdAt": "2026-06-07T08:17:17.334Z"
+      },
+      {
+        "id": "msg-1780820245366192",
+        "sender": "admin",
+        "userName": "Admin",
+        "message": "Xin chào, tôi có thể giúp gì cho bạn?",
+        "createdAt": "2026-06-07T08:17:25.366Z"
+      },
+      {
+        "id": "msg-1780820278360374",
+        "sender": "user",
+        "userName": "kophai",
+        "message": "tại sao tài khoản bị cấm ?",
+        "createdAt": "2026-06-07T08:17:58.360Z"
+      },
+      {
+        "id": "msg-1780820289064588",
+        "sender": "admin",
+        "userName": "Admin",
+        "message": "Rất tiếc về sự bất tiện này. Chúng tôi sẽ khắc phục ngay.",
+        "createdAt": "2026-06-07T08:18:09.064Z"
+      },
+      {
+        "id": "msg-1780820299157842",
+        "sender": "admin",
+        "userName": "Admin",
+        "message": "Tài khoản đã được mở",
+        "createdAt": "2026-06-07T08:18:19.157Z"
+      }
+    ]
+  },
+  "conv-1780883534005": {
+    "id": "conv-1780883534005",
+    "userName": "chihuahua",
+    "userEmail": "chi@a.b.c",
+    "createdAt": "2026-06-08T01:52:17.137Z",
+    "status": "bot_replied",
+    "messages": [
+      {
+        "id": "msg-1780883537137263",
+        "sender": "user",
+        "userName": "chihuahua",
+        "message": ".",
+        "createdAt": "2026-06-08T01:52:17.137Z"
+      },
+      {
+        "id": "msg-1780883537137108",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__SHOW_OPTIONS__",
+        "createdAt": "2026-06-08T01:52:17.137Z"
+      },
+      {
+        "id": "msg-17808835486627",
+        "sender": "user",
+        "userName": "chihuahua",
+        "message": "tôi gặp bạn",
+        "createdAt": "2026-06-08T01:52:28.662Z"
+      },
+      {
+        "id": "msg-1780883563714406",
+        "sender": "admin",
+        "userName": "Admin",
+        "message": "Xin chào, tôi có thể giúp gì cho bạn?",
+        "createdAt": "2026-06-08T01:52:43.714Z"
+      }
+    ]
+  },
+  "conv-1780883815842": {
+    "id": "conv-1780883815842",
+    "userName": "chihuahua",
+    "userEmail": "chi@a.b.c",
+    "createdAt": "2026-06-08T01:56:58.090Z",
+    "status": "waiting_admin",
+    "messages": [
+      {
+        "id": "msg-1780883818090823",
+        "sender": "user",
+        "userName": "chihuahua",
+        "message": "hi",
+        "createdAt": "2026-06-08T01:56:58.090Z"
+      },
+      {
+        "id": "msg-1780883818090655",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__SHOW_OPTIONS__",
+        "createdAt": "2026-06-08T01:56:58.090Z"
+      },
+      {
+        "id": "msg-1780883820843908",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__CONNECTED_ADMIN__",
+        "createdAt": "2026-06-08T01:57:00.843Z"
+      },
+      {
+        "id": "msg-1780883827477481",
+        "sender": "admin",
+        "userName": "Admin",
+        "message": "Xin chào, tôi có thể giúp gì cho bạn?",
+        "createdAt": "2026-06-08T01:57:07.477Z"
+      }
+    ]
+  },
+  "conv-1780902665610": {
+    "id": "conv-1780902665610",
+    "userName": "HOANGNGOC",
+    "userEmail": "ngoc@vn.com",
+    "createdAt": "2026-06-08T07:11:07.965Z",
+    "status": "waiting_admin",
+    "messages": [
+      {
+        "id": "msg-1780902667965728",
+        "sender": "user",
+        "userName": "HOANGNGOC",
+        "message": "hi",
+        "createdAt": "2026-06-08T07:11:07.965Z"
+      },
+      {
+        "id": "msg-1780902667965761",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__SHOW_OPTIONS__",
+        "createdAt": "2026-06-08T07:11:07.965Z"
+      },
+      {
+        "id": "msg-1780902669464275",
+        "sender": "bot",
+        "userName": "EcoBot",
+        "message": "__CONNECTED_ADMIN__",
+        "createdAt": "2026-06-08T07:11:09.465Z"
+      }
+    ]
+  }
+}

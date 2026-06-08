@@ -1,0 +1,22 @@
+[
+  {
+    "id": "ADR-1780835302096615",
+    "businessName": "Làng nghề Vạn Giang",
+    "contactPerson": "Bùi Đức Văn",
+    "phone": "0998712377",
+    "email": "van1985@gmail.com",
+    "adContent": "đồ đan tre",
+    "notes": "",
+    "images": [
+      {
+        "fileName": "1780835302091-uxvfch.jpg",
+        "originalName": "OIP.jpg",
+        "size": 17578,
+        "path": "/uploads/1780835302091-uxvfch.jpg"
+      }
+    ],
+    "status": "approved",
+    "createdAt": 1780835302096,
+    "adminNote": ""
+  }
+]

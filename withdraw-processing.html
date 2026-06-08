@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hóa đơn rút tiền - EcoShop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #eef2f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .invoice-wrap { max-width: 700px; width: 100%; }
+    .invoice {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 2px 40px rgba(0,0,0,.07);
+      overflow: hidden;
+    }
+    .invoice-top {
+      background: linear-gradient(135deg, #0a1f14 0%, #14532d 60%, #166534 100%);
+      padding: 32px 40px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .invoice-top .left { display: flex; align-items: center; gap: 16px; }
+    .invoice-top .logo {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      backdrop-filter: blur(4px);
+    }
+    .invoice-top .brand-text h2 { font-weight: 800; color: #fff; font-size: 1.15rem; margin: 0; letter-spacing: .5px; }
+    .invoice-top .brand-text p { color: rgba(255,255,255,.55); font-size: .78rem; margin: 2px 0 0; }
+    .invoice-top .inv-badge {
+      background: rgba(255,255,255,.1);
+      backdrop-filter: blur(4px);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: .72rem;
+      font-weight: 600;
+      color: rgba(255,255,255,.8);
+      letter-spacing: .3px;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .invoice-body { padding: 32px 40px 28px; }
+
+    .inv-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .inv-header .h-left h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0a1f14;
+      letter-spacing: 1px;
+      margin: 0;
+      line-height: 1.2;
+    }
+    .inv-header .h-left .h-sub {
+      font-size: .82rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .inv-header .h-right { text-align: right; }
+    .inv-header .h-right .inv-id {
+      font-size: .78rem;
+      color: #6b7280;
+    }
+    .inv-header .h-right .inv-id strong {
+      color: #0a1f14;
+      font-weight: 700;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: #f7f9f8;
+      border-radius: 14px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      border: 1px solid #eef1ef;
+    }
+    .info-grid .ig-item {
+      padding: 14px 18px;
+      border-right: 1px solid #eef1ef;
+      border-bottom: 1px solid #eef1ef;
+    }
+    .info-grid .ig-item:nth-child(even) { border-right: none; }
+    .info-grid .ig-item:nth-last-child(-n+2) { border-bottom: none; }
+    .info-grid .ig-label {
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: #8a9a8e;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .info-grid .ig-value {
+      font-size: .92rem;
+      font-weight: 600;
+      color: #0a1f14;
+    }
+    .info-grid .ig-value .status-badge {
+      display: inline-block;
+      padding: 2px 12px;
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+    .status-badge.pending { background: #fef3c7; color: #b45309; }
+    .status-badge.approved { background: #dbeafe; color: #1d4ed8; }
+    .status-badge.paid { background: #dcfce7; color: #15803d; }
+    .status-badge.rejected { background: #fee2e2; color: #b91c1c; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: .8rem;
+      color: #14532d;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 12px;
+    }
+    .section-title i { color: #16a34a; font-size: .85rem; }
+
+    .account-card {
+      background: #f7f9f8;
+      border: 1px solid #eef1ef;
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 24px;
+    }
+
+    .tx-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .tx-table tr td {
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f2f0;
+      font-size: .92rem;
+    }
+    .tx-table tr td:last-child { text-align: right; font-weight: 600; }
+    .tx-table .tfee td { color: #6b7280; }
+    .tx-table .tfee td:last-child { color: #dc2626; }
+    .tx-table .ttotal td {
+      border-top: 2px solid #14532d;
+      border-bottom: none;
+      padding-top: 16px;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+    .tx-table .ttotal td:first-child { color: #0a1f14; }
+    .tx-table .ttotal td:last-child { color: #16a34a; font-size: 1.3rem; }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .action-row button {
+      flex: 1;
+      padding: 13px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: .88rem;
+      cursor: pointer;
+      transition: all .25s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: #fff;
+      box-shadow: 0 6px 18px -5px rgba(22,163,74,.45);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px -6px rgba(22,163,74,.55); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-secondary {
+      background: transparent;
+      color: #374151;
+      border: 1.5px solid #e0e4e0 !important;
+    }
+    .btn-secondary:hover { border-color: #16a34a !important; color: #16a34a; }
+
+    .status-area {
+      margin-top: 6px;
+      padding: 28px 24px;
+      border-radius: 14px;
+      background: #f7f9f8;
+      border: 1px solid #eef1ef;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .status-msg { font-weight: 600; color: #0a1f14; font-size: .95rem; }
+    .status-msg.success { color: #16a34a; }
+
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #e5e7eb; border-top-color: #16a34a;
+      border-radius: 50%; animation: spin .8s linear infinite; margin-bottom: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .icon-circle {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 1.4rem;
+    }
+    .icon-circle.warn { background: #fef3c7; color: #b45309; }
+    .icon-circle.error { background: #fee2e2; color: #b91c1c; }
+    .icon-circle.success { background: #dcfce7; color: #15803d; }
+
+    .invoice-footer {
+      text-align: center;
+      padding: 16px 40px 22px;
+      font-size: .72rem;
+      color: #9ca3af;
+      border-top: 1px solid #f0f2f0;
+    }
+    .invoice-footer strong { color: #6b7280; }
+
+    .not-found {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    @media (max-width:540px) {
+      .invoice-top { padding: 22px 20px 20px; }
+      .invoice-body { padding: 22px 20px 20px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .info-grid .ig-item { border-right: none; }
+      .info-grid .ig-item:nth-last-child(-n+2) { border-bottom: 1px solid #eef1ef; }
+      .info-grid .ig-item:last-child { border-bottom: none; }
+      .action-row { flex-direction: column; }
+      .inv-header { flex-direction: column; align-items: flex-start; }
+      .inv-header .h-right { text-align: left; }
+      .invoice-footer { padding: 14px 20px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-wrap">
+    <div class="invoice">
+      <div class="invoice-top">
+        <div class="left">
+          <div class="logo"><i class="fa-solid fa-leaf"></i></div>
+          <div class="brand-text">
+            <h2>EcoShop</h2>
+            <p>Nền tảng thương mại điện tử xanh</p>
+          </div>
+        </div>
+        <span class="inv-badge"><i class="fa-regular fa-clock"></i> Hóa đơn điện tử</span>
+      </div>
+
+      <div class="invoice-body">
+        <div class="inv-header">
+          <div class="h-left">
+            <h1>RÚT TIỀN</h1>
+            <div class="h-sub">Yêu cầu rút tiền từ ví EcoShop</div>
+          </div>
+          <div class="h-right">
+            <div class="inv-id">Mã GD: <strong id="wdId">—</strong></div>
+          </div>
+        </div>
+
+        <div class="info-grid" id="infoGrid">
+          <div class="ig-item">
+            <div class="ig-label">Ngày tạo</div>
+            <div class="ig-value" id="wdDate">—</div>
+          </div>
+          <div class="ig-item">
+            <div class="ig-label">Trạng thái</div>
+            <div class="ig-value" id="wdStatus">—</div>
+          </div>
+          <div class="ig-item">
+            <div class="ig-label">Người rút</div>
+            <div class="ig-value" id="wdUserName">—</div>
+          </div>
+          <div class="ig-item">
+            <div class="ig-label">Phương thức</div>
+            <div class="ig-value" id="wdMethodLabel">—</div>
+          </div>
+        </div>
+
+        <div class="section-title"><i class="fa-solid fa-university"></i> Tài khoản nhận</div>
+        <div class="account-card" id="wdAccountBox"></div>
+
+        <div class="section-title"><i class="fa-solid fa-receipt"></i> Chi tiết giao dịch</div>
+        <table class="tx-table">
+          <tr><td>Số tiền rút</td><td id="wdAmount">—</td></tr>
+          <tr class="tfee"><td>Phí giao dịch</td><td id="wdFee">—</td></tr>
+          <tr class="ttotal"><td>Thực nhận</td><td id="wdNet">—</td></tr>
+        </table>
+
+        <div id="mainAction" class="action-row">
+          <button class="btn-secondary" onclick="cancelInvoice()"><i class="fa-solid fa-xmark"></i> Hủy yêu cầu</button>
+          <button class="btn-primary" id="confirmBtn" onclick="confirmInvoice()"><i class="fa-solid fa-check-circle"></i> Xác nhận hóa đơn</button>
+        </div>
+
+        <div id="statusArea" class="status-area" style="display:none">
+          <div id="statusContent"></div>
+        </div>
+      </div>
+
+      <div class="invoice-footer">
+        Hóa đơn được tạo bởi <strong>EcoShop</strong> &bull; Mọi giao dịch đều được admin kiểm duyệt và thanh toán qua hệ thống
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestId = urlParams.get('requestId');
+
+    const VIETNAM_BANKS = [
+      { name: 'Vietcombank', code: 'VCB', color: '#007B3D' },
+      { name: 'VietinBank', code: 'ICB', color: '#0072BC' },
+      { name: 'BIDV', code: 'BIDV', color: '#00A650' },
+      { name: 'Agribank', code: 'VBA', color: '#008B4A' },
+      { name: 'Techcombank', code: 'TCB', color: '#00447C' },
+      { name: 'ACB', code: 'ACB', color: '#003F87' },
+      { name: 'MB Bank', code: 'MB', color: '#E11B22' },
+      { name: 'VP Bank', code: 'VPB', color: '#005C2E' },
+      { name: 'Sacombank', code: 'STB', color: '#DA291C' },
+      { name: 'HDBank', code: 'HDB', color: '#004B87' },
+      { name: 'TPBank', code: 'TPB', color: '#F15A24' },
+      { name: 'VIB', code: 'VIB', color: '#003F72' },
+      { name: 'SHB', code: 'SHB', color: '#00613D' },
+      { name: 'MSB', code: 'MSB', color: '#ED1C24' },
+      { name: 'Eximbank', code: 'EIB', color: '#003366' },
+      { name: 'OCB', code: 'OCB', color: '#004B87' },
+      { name: 'Nam A Bank', code: 'NAB', color: '#003F87' },
+      { name: 'PVcombank', code: 'PVB', color: '#00A650' },
+      { name: 'SCB', code: 'SCB', color: '#ED1C24' },
+      { name: 'Saigonbank', code: 'SGB', color: '#003F72' },
+      { name: 'Dong A Bank', code: 'DAB', color: '#DA291C' },
+      { name: 'VietBank', code: 'VBB', color: '#004B87' },
+      { name: 'BaoViet Bank', code: 'BVB', color: '#007B3D' },
+      { name: 'Kienlong Bank', code: 'KLB', color: '#005C2E' },
+      { name: 'LienVietPostBank', code: 'LPB', color: '#00447C' },
+      { name: 'NCB', code: 'NCB', color: '#ED1C24' },
+      { name: 'PG Bank', code: 'PGB', color: '#003366' },
+      { name: 'OceanBank', code: 'OJB', color: '#003F87' },
+      { name: 'GPBank', code: 'GPB', color: '#007B3D' },
+      { name: 'CBBank', code: 'CBB', color: '#004B87' },
+      { name: 'SeABank', code: 'SEAB', color: '#00A650' },
+      { name: 'Bac A Bank', code: 'BAB', color: '#DA291C' },
+      { name: 'ABBank', code: 'ABB', color: '#003F72' },
+      { name: 'VRB', code: 'VRB', color: '#005C2E' },
+      { name: 'Woori Bank Vietnam', code: 'WRB', color: '#0073BC' }
+    ];
+
+    const EWALLETS = [
+      { name: 'Momo', icon: 'https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-Mo-Mo.png', color: '#A50064' },
+      { name: 'ZaloPay', icon: 'https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-ZaloPay.png', color: '#0068FF' },
+      { name: 'ShopeePay', icon: 'https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-ShopeePay.png', color: '#EE4D2D' }
+    ];
+
+    const METHOD_LABELS = { bank: 'Ngân hàng nội địa', ewallet: 'Ví điện tử' };
+    const STATUS_LABELS = {
+      'Chờ duyệt': '<span class="status-badge pending">Chờ duyệt</span>',
+      'Đã duyệt': '<span class="status-badge approved">Đã duyệt · Chờ thanh toán</span>',
+      'Đã thanh toán': '<span class="status-badge paid">Đã thanh toán</span>',
+      'Từ chối': '<span class="status-badge rejected">Từ chối</span>'
+    };
+
+    function bankLogoHtml(bank, size) {
+      size = size || 40;
+      var fs = Math.round(size * 0.38);
+      var abbr = bank.name.substring(0, 2).toUpperCase();
+      return '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;flex-shrink:0;background:' + bank.color + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:' + fs + 'px;font-weight:700;overflow:hidden;position:relative">' + abbr + '<img src="https://api.vietqr.io/img/' + bank.code + '.png" onerror="this.remove()" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;border-radius:50%"></div>';
+    }
+
+    function ewalletLogoHtml(wallet, size) {
+      size = size || 40;
+      var fs = Math.round(size * 0.38);
+      var abbr = wallet.name.substring(0, 2).toUpperCase();
+      return '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;flex-shrink:0;background:' + wallet.color + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:' + fs + 'px;font-weight:700;overflow:hidden;position:relative">' + abbr + '<img src="' + wallet.icon + '" onerror="this.remove()" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;border-radius:50%"></div>';
+    }
+
+    function money(n) { return '$' + Number(n || 0).toFixed(2); }
+
+    function getRequest() {
+      var stored = localStorage.getItem('eco_pending_withdrawals') || '[]';
+      return JSON.parse(stored).find(function(r) { return r.id === requestId; });
+    }
+
+    function processRefund() {
+      var now = Date.now();
+      var stored = localStorage.getItem('eco_pending_withdrawals') || '[]';
+      var requests = JSON.parse(stored);
+      var req = requests.find(function(r) { return r.id === requestId; });
+      if (!req || req.status !== 'Từ chối' || req.refundStatus !== 'pending') return false;
+      var elapsed = now - (req.rejectedAt || now);
+      if (elapsed >= req.refundDelay) {
+        req.refundStatus = 'completed';
+        req.refundedAt = now;
+        var dbKey = 'ecoshop_db_v1';
+        var dbRaw = localStorage.getItem(dbKey);
+        if (dbRaw) {
+          try {
+            var DB = JSON.parse(dbRaw);
+            if (!DB.wallets) DB.wallets = {};
+            if (!DB.wallets[req.userId]) DB.wallets[req.userId] = { balance: 0, transactions: [] };
+            var wallet = DB.wallets[req.userId];
+            wallet.balance = (wallet.balance || 0) + req.amount;
+            if (!wallet.transactions) wallet.transactions = [];
+            wallet.transactions.push({
+              id: 'TXN-' + Date.now() + Math.floor(Math.random() * 1000),
+              type: 'refund',
+              amount: req.amount,
+              method: req.method,
+              note: 'Hoàn tiền rút - ' + req.id,
+              createdAt: now
+            });
+            localStorage.setItem(dbKey, JSON.stringify(DB));
+            localStorage.setItem('eco_pending_withdrawals', JSON.stringify(requests));
+          } catch(e) {}
+        }
+        return true;
+      }
+      return false;
+    }
+
+    function showStatusContent(html) {
+      document.getElementById('mainAction').style.display = 'none';
+      document.getElementById('statusArea').style.display = 'flex';
+      document.getElementById('statusContent').innerHTML = html;
+    }
+
+    function renderInvoice() {
+      var req = getRequest();
+      if (!req) {
+        document.querySelector('.invoice-body').innerHTML =
+          '<div class="not-found">' +
+          '<div class="icon-circle error"><i class="fa-solid fa-circle-exclamation"></i></div>' +
+          '<h4 style="font-weight:800;color:#0a1f14">Không tìm thấy hóa đơn</h4>' +
+          '<p style="color:#6b7280;font-size:.88rem;margin:8px 0 18px">Mã hóa đơn không hợp lệ hoặc đã bị xóa.</p>' +
+          '<button class="btn-primary" onclick="window.location.href=\'index.html\'" style="display:inline-flex;padding:12px 28px;border:none;border-radius:12px;font-weight:700;cursor:pointer"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</button>' +
+          '</div>';
+        return;
+      }
+
+      document.getElementById('wdId').textContent = req.id;
+      document.getElementById('wdDate').textContent = new Date(req.createdAt).toLocaleString('vi-VN');
+      document.getElementById('wdUserName').textContent = req.userName || req.userId;
+      document.getElementById('wdStatus').innerHTML = STATUS_LABELS[req.status] || '<span class="status-badge pending">' + req.status + '</span>';
+      document.getElementById('wdMethodLabel').textContent = METHOD_LABELS[req.method] || req.method;
+
+      document.getElementById('wdAmount').textContent = money(req.amount);
+      var fee = req.fee || 0;
+      document.getElementById('wdFee').textContent = fee > 0 ? money(fee) : '<span style="color:#16a34a">Miễn phí</span>';
+      document.getElementById('wdNet').textContent = money(req.amount - fee);
+
+      var d = req.accountDetails || {};
+      var accHtml = '<div style="display:flex;align-items:center;gap:14px;width:100%">';
+      if (req.method === 'bank') {
+        var bank = VIETNAM_BANKS.find(function(b) { return b.name === d.bankName; });
+        var logo = bank ? bankLogoHtml(bank, 44) : '<div style="width:44px;height:44px;border-radius:50%;background:#e8ece8;display:flex;align-items:center;justify-content:center;color:#6b7280;font-size:1rem;flex-shrink:0"><i class="fa-solid fa-building-columns"></i></div>';
+        accHtml += logo +
+          '<div style="flex:1;min-width:0">' +
+          '<div style="font-weight:700;color:#0a1f14;font-size:.95rem">' + (d.bankName || '—') + '</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:4px;font-size:.82rem;color:#6b7280">' +
+          '<span>STK: <strong style="color:#0a1f14;font-weight:600">' + (d.accountNumber || '—') + '</strong></span>' +
+          '<span>Chủ TK: <strong style="color:#0a1f14;font-weight:600">' + (d.accountHolder || '—') + '</strong></span>' +
+          '<span>Chi nhánh: <strong style="color:#0a1f14;font-weight:600">' + (d.branch || '—') + '</strong></span>' +
+          '</div></div>';
+      } else if (req.method === 'ewallet') {
+        var wallet = EWALLETS.find(function(w) { return w.name === d.ewalletName; });
+        var logo2 = wallet ? ewalletLogoHtml(wallet, 44) : '<div style="width:44px;height:44px;border-radius:50%;background:#e8ece8;display:flex;align-items:center;justify-content:center;color:#6b7280;font-size:1rem;flex-shrink:0"><i class="fa-solid fa-wallet"></i></div>';
+        accHtml += logo2 +
+          '<div style="flex:1;min-width:0">' +
+          '<div style="font-weight:700;color:#0a1f14;font-size:.95rem">' + (d.ewalletName || '—') + '</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:4px;font-size:.82rem;color:#6b7280">' +
+          '<span>SĐT: <strong style="color:#0a1f14;font-weight:600">' + (d.phone || '—') + '</strong></span>' +
+          '<span>Chủ TK: <strong style="color:#0a1f14;font-weight:600">' + (d.accountHolder || '—') + '</strong></span>' +
+          '</div></div>';
+      }
+      accHtml += '</div>';
+      document.getElementById('wdAccountBox').innerHTML = accHtml;
+
+      if (req.status === 'Từ chối' && req.refundStatus === 'pending') {
+        var refunded = processRefund();
+        if (!refunded) {
+          var now = Date.now();
+          var elapsed = now - (req.rejectedAt || now);
+          var remaining = Math.max(0, Math.ceil((req.refundDelay - elapsed) / 1000));
+          if (remaining > 0 && remaining <= 300) {
+            showStatusContent(
+              '<div class="icon-circle warn"><i class="fa-solid fa-clock"></i></div>' +
+              '<div class="status-msg" style="color:#b45309">Yêu cầu rút tiền đã bị từ chối</div>' +
+              '<div style="font-size:.85rem;color:#6b7280;margin-top:6px">Hệ thống đang hoàn tiền... <strong id="refundTimer" style="color:#b45309">' + remaining + '</strong> giây nữa</div>' +
+              '<button class="btn-secondary" onclick="window.location.href=\'index.html\'" style="margin-top:14px;padding:8px 20px;border-radius:10px;font-weight:600;cursor:pointer;border:1.5px solid #e0e4e0;background:transparent"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</button>'
+            );
+            startRefundTimer(remaining);
+          } else {
+            showStatusContent(
+              '<div class="icon-circle error"><i class="fa-solid fa-circle-exclamation"></i></div>' +
+              '<div class="status-msg" style="color:#b91c1c">Yêu cầu rút tiền đã bị từ chối</div>' +
+              '<div style="font-size:.85rem;color:#6b7280;margin-top:6px">Quá thời gian hoàn tiền, vui lòng liên hệ Admin để xử lý!</div>' +
+              '<button class="btn-secondary" onclick="window.location.href=\'index.html\'" style="margin-top:14px;padding:8px 20px;border-radius:10px;font-weight:600;cursor:pointer;border:1.5px solid #e0e4e0;background:transparent"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>'
+            );
+          }
+        } else {
+          showStatusContent(
+            '<div class="icon-circle success"><i class="fa-solid fa-check-circle"></i></div>' +
+            '<div class="status-msg success">Đã hoàn tiền thành công!</div>' +
+            '<div style="font-size:.85rem;color:#6b7280;margin-top:6px">Số tiền <strong style="color:#16a34a">' + money(req.amount) + '</strong> đã được trả lại vào ví của bạn.</div>' +
+            '<button class="btn-secondary" onclick="window.location.href=\'index.html\'" style="margin-top:14px;padding:8px 20px;border-radius:10px;font-weight:600;cursor:pointer;border:1.5px solid #e0e4e0;background:transparent"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</button>'
+          );
+        }
+      } else if (req.status !== 'Chờ duyệt') {
+        showStatusContent(
+          '<div class="icon-circle success"><i class="fa-solid fa-check-circle"></i></div>' +
+          '<div class="status-msg success">Hóa đơn đã được xử lý</div>' +
+          '<button class="btn-secondary" onclick="window.location.href=\'index.html\'" style="margin-top:14px;padding:8px 20px;border-radius:10px;font-weight:600;cursor:pointer;border:1.5px solid #e0e4e0;background:transparent"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</button>'
+        );
+      }
+    }
+
+    function startRefundTimer(remaining) {
+      var timer = setInterval(function() {
+        remaining--;
+        var el = document.getElementById('refundTimer');
+        if (el) el.textContent = remaining;
+        if (remaining <= 0) {
+          clearInterval(timer);
+          processRefund();
+          renderInvoice();
+        }
+      }, 1000);
+    }
+
+    function confirmInvoice() {
+      var btn = document.getElementById('confirmBtn');
+      var cancelBtn = document.querySelector('.btn-secondary');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+      if (cancelBtn) cancelBtn.style.display = 'none';
+
+      showStatusContent(
+        '<div class="spinner"></div>' +
+        '<div class="status-msg">Đang gửi yêu cầu rút tiền lên hệ thống...</div>'
+      );
+
+      setTimeout(function() {
+        document.getElementById('statusContent').innerHTML =
+          '<div class="icon-circle success"><i class="fa-solid fa-check-circle"></i></div>' +
+          '<div class="status-msg success">Hóa đơn đã được gửi lên hệ thống thành công!</div>' +
+          '<div style="font-size:.85rem;color:#6b7280;margin-top:6px">Vui lòng chờ admin phê duyệt và hệ thống thanh toán.</div>' +
+          '<div style="margin-top:12px;font-size:.82rem;color:#9ca3af">Tự động quay lại sau <strong id="countdown" style="color:#16a34a">3</strong> giây</div>';
+
+        var cd = 3;
+        var cdEl = document.getElementById('countdown');
+        if (cdEl) {
+          var interval = setInterval(function() {
+            cd--;
+            if (cdEl) cdEl.textContent = cd;
+            if (cd <= 0) { clearInterval(interval); window.location.href = 'index.html'; }
+          }, 1000);
+        }
+      }, 1500);
+    }
+
+    function cancelInvoice() {
+      if (!confirm('Bạn có chắc muốn hủy yêu cầu rút tiền này?')) return;
+      var stored = localStorage.getItem('eco_pending_withdrawals') || '[]';
+      var requests = JSON.parse(stored);
+      var idx = requests.findIndex(function(r) { return r.id === requestId; });
+      if (idx > -1) { requests.splice(idx, 1); localStorage.setItem('eco_pending_withdrawals', JSON.stringify(requests)); }
+      window.location.href = 'index.html';
+    }
+
+    renderInvoice();
+    setInterval(function() {
+      var r = getRequest();
+      if (!r) { window.location.href = 'index.html'; return; }
+      if (r.status !== 'Chờ duyệt') {
+        var $ma = document.getElementById('mainAction');
+        if ($ma && $ma.style.display !== 'none') { renderInvoice(); }
+      }
+    }, 5000);
+  </script>
+</body>
+</html>

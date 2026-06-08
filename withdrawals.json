@@ -1,0 +1,86 @@
+[
+  {
+    "id": "WD-1780817355367354",
+    "userId": "U-6321",
+    "userName": "kophai",
+    "amount": 10,
+    "method": "banking",
+    "accountDetails": {
+      "bankName": "Vietcombank",
+      "accountNumber": "9991232005",
+      "accountHolder": "LE VAN DUNG"
+    },
+    "status": "Từ chối",
+    "createdAt": 1780817355367
+  },
+  {
+    "id": "WD-178081755153770",
+    "userId": "U-6321",
+    "userName": "kophai",
+    "amount": 2,
+    "method": "banking",
+    "accountDetails": {
+      "bankName": "Vietcombank",
+      "accountNumber": "9991232005",
+      "accountHolder": "LE VAN DUNG"
+    },
+    "status": "Từ chối",
+    "createdAt": 1780817551538
+  },
+  {
+    "id": "WD-1780817840459686",
+    "userId": "U-6321",
+    "userName": "kophai",
+    "amount": 0.5,
+    "method": "ewallet",
+    "accountDetails": {
+      "ewalletName": "ZaloPay",
+      "phone": "0995716456",
+      "accountHolder": "LE VAN DUNG"
+    },
+    "status": "Đã thanh toán",
+    "createdAt": 1780817840459
+  },
+  {
+    "id": "WD-1780819046691490",
+    "userId": "U-6321",
+    "userName": "kophai",
+    "amount": 1,
+    "method": "bank",
+    "accountDetails": {
+      "bankName": "VP Bank",
+      "accountNumber": "9991232005",
+      "accountHolder": "LE VAN DUNG"
+    },
+    "status": "Đã thanh toán",
+    "createdAt": 1780819046691
+  },
+  {
+    "id": "WD-1780819278697656",
+    "userId": "U-6321",
+    "userName": "kophai",
+    "amount": 4,
+    "method": "bank",
+    "accountDetails": {
+      "bankName": "Agribank",
+      "accountNumber": "9991232005",
+      "accountHolder": "LE VAN DUNG"
+    },
+    "status": "Đã thanh toán",
+    "createdAt": 1780819278697
+  },
+  {
+    "id": "WD-1780819950378848",
+    "userId": "U-6321",
+    "userName": "kophai",
+    "amount": 2.5,
+    "method": "bank",
+    "accountDetails": {
+      "bankName": "BIDV",
+      "accountNumber": "9991232005",
+      "accountHolder": "LE VAN DUNG"
+    },
+    "status": "Đã thanh toán",
+    "createdAt": 1780819950378
+  }
+]

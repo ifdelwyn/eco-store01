@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoShop – Thanh toán</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    :root { --primary: #16a34a; --secondary: #15803d; --accent: #22c55e; --bg: #f0fdf4; --soft: #dcfce7; --glow: #bbf7d0; --dark: #14532d; --text: #0f2417; --muted: #5b6b62; --card: #ffffff; --border: rgba(20,83,45,.1); --shadow: 0 10px 30px -10px rgba(20,83,45,.18); --radius: 18px; --grad: linear-gradient(135deg,#16a34a 0%,#22c55e 60%,#bbf7d0 100%); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Plus Jakarta Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+    .container { max-width: 720px; margin: 0 auto; padding: 30px 20px; }
+    .card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 28px; margin-bottom: 18px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; color: var(--secondary); margin-bottom: 20px; text-decoration: none; }
+    .brand-logo { width: 38px; height: 38px; border-radius: 12px; background: var(--grad); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; }
+    h2 { font-weight: 800; font-size: 1.4rem; margin-bottom: 6px; }
+    .warning-box { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 12px; padding: 14px 16px; margin: 14px 0; font-size: .88rem; }
+    .warning-box i { color: #f59e0b; margin-right: 6px; }
+    .warning-box strong { display: block; margin-bottom: 4px; color: #92400e; }
+    .warning-box p { color: #78350f; margin: 0; }
+    .bank-info { background: var(--soft); border-radius: 12px; padding: 16px; margin: 14px 0; font-size: .9rem; }
+    .bank-info .row-b { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--border); gap: 8px; }
+    .bank-info .row-b:last-child { border: none; }
+    .bank-info .label { color: var(--muted); flex-shrink: 0; }
+    .bank-info .value { font-weight: 700; word-break: break-all; }
+    .btn-copy { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; font-size: .78rem; font-weight: 700; color: var(--secondary); cursor: pointer; flex-shrink: 0; transition: all .2s; }
+    .btn-copy:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-pay { width: 100%; padding: 14px; border: none; border-radius: 14px; font-weight: 700; font-size: 1.1rem; cursor: pointer; background: var(--grad); color: #fff; box-shadow: 0 10px 24px -8px rgba(22,163,74,.55); transition: all .3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-pay:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -8px rgba(22,163,74,.7); }
+    .btn-pay:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+    .loading-state { text-align: center; padding: 30px 0; }
+    .spinner-lg { width: 56px; height: 56px; border: 5px solid var(--soft); border-top-color: var(--primary); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .success-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; margin: 0 auto 12px; animation: popIn .5s ease; }
+    @keyframes popIn { 0% { transform: scale(.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .countdown-text { color: var(--muted); font-size: .88rem; margin-top: 10px; }
+    .table-items { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    .table-items td { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .table-items tr:last-child td { border: none; }
+    .tag { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: .75rem; font-weight: 700; background: var(--soft); color: var(--secondary); }
+    .qr-box { text-align: center; padding: 16px; }
+    .qr-box #qrcode { display: inline-block; background: #fff; padding: 12px; border-radius: 14px; margin-bottom: 10px; }
+    .qr-timer { display: inline-block; background: var(--card); padding: 6px 16px; border-radius: 20px; font-weight: 800; color: var(--primary); font-size: 1rem; letter-spacing: 1px; }
+    .qr-timer.expired { color: #dc2626; }
+    @keyframes warnPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,.5); } 50% { box-shadow: 0 0 0 12px rgba(220,38,38,0); } }
+    @keyframes warnShake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); } 20%, 40%, 60%, 80% { transform: translateX(4px); } }
+    @keyframes warnSlideDown { 0% { transform: translateY(-100%) scale(.9); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+    @keyframes warnGlow { 0%, 100% { border-color: #dc2626; } 50% { border-color: #ef4444; } }
+    @keyframes warnBgPulse { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .reload-warn {
+      background: linear-gradient(135deg, #fef2f2, #fee2e2, #fecaca);
+      background-size: 200% 200%;
+      animation: warnSlideDown .5s cubic-bezier(.22,1,.36,1), warnBgPulse 4s ease infinite, warnGlow 2s ease-in-out infinite;
+      border: 2px solid #dc2626;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      box-shadow: 0 0 24px -4px rgba(220,38,38,.25), inset 0 0 40px -20px rgba(220,38,38,.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .reload-warn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #dc2626, #ef4444, #fca5a5, #ef4444, #dc2626);
+      background-size: 200% 100%;
+      animation: warnBgPulse 2s ease infinite;
+    }
+    .reload-warn .rw-icon {
+      width: 44px; height: 44px; min-width: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.2rem;
+      animation: warnPulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    .reload-warn .rw-body { flex: 1; min-width: 0; }
+    .reload-warn .rw-body strong {
+      display: block; font-size: .92rem; color: #991b1b; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .reload-warn .rw-body strong .rw-blink {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #dc2626;
+      animation: warnPulse 1s ease-in-out infinite;
+    }
+    .reload-warn .rw-body p { font-size: .84rem; color: #7f1d1d; margin: 0 0 12px; line-height: 1.5; }
+    .reload-warn .rw-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .reload-warn .rw-actions button {
+      padding: 8px 18px; border-radius: 10px; font-weight: 700; font-size: .82rem;
+      cursor: pointer; border: none; transition: all .25s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .reload-warn .rw-close {
+      background: rgba(220,38,38,.1); color: #991b1b; border: 1.5px solid #dc2626 !important;
+    }
+    .reload-warn .rw-close:hover { background: #dc2626; color: #fff; }
+    .reload-warn .rw-back {
+      background: linear-gradient(135deg,#14532d,#15803d); color: #fff;
+      box-shadow: 0 6px 16px -6px rgba(20,83,45,.5);
+    }
+    .reload-warn .rw-back:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -6px rgba(20,83,45,.6); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="brand">
+      <div class="brand-logo"><i class="fa-solid fa-leaf"></i></div>
+      <span>EcoShop</span>
+    </a>
+    <div id="content"></div>
+  </div>
+
+
+
+  <script>
+    var order = null, qrTimer = null;
+    try { var raw = sessionStorage.getItem('pendingOrder'); if (raw) order = JSON.parse(raw); } catch(e) {}
+    if (!order) { window.location.href = 'index.html'; }
+    // Đảm bảo có email/phone trong dữ liệu đơn hàng (phòng trường hợp dữ liệu cũ)
+    if (!order.customerEmail) order.customerEmail = '';
+    if (!order.customerPhone) order.customerPhone = '';
+
+    // Kiểm tra VIP membership để áp dụng giảm giá
+    var vipDiscount = 0;
+    try {
+      var dbRaw = localStorage.getItem('ecoshop_db_v1');
+      if (dbRaw) {
+        var DB = JSON.parse(dbRaw);
+        var sessRaw = sessionStorage.getItem('eco_session');
+        if (sessRaw) {
+          var sess = JSON.parse(sessRaw);
+          if (sess && sess.membershipType === 'VIP' && sess.membershipDiscount) {
+            vipDiscount = sess.membershipDiscount;
+            // Áp dụng giảm giá vào tổng hóa đơn
+            var originalTotal = order.total;
+            var discountAmount = originalTotal * vipDiscount;
+            order.total = originalTotal - discountAmount;
+            order.vipDiscount = discountAmount;
+            order.originalTotal = originalTotal;
+          }
+        }
+      }
+    } catch(e) {}
+
+    var payLabels = { qr: 'QR Banking', paypal: 'PayPal', usdt: 'USDT', cod: 'COD' };
+    var payMethod = payLabels[order.paymentKey] || 'QR Banking';
+
+    function money(n) { return '$' + Number(n || 0).toFixed(2); }
+
+    function copyText(txt) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(txt).then(function() { toast('Đã sao chép'); });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = txt; document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        toast('Đã sao chép');
+      }
+    }
+
+    function toast(msg) {
+      var t = $('<div style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:12px 24px;border-radius:12px;font-weight:600;font-size:.9rem;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,.3);animation:fadeIn .3s">' + msg + '</div>');
+      $('body').append(t);
+      setTimeout(function() { t.fadeOut(300, function() { t.remove(); }); }, 2000);
+    }
+
+    function generateQR() {
+      var el = document.getElementById('qrcode');
+      if (!el) return;
+      el.innerHTML = '';
+      var content = 'https://api.vietqr.io/image/VCB-1012345678-' + order.id + '-qr.jpg?amount=' + order.total.toFixed(2) + '&addInfo=THANHTOAN%20' + order.id;
+      try { new QRCode(el, { text: content, width: 200, height: 200 }); } catch(e) { el.innerHTML = '<div style="width:200px;height:200px;display:flex;align-items:center;justify-content:center;background:var(--soft);border-radius:12px;color:var(--muted);font-size:.85rem">QR Code</div>'; }
+    }
+
+    function startQRTimer() {
+      if (qrTimer) clearInterval(qrTimer);
+      var seconds = 120;
+      var el = $('#qrTimerDisplay');
+      el.removeClass('expired');
+      qrTimer = setInterval(function() {
+        seconds--;
+        var m = Math.floor(seconds / 60), s = String(seconds % 60).padStart(2, '0');
+        el.text(m + ':' + s);
+        if (seconds <= 0) {
+          clearInterval(qrTimer); qrTimer = null;
+          el.addClass('expired').text('HẾT HẠN');
+          generateQR();
+          startQRTimer();
+        }
+      }, 1000);
+    }
+
+    function renderPaymentPage() {
+      var itemsHtml = (order.items || []).map(function(c) {
+        return '<tr><td>' + escapeHtml(c.name) + ' × ' + c.qty + '</td><td style="text-align:right;font-weight:700">' + money(c.price * c.qty) + '</td></tr>';
+      }).join('');
+
+      var payInfoHtml = '';
+      if (order.paymentKey === 'qr') {
+        payInfoHtml = `
+          <div class="qr-box">
+            <div id="qrcode"></div>
+            <div style="margin-top:6px;color:var(--muted);font-size:.82rem">Quét mã QR bằng ứng dụng ngân hàng</div>
+            <div style="margin-top:8px">Mã hết hạn sau: <span class="qr-timer" id="qrTimerDisplay">02:00</span></div>
+            <button class="btn-ghost" style="margin-top:8px;padding:8px 18px;background:transparent;border:1.5px solid var(--primary);border-radius:12px;font-weight:700;color:var(--secondary);cursor:pointer" onclick="generateQR();startQRTimer()"><i class="fa-solid fa-rotate"></i> Tạo mã mới</button>
+          </div>
+          <div class="bank-info">
+            <div class="row-b"><span class="label">Ngân hàng</span><span class="value">Vietcombank</span></div>
+            <div class="row-b">
+              <span class="label">Số tài khoản</span>
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span class="value" id="stkText" style="font-family:monospace;font-size:1rem;letter-spacing:2px;color:var(--primary)">1012345678</span><button class="btn-copy" onclick="copyText('1012345678')"><i class="fa-regular fa-copy"></i> Sao chép</button></div>
+            </div>
+            <div class="row-b"><span class="label">Chủ tài khoản</span><span class="value">ECOSHOP COMPANY</span></div>
+            <div class="row-b"><span class="label">Số tiền</span><span class="value" style="color:var(--primary)">${money(order.total)}</span></div>
+            <div class="row-b">
+              <span class="label">Nội dung CK</span>
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span class="value" id="ndText" style="font-family:monospace;background:#fff;padding:3px 8px;border-radius:6px">THANHTOAN ${order.id}</span><button class="btn-copy" onclick="copyText('THANHTOAN ${order.id}')"><i class="fa-regular fa-copy"></i> Sao chép</button></div>
+            </div>
+          </div>
+          <div class="warning-box">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> Vui lòng nhập đúng nội dung chuyển khoản</strong>
+            <p>Nội dung chuyển khoản phải chính xác là: <strong style="font-family:monospace">THANHTOAN ${order.id}</strong></p>
+            <p style="margin-top:4px">Nếu nhập sai, vui lòng liên hệ Admin để được hỗ trợ xử lý!</p>
+          </div>`;
+      } else if (order.paymentKey === 'paypal') {
+        payInfoHtml = `
+          <div style="text-align:center;padding:20px">
+            <i class="fa-brands fa-paypal" style="font-size:4rem;color:#003087"></i>
+            <h5 style="font-weight:700;margin:10px 0">Thanh toán qua PayPal</h5>
+            <p style="color:var(--muted)">Số tiền: <strong>${money(order.total)}</strong></p>
+          </div>
+          <div class="warning-box">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> Vui lòng kiểm tra thông tin trước khi thanh toán</strong>
+            <p>Đảm bảo tài khoản PayPal của bạn có đủ số dư trước khi thực hiện giao dịch.</p>
+            <p style="margin-top:4px">Nếu có lỗi xảy ra, vui lòng liên hệ Admin để được hỗ trợ xử lý!</p>
+          </div>`;
+      } else if (order.paymentKey === 'usdt') {
+        payInfoHtml = `
+          <div style="text-align:center;padding:10px">
+            <i class="fa-brands fa-bitcoin" style="font-size:3rem;color:#f7931a"></i>
+            <h5 style="font-weight:700;margin:10px 0">Thanh toán USDT (TRC20)</h5>
+            <p style="color:var(--muted)">Số tiền: <strong>${order.total.toFixed(2)} USDT</strong></p>
+            <div style="background:var(--soft);border-radius:12px;padding:14px;margin:10px 0;word-break:break-all;font-family:monospace;font-size:.85rem">TXYZ1a2b3c4d5e6f7g8h9i0jkLmnopQRSTUVwx</div>
+          </div>
+          <div class="warning-box">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> Vui lòng nhập đúng nội dung chuyển khoản</strong>
+            <p>Gửi đúng số USDT tới địa chỉ ví trên. Giao dịch sẽ được xác nhận sau vài phút.</p>
+            <p style="margin-top:4px">Nếu nhập sai, vui lòng liên hệ Admin để được hỗ trợ xử lý!</p>
+          </div>`;
+      }
+
+      var warnBanner = '<div class="reload-warn" id="inlineReloadWarn">' +
+        '<div class="rw-icon"><i class="fa-solid fa-bolt"></i></div>' +
+        '<div class="rw-body">' +
+        '<strong><span class="rw-blink"></span> CẢNH BÁO MẤT DỮ LIỆU</strong>' +
+        '<p>Nếu tải lại trang hoặc thoát khỏi đây, <strong>quá trình thanh toán sẽ bị hủy</strong> và bạn sẽ mất thông tin đơn hàng. Vui lòng hoàn tất thanh toán trước khi rời đi.</p>' +
+        '<div class="rw-actions">' +
+        '<button class="rw-close" onclick="$(\'#inlineReloadWarn\').slideUp(300)"><i class="fa-solid fa-xmark"></i> Tôi đã hiểu</button>' +
+        '<button class="rw-back" onclick="goBackHome()"><i class="fa-solid fa-house"></i> Quay lại trang chủ</button>' +
+        '</div></div></div>';
+
+      var vipLine = '';
+      if (order.vipDiscount) {
+        vipLine = '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.88rem"><span style="color:var(--muted)"><i class="fa-solid fa-crown" style="color:#f59e0b"></i> VIP giảm giá</span><span style="color:#16a34a;font-weight:700">−' + money(order.vipDiscount) + '</span></div>';
+      }
+      var originalLine = '';
+      if (order.originalTotal) {
+        originalLine = '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.82rem"><span style="color:var(--muted)">Tổng gốc</span><span style="text-decoration:line-through;color:var(--muted)">' + money(order.originalTotal) + '</span></div>';
+      }
+      $('#content').html(warnBanner + `
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+            <h2>Thanh toán đơn hàng</h2>
+            <span class="tag">${payMethod}</span>
+          </div>
+          <div style="font-size:.9rem;margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--muted)">Mã đơn:</span><strong>${escapeHtml(order.id)}</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--muted)">Khách hàng:</span><span>${escapeHtml(order.customer)}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:var(--muted)">Thời gian:</span><span>${new Date(order.createdAt).toLocaleString('vi-VN')}</span></div>
+          </div>
+          <table class="table-items">
+            <thead><tr><th style="text-align:left;padding:6px 0;font-size:.75rem;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)">Sản phẩm</th><th style="text-align:right;padding:6px 0;font-size:.75rem;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)">Thành tiền</th></tr></thead>
+            <tbody>${itemsHtml}</tbody>
+          </table>
+          ${originalLine}
+          ${vipLine}
+          <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-weight:800;font-size:1.1rem;border-top:2px solid var(--border);margin-top:4px">
+            <span>Tổng cộng</span>
+            <span style="color:var(--secondary)">${money(order.total)}</span>
+          </div>
+        </div>
+        <div class="card" id="payInfoCard">
+          ${payInfoHtml}
+          <div id="payActionArea" style="margin-top:14px">
+            <button class="btn-pay" id="payBtn" onclick="startPayment()">
+              <i class="fa-solid fa-check-circle"></i> Đã hoàn thành thanh toán
+            </button>
+          </div>
+        </div>
+      `);
+
+      if (order.paymentKey === 'qr') {
+        setTimeout(function() { generateQR(); startQRTimer(); }, 100);
+      }
+    }
+
+    function startPayment() {
+      $('#payBtn').prop('disabled', true);
+      if (qrTimer) { clearInterval(qrTimer); qrTimer = null; }
+      $('#payActionArea').html(`
+        <div class="loading-state">
+          <div class="spinner-lg"></div>
+          <div style="font-weight:600;font-size:1rem">Hệ thống đang kiểm tra giao dịch, vui lòng đợi...</div>
+          <div style="color:var(--muted);font-size:.82rem;margin-top:4px">Thời gian dự kiến: 5 giây</div>
+        </div>
+      `);
+      setTimeout(function() {
+        $.ajax({
+          url: '/api/orders',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(order),
+          error: function () { console.warn('Could not sync order to server'); }
+        });
+        showReceipt();
+      }, 5000);
+    }
+
+    function showReceipt() {
+      var order = null;
+      try { order = JSON.parse(sessionStorage.getItem('pendingOrder')); } catch(e) {}
+      if (!order) { window.location.href = 'index.html'; return; }
+
+      if (order.promoCode) {
+        try {
+          var dbRaw = localStorage.getItem('ecoshop_db_v1');
+          if (dbRaw) {
+            var DB = JSON.parse(dbRaw);
+            var pc = (DB.promoCodes || []).find(function(p) { return p.code === order.promoCode; });
+            if (pc) { pc.usedCount = (pc.usedCount || 0) + 1; localStorage.setItem('ecoshop_db_v1', JSON.stringify(DB)); }
+          }
+        } catch(e) {}
+      }
+
+      var itemsHtml = (order.items || []).map(function(c) {
+        return '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.78rem;border-bottom:1px dashed #ddd">' +
+          '<span style="flex:2">' + escapeHtml(c.name) + '</span>' +
+          '<span style="flex:1;text-align:right">' + c.qty + '</span>' +
+          '<span style="flex:1.2;text-align:right;font-weight:700">$' + (c.price * c.qty).toFixed(2) + '</span></div>';
+      }).join('');
+
+      var dateStr = new Date(order.createdAt).toLocaleString('vi-VN');
+      var methodStr = order.payment || order.paymentKey || '—';
+
+      $('#receiptOrderId').text(order.id);
+      $('#receiptMethod').text(methodStr);
+      $('#receiptDate').text(dateStr);
+      $('#receiptCustomer').text(order.customer || '—');
+      $('#receiptItems').html(itemsHtml);
+      $('#receiptTotal').text('$' + (order.total || 0).toFixed(2));
+
+      $('#receiptOverlay').css('display','flex');
+      $('#receiptCd').text('15');
+
+      if (window.rcTimer) clearInterval(window.rcTimer);
+      var cd = 15;
+      window.rcTimer = setInterval(function() {
+        cd--;
+        $('#receiptCd').text(cd);
+        if (cd <= 0) { clearInterval(window.rcTimer); window.rcTimer = null; closeReceipt(); }
+      }, 1000);
+    }
+
+    function closeReceipt() {
+      $('#receiptOverlay').hide();
+      if (window.rcTimer) { clearInterval(window.rcTimer); window.rcTimer = null; }
+      sessionStorage.removeItem('pendingOrder');
+      window.location.href = 'index.html';
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, function(c) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+      });
+    }
+
+    function goBackHome() {
+      sessionStorage.removeItem('pendingOrder');
+      window.location.href = 'index.html';
+    }
+
+    $(document).on('keydown', function(e) {
+      if (e.key === 'F5' || (e.ctrlKey && (e.key === 'r' || e.key === 'R'))) {
+        e.preventDefault();
+      }
+    });
+
+    window.addEventListener('beforeunload', function(e) {
+      if ($('#payBtn').length && !$('#payBtn').prop('disabled')) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+
+    $(function() { renderPaymentPage(); });
+  </script>
+
+  <!-- ===== SUCCESS MODAL ===== -->
+  <div id="receiptOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px">
+    <div style="position:absolute;inset:0" onclick="closeReceipt()"></div>
+    <div style="background:#fff;border-radius:20px;max-width:420px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.25);position:relative;overflow:hidden">
+      <div style="background:linear-gradient(135deg,#16a34a 0%,#22c55e 60%,#bbf7d0 100%);padding:26px 28px 20px;text-align:center">
+        <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:1.6rem;color:#fff;backdrop-filter:blur(4px)">
+          <i class="fa-solid fa-check-circle"></i>
+        </div>
+        <h3 style="font-weight:800;color:#fff;margin:0;font-size:1.15rem">Thanh toán thành công!</h3>
+        <p style="color:rgba(255,255,255,.75);font-size:.83rem;margin:4px 0 0">Cảm ơn bạn đã mua hàng tại EcoShop</p>
+      </div>
+
+      <div style="padding:18px 22px 4px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+          <div style="background:#f0fdf4;border-radius:12px;padding:9px 11px">
+            <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:#5b6b62;font-weight:600">Mã đơn hàng</div>
+            <div style="font-weight:700;font-size:.88rem;margin-top:2px;color:#0f2417" id="receiptOrderId">—</div>
+          </div>
+          <div style="background:#f0fdf4;border-radius:12px;padding:9px 11px">
+            <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:#5b6b62;font-weight:600">Thanh toán</div>
+            <div style="font-weight:600;font-size:.83rem;margin-top:2px" id="receiptMethod">—</div>
+          </div>
+          <div style="background:#f0fdf4;border-radius:12px;padding:9px 11px">
+            <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:#5b6b62;font-weight:600">Ngày</div>
+            <div style="font-weight:600;font-size:.8rem;margin-top:2px" id="receiptDate">—</div>
+          </div>
+          <div style="background:#f0fdf4;border-radius:12px;padding:9px 11px">
+            <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:#5b6b62;font-weight:600">Khách hàng</div>
+            <div style="font-weight:600;font-size:.83rem;margin-top:2px" id="receiptCustomer">—</div>
+          </div>
+        </div>
+
+        <div style="font-weight:700;font-size:.8rem;margin-bottom:6px;display:flex;align-items:center;gap:6px;color:#0f2417">
+          <i class="fa-solid fa-box" style="color:#16a34a"></i> Sản phẩm đã mua
+        </div>
+        <div style="border-radius:12px;background:#f0fdf4;padding:10px 12px;font-size:.83rem" id="receiptItems"></div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:2px solid #dcfce7">
+          <span style="font-weight:800;font-size:.95rem">Tổng tiền</span>
+          <span id="receiptTotal" style="font-weight:800;font-size:1.25rem;color:#16a34a">$0.00</span>
+        </div>
+      </div>
+
+      <div style="padding:14px 22px 20px;text-align:center">
+        <button onclick="closeReceipt()" style="width:100%;padding:12px;border:none;border-radius:12px;font-weight:700;font-size:.88rem;cursor:pointer;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;box-shadow:0 6px 16px -4px rgba(22,163,74,.45);display:inline-flex;align-items:center;justify-content:center;gap:6px">
+          <i class="fa-solid fa-house"></i> Về trang chủ
+        </button>
+        <div style="margin-top:6px;font-size:.76rem;color:#5b6b62">
+          <i class="fa-regular fa-clock"></i> Tự động quay lại sau <strong id="receiptCd" style="color:#16a34a">15</strong> giây
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

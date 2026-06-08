@@ -1,0 +1,26 @@
+[
+  {
+    "id": "TK-1780808647669461",
+    "fullName": "max",
+    "contact": "muahakhongcoem@proton.me",
+    "title": "L?i don h�ng",
+    "content": "h",
+    "urgency": "medium",
+    "files": [],
+    "status": "done",
+    "createdAt": "2026-06-07T05:04:07.669Z",
+    "updatedAt": "2026-06-07T08:39:08.066Z"
+  },
+  {
+    "id": "TK-1780826492491755",
+    "fullName": "huyb",
+    "contact": "muahakhongcoem@proton.net",
+    "title": "[KHIẾU NẠI] Vi phạm nhẹ, xin cơ hội - hb789",
+    "content": "Loại khiếu nại: Vi phạm nhẹ, xin cơ hội\n\ntôi ấn nhầm, hihihaha\n\n---\nLý do bị khóa: Vi phạm chính sách nghiêm trọng",
+    "urgency": "high",
+    "files": [],
+    "status": "pending",
+    "createdAt": "2026-06-07T10:01:32.491Z",
+    "updatedAt": "2026-06-07T10:01:32.491Z"
+  }
+]
