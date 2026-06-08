@@ -601,180 +601,181 @@
       .hero-visual {
         position: relative;
         height: 520px;
-        perspective: 1000px;
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0,0,0,.35);
+        border: 1px solid rgba(255,255,255,.1);
       }
-      .hero-card {
+      .hero-bg {
         position: absolute;
-        border-radius: 24px;
-        padding: 18px;
-        animation: floaty 6s ease-in-out infinite;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-      }
-      .hero-card.main {
         inset: 0;
-        background: linear-gradient(145deg, #0f2a1e 0%, #1a4a34 50%, #0d281a 100%);
-        color: #fff;
+        background: url("https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1200&q=80") center/cover no-repeat;
+        z-index: 1;
+        transform: scale(1.05);
+        animation: heroZoom 20s ease-in-out infinite alternate;
+      }
+      @keyframes heroZoom {
+        from { transform: scale(1.05); }
+        to { transform: scale(1.12); }
+      }
+      .hero-floats {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .hf-item {
+        position: absolute;
+        color: rgba(255,255,255,.25);
+        text-shadow: 0 4px 20px rgba(0,0,0,.2);
+      }
+      .hf-1 { top: 8%; left: 6%; font-size: 2.6rem; animation: hf1 9s ease-in-out infinite; }
+      .hf-2 { top: 15%; right: 8%; font-size: 3.4rem; animation: hf2 7s ease-in-out infinite; color: rgba(255,255,255,.18); }
+      .hf-3 { bottom: 22%; left: 12%; font-size: 2rem; animation: hf3 11s ease-in-out infinite; }
+      .hf-4 { bottom: 12%; right: 14%; font-size: 2.8rem; animation: hf4 8s ease-in-out infinite; }
+      .hf-5 { top: 45%; left: 42%; font-size: 1.6rem; animation: hf5 10s ease-in-out infinite; color: rgba(255,255,255,.15); }
+      .hf-6 { top: 70%; left: 6%; font-size: 1.8rem; animation: hf6 12s ease-in-out infinite; color: rgba(255,255,255,.12); }
+      @keyframes hf1 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-22px) rotate(12deg)} }
+      @keyframes hf2 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-16px) rotate(-8deg)} }
+      @keyframes hf3 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-28px) rotate(6deg)} }
+      @keyframes hf4 { 0%,100%{transform:translateY(0) rotate(0deg)} 33%{transform:translateY(-20px) rotate(-10deg)} 66%{transform:translateY(10px) rotate(5deg)} }
+      @keyframes hf5 { 0%,100%{transform:translateY(0) translateX(0) rotate(0deg)} 50%{transform:translateY(-14px) translateX(8px) rotate(15deg)} }
+      @keyframes hf6 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-18px) rotate(-6deg)} }
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
-        padding: 30px;
-        border: none;
-        overflow: hidden;
-        border-radius: 32px;
-        box-shadow: 0 25px 60px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.08);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #fff;
+        padding: 40px;
+        background: linear-gradient(180deg, rgba(10,30,18,.45) 0%, rgba(10,30,18,.1) 40%, rgba(10,30,18,.5) 100%);
       }
-      .hero-card.main::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: url("https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=900&q=80")
-          center/cover;
-        opacity: 0.3;
-        mix-blend-mode: overlay;
-      }
-      .hero-card.main::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,.08) 0%, transparent 50%);
-        pointer-events: none;
-      }
-      .hero-card.main .hero-prod-grid {
-        position: relative;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
+      .hero-overlay .hero-badge-hero {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,.12);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,.18);
+        padding: 10px 22px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: .88rem;
         margin-bottom: 20px;
+        animation: fadeInUp .8s ease both;
       }
-      .hero-card.main .hero-prod-grid .hp-item {
-        aspect-ratio: 1/1;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0,0,0,.15);
-      }
-      .hero-card.main .hero-prod-grid .hp-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform .5s;
-      }
-      .hero-card.main .hero-prod-grid .hp-item:hover img {
-        transform: scale(1.08);
-      }
-      .hero-card.main h3 {
-        font-size: 1.6rem;
+      .hero-overlay h1 {
+        font-size: clamp(2.4rem, 5.5vw, 4.2rem);
         font-weight: 800;
-        margin: 0;
-        position: relative;
+        margin: 0 0 16px;
+        text-shadow: 0 4px 30px rgba(0,0,0,.35);
+        line-height: 1.08;
+        letter-spacing: -1.5px;
+        animation: fadeInUp .8s ease .15s both;
+      }
+      .hero-overlay h1 .gradient-text-hero {
+        background: linear-gradient(135deg, #86efac, #4ade80, #22c55e);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        filter: drop-shadow(0 2px 8px rgba(34,197,94,.4));
+      }
+      .hero-overlay p {
+        font-size: 1.15rem;
+        max-width: 520px;
+        margin: 0 0 28px;
+        opacity: .92;
         text-shadow: 0 2px 12px rgba(0,0,0,.25);
+        line-height: 1.6;
+        animation: fadeInUp .8s ease .3s both;
       }
-      .hero-card.main p {
-        margin: 6px 0 0;
-        opacity: 0.95;
-        position: relative;
-        text-shadow: 0 1px 6px rgba(0,0,0,.2);
+      .hero-overlay .hero-btns {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        animation: fadeInUp .8s ease .45s both;
       }
-      .hero-card.float1 {
-        top: 30px;
-        right: -30px;
-        width: 200px;
-        animation-delay: -2s;
-        background: rgba(255,255,255,.88);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255,255,255,.5);
-        box-shadow: 0 15px 40px rgba(0,0,0,.12);
+      .hero-overlay .hero-btns button {
+        padding: 14px 32px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: .95rem;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all .25s;
       }
-      .hero-card.float2 {
-        bottom: 30px;
-        left: -30px;
-        width: 230px;
-        animation-delay: -4s;
-        background: rgba(255,255,255,.88);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255,255,255,.5);
-        box-shadow: 0 15px 40px rgba(0,0,0,.12);
+      .hero-overlay .btn-hero-primary {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: #fff;
+        box-shadow: 0 8px 30px rgba(34,197,94,.35);
       }
-      .hero-card.float3 {
-        top: 18%;
-        right: 10%;
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        animation: floatyRev 7s ease-in-out infinite;
-        animation-delay: -1s;
+      .hero-overlay .btn-hero-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(34,197,94,.45);
+      }
+      .hero-overlay .btn-hero-ghost {
         background: rgba(255,255,255,.1);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255,255,255,.15);
-        box-shadow: none;
+        border: 1px solid rgba(255,255,255,.2) !important;
+        color: #fff;
+      }
+      .hero-overlay .btn-hero-ghost:hover {
+        background: rgba(255,255,255,.18);
+      }
+      .hero-overlay .hero-stat-row {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        pointer-events: none;
+        gap: 36px;
+        margin-top: 32px;
+        animation: fadeInUp .8s ease .6s both;
       }
-      .mini-prod {
-        display: flex;
-        align-items: center;
-        gap: 10px;
+      .hero-overlay .hero-stat-row .hs {
+        text-align: center;
       }
-      .mini-prod img {
-        width: 48px;
-        height: 48px;
-        border-radius: 14px;
-        object-fit: cover;
-        box-shadow: 0 4px 12px rgba(0,0,0,.08);
+      .hero-overlay .hero-stat-row .hs strong {
+        display: block;
+        font-size: 1.7rem;
+        font-weight: 800;
+        text-shadow: 0 2px 10px rgba(0,0,0,.3);
       }
-      .mini-prod strong {
-        font-size: 0.85rem;
+      .hero-overlay .hero-stat-row .hs span {
+        font-size: .82rem;
+        opacity: .85;
       }
-      .mini-prod small {
-        color: var(--muted);
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(0); }
       }
-      @keyframes floaty {
-        0%, 100% { transform: translateY(0); }
-         50% { transform: translateY(-14px); }
-      }
-      @keyframes floatyRev {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-         33% { transform: translateY(-18px) rotate(5deg); }
-         66% { transform: translateY(8px) rotate(-3deg); }
-      }
-      .hero-visual .deco-leaf {
-        position: absolute;
-        font-size: 2.8rem;
-        opacity: .1;
-        pointer-events: none;
-        animation: floaty 8s ease-in-out infinite;
-      }
-      .hero-visual .deco-leaf:nth-child(1) { top: -20px; left: 0; animation-delay: -1s; }
-      .hero-visual .deco-leaf:nth-child(2) { bottom: -10px; right: -10px; font-size: 3.6rem; animation-delay: -5s; }
       @media (max-width: 992px) {
         .hero-visual {
+          height: 420px;
+          max-width: 520px;
+          margin: 20px auto 0;
+        }
+        .hf-2, .hf-5, .hf-6 { display: none; }
+        .hf-1, .hf-3, .hf-4 { font-size: 2rem !important; }
+      }
+      @media (max-width: 576px) {
+        .hero-visual {
           height: 380px;
-          max-width: 480px;
-          margin: 0 auto;
+          border-radius: 24px;
+          max-width: 100%;
         }
-        .hero-card.main .hero-prod-grid { display: none; }
-        .hero-card.float1 {
-          right: -10px;
-          width: 160px;
-          top: 20px;
-          padding: 12px;
-        }
-        .hero-card.float2 {
-          left: -10px;
-          width: 180px;
-          bottom: 20px;
-          padding: 12px;
-        }
-        .hero-card.float3 { display: none; }
-        .hero-card.main { border-radius: 24px; padding: 24px; }
-        .mini-prod img { width: 38px; height: 38px; }
-        .hero-visual .deco-leaf { display: none; }
+        .hero-overlay { padding: 24px 20px; }
+        .hero-overlay .hero-stat-row { gap: 20px; margin-top: 24px; }
+        .hero-overlay .hero-stat-row .hs strong { font-size: 1.4rem; }
+        .hf-item { display: none !important; }
       }
 
       /* =========================================================
@@ -3449,42 +3450,27 @@
                 </div>
               </div>
               <div class="hero-visual">
-                <div class="deco-leaf"><i class="fa-solid fa-leaf"></i></div>
-                <div class="deco-leaf"><i class="fa-solid fa-seedling"></i></div>
-                <div class="hero-card main">
-                  <div class="hero-prod-grid">
-                    <div class="hp-item"><img src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=300&q=80" alt="Avocado"></div>
-                    <div class="hp-item"><img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=300&q=80" alt="Honey"></div>
-                    <div class="hp-item"><img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=300&q=80" alt="Berries"></div>
-                  </div>
-                  <h3 data-i18n="hero.cardT">From farm to your table</h3>
-                  <p data-i18n="hero.cardP">
-                    2,500+ organic products, handpicked just for you.
-                  </p>
+                <div class="hero-bg"></div>
+                <div class="hero-floats">
+                  <div class="hf-item hf-1"><i class="fa-solid fa-leaf"></i></div>
+                  <div class="hf-item hf-2"><i class="fa-solid fa-seedling"></i></div>
+                  <div class="hf-item hf-3"><i class="fa-solid fa-spa"></i></div>
+                  <div class="hf-item hf-4"><i class="fa-solid fa-tree"></i></div>
+                  <div class="hf-item hf-5"><i class="fa-solid fa-cloud"></i></div>
+                  <div class="hf-item hf-6"><i class="fa-solid fa-wind"></i></div>
                 </div>
-                <div class="hero-card float3"><i class="fa-solid fa-store"></i></div>
-                <div class="hero-card float1">
-                  <div class="mini-prod">
-                    <img
-                      src="https://images.unsplash.com/photo-1610348725531-843dff563e2c?w=200&q=80"
-                      alt="Avocado"
-                    />
-                    <div>
-                      <strong style="font-size: 0.85rem">Hass Avocado</strong
-                      ><br /><small>$3.99</small>
-                    </div>
+                <div class="hero-overlay">
+                  <div class="hero-badge-hero"><i class="fa-solid fa-seedling"></i> <span data-i18n="hero.badge">100% Certified Organic</span></div>
+                  <h1><span data-i18n="hero.title1">Eat clean,</span><br><span class="gradient-text-hero" data-i18n="hero.title2">live green.</span></h1>
+                  <p data-i18n="hero.lead">Premium organic groceries and eco-friendly essentials, sourced directly from certified sustainable farms and delivered to your door.</p>
+                  <div class="hero-btns">
+                    <button class="btn-hero-primary" onclick="navigateTo('shop')"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="hero.shop">Shop Now</span></button>
+                    <button class="btn-hero-ghost" onclick="navigateTo('about')"><span data-i18n="hero.story">Our Story</span></button>
                   </div>
-                </div>
-                <div class="hero-card float2">
-                  <div class="mini-prod">
-                    <img
-                      src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=200&q=80"
-                      alt="Honey"
-                    />
-                    <div>
-                      <strong style="font-size: 0.85rem">Raw Wild Honey</strong
-                      ><br /><small>$8.49</small>
-                    </div>
+                  <div class="hero-stat-row">
+                    <div class="hs"><strong>2,500+</strong><span data-i18n="hero.s1">Organic products</span></div>
+                    <div class="hs"><strong>180+</strong><span data-i18n="hero.s2">Certified farms</span></div>
+                    <div class="hs"><strong>98%</strong><span data-i18n="hero.s3">Happy customers</span></div>
                   </div>
                 </div>
               </div>
