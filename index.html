@@ -532,105 +532,91 @@
         padding: 160px 0 80px;
         overflow: hidden;
       }
-      .hero-grid {
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 60px;
-        align-items: center;
-      }
-      @media (max-width: 992px) {
-        .hero-grid {
-          grid-template-columns: 1fr;
-          text-align: center;
-        }
-      }
-      .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--soft);
-        color: var(--secondary);
-        padding: 8px 16px;
-        border-radius: 30px;
-        font-weight: 600;
-        font-size: 0.85rem;
-        border: 1px solid var(--glow);
-      }
-      .hero h1 {
-        font-size: clamp(2.2rem, 5vw, 4rem);
-        font-weight: 800;
-        line-height: 1.05;
-        margin: 18px 0 18px;
-        letter-spacing: -1.5px;
-      }
-      .hero h1 .gradient-text {
-        background: var(--grad);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-      }
-      .hero p.lead {
-        font-size: 1.1rem;
-        color: var(--muted);
-        max-width: 540px;
-        margin: 0 0 28px;
-      }
-      @media (max-width: 992px) {
-        .hero p.lead {
-          margin: 0 auto 28px;
-        }
-      }
-      .hero-stats {
-        display: flex;
-        gap: 30px;
-        margin-top: 38px;
-        flex-wrap: wrap;
-      }
-      .hero-stats .stat strong {
-        display: block;
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: var(--secondary);
-      }
-      .hero-stats .stat span {
-        color: var(--muted);
-        font-size: 0.88rem;
-      }
 
       .hero-visual {
         display: flex;
         border-radius: 32px;
         overflow: hidden;
         box-shadow: 0 30px 80px rgba(0,0,0,.35);
-        background: #0a2e1a;
         min-height: 480px;
       }
-      .hero-text-col {
-        flex: 0 0 45%;
-        max-width: 45%;
-        padding: 56px 48px;
+      .hero-brand-col {
+        flex: 0 0 28%;
+        background: linear-gradient(160deg, #0d331e 0%, #1a4d2a 50%, #0d331e 100%);
         display: flex;
         flex-direction: column;
+        align-items: center;
         justify-content: center;
-        color: #fff;
+        padding: 40px 24px;
+        position: relative;
+        gap: 20px;
       }
-      .hero-media-col {
+      .hero-brand-col .hb-logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.08);
+        border: 2px solid rgba(255,255,255,.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: #86efac;
+      }
+      .hero-brand-col .hb-tagline {
+        font-size: 1.6rem;
+        font-weight: 300;
+        letter-spacing: 8px;
+        text-transform: uppercase;
+        color: rgba(255,255,255,.6);
+      }
+      .hero-brand-col .hb-accents {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .hero-brand-col .hb-accents span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #4ade80;
+        opacity: .5;
+        animation: accentPulse 2s ease-in-out infinite;
+      }
+      .hero-brand-col .hb-accents span:nth-child(2) { animation-delay: .3s; }
+      .hero-brand-col .hb-accents span:nth-child(3) { animation-delay: .6s; }
+      @keyframes accentPulse {
+        0%, 100% { opacity: .3; transform: scale(1); }
+        50% { opacity: .9; transform: scale(1.4); }
+      }
+      .hero-video-col {
         flex: 1;
         position: relative;
         overflow: hidden;
       }
-      .hero-media-col video {
+      .hero-video-col video {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
       }
-      .hero-media-col .media-gradient {
+      .hero-video-col .hero-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(90deg, #0a2e1a 0%, transparent 40%);
-        pointer-events: none;
+        background: linear-gradient(135deg, rgba(5,46,22,.55) 0%, rgba(5,46,22,.15) 50%, rgba(5,46,22,.45) 100%);
+        z-index: 1;
+      }
+      .hero-video-col .hero-content {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #fff;
+        padding: 40px;
       }
       .hc-badge {
         display: inline-flex;
@@ -646,8 +632,8 @@
         backdrop-filter: blur(4px);
         animation: heroFadeIn .7s ease both;
       }
-      .hero-text-col h1 {
-        font-size: clamp(2.4rem, 5vw, 3.8rem);
+      .hero-video-col .hero-content h1 {
+        font-size: clamp(2.4rem, 5.5vw, 4.2rem);
         font-weight: 800;
         margin: 0 0 16px;
         line-height: 1.08;
@@ -655,7 +641,7 @@
         text-shadow: 0 4px 30px rgba(0,0,0,.3);
         animation: heroFadeIn .7s ease .12s both;
       }
-      .hero-text-col h1 .hc-green {
+      .hero-video-col .hero-content h1 .hc-green {
         background: linear-gradient(135deg, #86efac, #4ade80, #22c55e);
         background-clip: text;
         -webkit-background-clip: text;
@@ -663,7 +649,7 @@
         color: transparent;
         filter: drop-shadow(0 2px 8px rgba(34,197,94,.4));
       }
-      .hero-text-col p {
+      .hero-video-col .hero-content p {
         font-size: 1.15rem;
         max-width: 500px;
         margin: 0 0 28px;
@@ -672,13 +658,14 @@
         text-shadow: 0 2px 12px rgba(0,0,0,.2);
         animation: heroFadeIn .7s ease .24s both;
       }
-      .hero-text-col .hc-btns {
+      .hero-video-col .hero-content .hc-btns {
         display: flex;
         gap: 14px;
         flex-wrap: wrap;
+        justify-content: center;
         animation: heroFadeIn .7s ease .36s both;
       }
-      .hero-text-col .hc-btns button {
+      .hero-video-col .hero-content .hc-btns button {
         padding: 14px 32px;
         border-radius: 14px;
         font-weight: 700;
@@ -704,20 +691,20 @@
         color: #fff;
       }
       .hc-btn-outline:hover { background: rgba(255,255,255,.18); }
-      .hero-text-col .hc-stats {
+      .hero-video-col .hero-content .hc-stats {
         display: flex;
         gap: 36px;
         margin-top: 32px;
         animation: heroFadeIn .7s ease .48s both;
       }
-      .hero-text-col .hc-stats .hs-item { text-align: center; }
-      .hero-text-col .hc-stats .hs-item strong {
+      .hero-video-col .hero-content .hc-stats .hs-item { text-align: center; }
+      .hero-video-col .hero-content .hc-stats .hs-item strong {
         display: block;
         font-size: 1.7rem;
         font-weight: 800;
         text-shadow: 0 2px 10px rgba(0,0,0,.25);
       }
-      .hero-text-col .hc-stats .hs-item span {
+      .hero-video-col .hero-content .hc-stats .hs-item span {
         font-size: .82rem;
         opacity: .85;
       }
@@ -727,34 +714,43 @@
       }
       @media (max-width: 992px) {
         .hero-visual {
-          flex-direction: column-reverse;
+          flex-direction: column;
           max-width: 600px;
           margin: 20px auto 0;
           min-height: auto;
         }
-        .hero-text-col {
+        .hero-brand-col {
           flex: none;
-          max-width: 100%;
-          padding: 40px 32px;
+          width: 100%;
+          padding: 32px 24px;
+          flex-direction: row;
+          justify-content: center;
+          gap: 16px;
         }
-        .hero-media-col {
-          height: 300px;
+        .hero-brand-col .hb-logo { width: 56px; height: 56px; font-size: 1.4rem; }
+        .hero-brand-col .hb-tagline { font-size: 1.2rem; letter-spacing: 6px; }
+        .hero-brand-col .hb-accents { margin-top: 0; }
+        .hero-video-col {
+          height: 340px;
         }
-        .hero-text-col h1 { font-size: clamp(2rem, 5.5vw, 3rem); }
       }
       @media (max-width: 576px) {
         .hero-visual {
           border-radius: 24px;
           max-width: 100%;
         }
-        .hero-text-col {
-          padding: 28px 20px;
+        .hero-brand-col {
+          padding: 24px 16px;
+          gap: 12px;
         }
-        .hero-text-col .hc-stats { gap: 20px; margin-top: 24px; }
-        .hero-text-col .hc-stats .hs-item strong { font-size: 1.4rem; }
-        .hero-media-col {
-          height: 220px;
+        .hero-brand-col .hb-logo { width: 44px; height: 44px; font-size: 1.1rem; }
+        .hero-brand-col .hb-tagline { font-size: 1rem; letter-spacing: 4px; }
+        .hero-video-col {
+          height: 240px;
         }
+        .hero-video-col .hero-content { padding: 24px 20px; }
+        .hero-video-col .hero-content .hc-stats { gap: 20px; margin-top: 24px; }
+        .hero-video-col .hero-content .hc-stats .hs-item strong { font-size: 1.4rem; }
       }      /* =========================================================
     SECTION GENERIC
     ========================================================= */
@@ -3372,81 +3368,35 @@
       <section class="view active" id="view-home">
         <div class="hero">
           <div class="container-eco">
-            <div class="hero-grid">
-              <div>
-                <span class="hero-badge"
-                  ><i class="fa-solid fa-seedling"></i>
-                  <span data-i18n="hero.badge"
-                    >100% Certified Organic</span
-                  ></span
-                >
-                <h1>
-                  <span data-i18n="hero.title1">Eat clean,</span><br /><span
-                    class="gradient-text"
-                    data-i18n="hero.title2"
-                    >live green.</span
-                  >
-                </h1>
-                <p class="lead" data-i18n="hero.lead">
-                  Premium organic groceries and eco-friendly essentials, sourced
-                  directly from certified sustainable farms and delivered to
-                  your door.
-                </p>
-                <div
-                  style="
-                    display: flex;
-                    gap: 12px;
-                    flex-wrap: wrap;
-                    justify-content: flex-start;
-                  "
-                  id="heroCtas"
-                >
-                  <button class="btn-eco magnetic" onclick="navigateTo('shop')">
-                    <i class="fa-solid fa-bag-shopping"></i>
-                    <span data-i18n="hero.shop">Shop Now</span>
-                  </button>
-                  <button
-                    class="btn-ghost magnetic"
-                    onclick="navigateTo('about')"
-                  >
-                    <span data-i18n="hero.story">Our Story</span>
-                  </button>
-                </div>
-                <div class="hero-stats">
-                  <div class="stat">
-                    <strong>2,500+</strong
-                    ><span data-i18n="hero.s1">Organic products</span>
+            <div class="hero-visual">
+                <div class="hero-brand-col">
+                  <div class="hb-logo">
+                    <i class="fa-solid fa-leaf"></i>
                   </div>
-                  <div class="stat">
-                    <strong>180+</strong
-                    ><span data-i18n="hero.s2">Certified farms</span>
-                  </div>
-                  <div class="stat">
-                    <strong>98%</strong
-                    ><span data-i18n="hero.s3">Happy customers</span>
+                  <div class="hb-tagline">eco</div>
+                  <div class="hb-accents">
+                    <span></span><span></span><span></span>
                   </div>
                 </div>
-              </div>
-              <div class="hero-visual">
-                <div class="hero-text-col">
-                  <div class="hc-badge"><i class="fa-solid fa-seedling"></i> <span data-i18n="hero.badge">100% Certified Organic</span></div>
-                  <h1><span data-i18n="hero.title1">Eat clean,</span><br><span class="hc-green" data-i18n="hero.title2">live green.</span></h1>
-                  <p data-i18n="hero.lead">Premium organic groceries and eco-friendly essentials, sourced directly from certified sustainable farms and delivered to your door.</p>
-                  <div class="hc-btns">
-                    <button class="hc-btn-green" onclick="navigateTo('shop')"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="hero.shop">Shop Now</span></button>
-                    <button class="hc-btn-outline" onclick="navigateTo('about')"><span data-i18n="hero.story">Our Story</span></button>
-                  </div>
-                  <div class="hc-stats">
-                    <div class="hs-item"><strong>2,500+</strong><span data-i18n="hero.s1">Organic products</span></div>
-                    <div class="hs-item"><strong>180+</strong><span data-i18n="hero.s2">Certified farms</span></div>
-                    <div class="hs-item"><strong>98%</strong><span data-i18n="hero.s3">Happy customers</span></div>
-                  </div>
-                </div>
-                <div class="hero-media-col">
+                <div class="hero-video-col">
                   <video autoplay loop muted playsinline poster="https://cdn.coverr.co/videos/coverr-sun-setting-over-a-barley-crop-field-2451/thumbnail?width=1920">
                     <source src="https://cdn.coverr.co/videos/coverr-sun-setting-over-a-barley-crop-field-2451/1080p.mp4" type="video/mp4">
                   </video>
-                  <div class="media-gradient"></div>
+                  <div class="hero-overlay"></div>
+                  <div class="hero-content">
+                    <div class="hc-badge"><i class="fa-solid fa-seedling"></i> <span data-i18n="hero.badge">100% Certified Organic</span></div>
+                    <h1><span data-i18n="hero.title1">Eat clean,</span><br><span class="hc-green" data-i18n="hero.title2">live green.</span></h1>
+                    <p data-i18n="hero.lead">Premium organic groceries and eco-friendly essentials, sourced directly from certified sustainable farms and delivered to your door.</p>
+                    <div class="hc-btns">
+                      <button class="hc-btn-green" onclick="navigateTo('shop')"><i class="fa-solid fa-bag-shopping"></i> <span data-i18n="hero.shop">Shop Now</span></button>
+                      <button class="hc-btn-outline" onclick="navigateTo('about')"><span data-i18n="hero.story">Our Story</span></button>
+                    </div>
+                    <div class="hc-stats">
+                      <div class="hs-item"><strong>2,500+</strong><span data-i18n="hero.s1">Organic products</span></div>
+                      <div class="hs-item"><strong>180+</strong><span data-i18n="hero.s2">Certified farms</span></div>
+                      <div class="hs-item"><strong>98%</strong><span data-i18n="hero.s3">Happy customers</span></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4403,11 +4353,10 @@
             <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
               <button class="btn-ghost" onclick="closeModal('ticketModal')">Hủy</button>
               <button class="btn-eco" onclick="submitTicket()"><i class="fa-solid fa-paper-plane"></i> Gửi yêu cầu</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
     <!-- ===== PRODUCT MODAL ===== -->
     <div class="eco-modal" id="productModal">
