@@ -9950,7 +9950,9 @@
             }
           }
         }
-        initApp();
+        // Fallback áº©n loader sau 3s náº¿u initApp() gáº·p lá»—i
+        setTimeout(() => $("#loader").addClass("hide"), 3000);
+        try { initApp(); } catch (e) { console.error('[EcoShop] init error:', e); $("#loader").addClass("hide"); }
         var savedView = sessionStorage.getItem('eco_current_view');
         if (savedView && savedView !== 'home') {
           setTimeout(function() { navigateTo(savedView); }, 350);
@@ -9997,7 +9999,7 @@
             '</div>' +
           '</div>';
         });
-        $('#bannerSlider').prepend(html);
+        $('#bannerSlider').html(html);
         var dotsHtml = '';
         bannerData.forEach(function(b, i) {
           dotsHtml += '<span class="' + (i === 0 ? 'active' : '') + '" onclick="goToBanner(' + i + ')"></span>';
@@ -10793,7 +10795,7 @@
           positionHighlight($el2[0]);
           positionTooltip($el2[0]);
         }
-      }, 100);
+      }, 300);
 
       setTimeout(function() {
         clearInterval(checkExist);
