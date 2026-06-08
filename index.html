@@ -1,5 +1,5 @@
 ﻿<!doctype html>
-<html lang="en" dir="ltr" data-theme="light">
+<html lang="vi" dir="ltr" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <script>history.scrollRestoration='manual';addEventListener('DOMContentLoaded',()=>window.scrollTo(0,0))</script>
@@ -3216,9 +3216,9 @@
         <a href="#" data-view="categories" data-i18n="nav.categories">Categories</a>
         <a href="#" data-view="tracking" data-i18n="nav.tracking">Tracking</a>
         <a href="#" data-view="about" data-i18n="nav.about">About</a>
-        <a href="#" data-view="community" style="color:var(--accent);font-weight:600">Lounge</a>
-        <a href="#" data-view="farmtour">Tham quan</a>
-        <a href="#" onclick="if(requireAuth()) openModal('ticketModal')">Hỗ trợ</a>
+        <a href="#" data-view="community" style="color:var(--accent);font-weight:600" data-i18n="nav.lounge">Lounge</a>
+        <a href="#" data-view="farmtour" data-i18n="nav.farmtour">Tham quan</a>
+        <a href="#" onclick="if(requireAuth()) openModal('ticketModal')" data-i18n="nav.support">Hỗ trợ</a>
       </div>
       <div class="nav-actions">
         <div class="nav-group">
@@ -4442,6 +4442,9 @@
           "nav.marketplace": "Marketplace",
           "nav.sell": "Sell",
           "nav.admin": "Admin",
+          "nav.lounge": "Lounge",
+          "nav.farmtour": "Farm Tour",
+          "nav.support": "Support",
           "auth.login_tab": "Login",
           "auth.register": "Register",
           "auth.admin_login": "Admin",
@@ -4739,6 +4742,9 @@
           "nav.marketplace": "Chợ",
           "nav.sell": "Bán hàng",
           "nav.admin": "Quản trị",
+          "nav.lounge": "Cộng đồng",
+          "nav.farmtour": "Tham quan",
+          "nav.support": "Hỗ trợ",
           "auth.login_tab": "Đăng nhập",
           "auth.register": "Đăng ký",
           "auth.admin_login": "Quản trị",
@@ -5035,6 +5041,9 @@
           "nav.marketplace": "السوق",
           "nav.sell": "بيع",
           "nav.admin": "المشرف",
+          "nav.lounge": "الاستراحة",
+          "nav.farmtour": "جولة المزرعة",
+          "nav.support": "الدعم",
           "auth.login_tab": "تسجيل الدخول",
           "auth.register": "تسجيل",
           "auth.admin_login": "المشرف",
@@ -5142,7 +5151,7 @@
           "footer.developed": "تم تطوير الموقع بواسطة المجموعة 2",
         },
       };
-      let LANG = sessionStorage.getItem("eco_lang") || "en";
+      let LANG = sessionStorage.getItem("eco_lang") || "vi";
       function applyI18n() {
         const dict = I18N[LANG] || I18N.en;
         document.documentElement.lang = LANG;
