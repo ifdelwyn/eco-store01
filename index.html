@@ -1703,7 +1703,7 @@
    ========================================================= */
       footer {
         background: var(--grad-dark);
-        color: #d4f4df;
+        color: var(--footer-text);
         margin-top: 80px;
         padding: 70px 0 24px;
         position: relative;
@@ -1715,9 +1715,10 @@
         inset: 0;
         background: radial-gradient(
           circle at 20% 20%,
-          rgba(34, 197, 94, 0.25),
-          transparent 50%
+          var(--primary) 0%,
+          transparent 60%
         );
+        opacity: 0.2;
       }
       .f-grid {
         display: grid;
@@ -1736,21 +1737,21 @@
         }
       }
       .f-col h5 {
-        color: #fff;
+        color: var(--footer-text);
         font-weight: 800;
         margin-bottom: 18px;
         font-size: 1rem;
       }
       .f-col a,
       .f-col p {
-        color: #bbe5c8;
+        color: var(--footer-muted);
         font-size: 0.9rem;
         display: block;
         margin-bottom: 8px;
         transition: all 0.2s;
       }
       .f-col a:hover {
-        color: #fff;
+        color: var(--footer-text);
         transform: translateX(4px);
       }
       html[dir="rtl"] .f-col a:hover {
@@ -1760,13 +1761,13 @@
         width: 100%;
         padding: 13px 16px;
         border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        background: rgba(255, 255, 255, 0.08);
-        color: #fff;
+        border: 1px solid var(--footer-border);
+        background: var(--footer-input-bg);
+        color: var(--footer-text);
         outline: none;
       }
       .f-newsletter input::placeholder {
-        color: #a0c9ae;
+        color: var(--footer-muted);
       }
       .f-newsletter button {
         margin-top: 10px;
@@ -1795,9 +1796,9 @@
       .f-bot {
         margin-top: 50px;
         padding-top: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        border-top: 1px solid var(--footer-border);
         text-align: center;
-        color: #a0c9ae;
+        color: var(--footer-muted);
         font-size: 0.85rem;
         position: relative;
       }
@@ -4398,7 +4399,7 @@
         <div class="auth-grid">
           <div class="auth-side">
             <div>
-              <div class="brand" style="color: #fff">
+            <div class="brand" style="color: var(--footer-text)">
                 <div
                   class="brand-logo"
                   style="background: rgba(255, 255, 255, 0.2)"
@@ -4894,11 +4895,15 @@
           "nav.search_btn": "Search",
           "nav.cart_btn": "Cart",
           "nav.account_btn": "Account",
-          "policy.legal": "Legal Policy: EcoShop complies with consumer protection laws and ethical sourcing standards in all operating regions.",
-          "policy.terms": "Terms of Use: By using this site you agree to lawful use, accurate account information, and our purchasing terms.",
-          "policy.privacy": "Privacy Policy: We collect minimal data needed to process orders. We never sell your data.",
-          "policy.shipping": "Shipping Policy: Free shipping over $50. Carriers: GHN, GHTK, Viettel Post, J&T. Delivery 1-3 business days.",
-          "policy.refund": "Refund Policy: 30-day returns on unopened items. Refunds processed within 5 business days.",
+          "policy.legal": "Legal Policy — EcoShop Ltd. complies fully with consumer protection laws (including the Consumer Rights Directive 2011/83/EU), fair-trade regulations, and ethical sourcing standards across all operating regions. We hold certifications from the Organic Trade Association (OTA), Rainforest Alliance, and the Global Organic Textile Standard (GOTS). Our supply chain is audited annually by independent third parties to ensure no forced labour, child labour, or environmental degradation occurs. Any violation results in immediate contract termination and legal reporting.<br><br><b>✅ Product compliance:</b> All items sold on EcoShop bear valid certification logos and lot numbers traceable to origin.<br><b>📄 Documentation:</b> Full certificates of analysis (CoA), material safety data sheets (MSDS), and origin declarations are available upon request via <a href='#' style='color:var(--primary)'>legal@ecoshop.com</a>.<br><b>⚖️ Governing law:</b> These policies are governed by the laws of Belgium, with disputes settled via the ICC International Court of Arbitration in Brussels.",
+
+          "policy.terms": "Terms of Use — By accessing or purchasing on EcoShop, you agree to the following binding terms:<br><br><b>1. Account responsibility.</b> You must provide accurate, current registration details and keep your password confidential. You are liable for all activity under your account.<br><b>2. Pricing & availability.</b> Prices are listed in USD (or local currency where supported) and exclude applicable taxes. EcoShop reserves the right to modify prices and correct inadvertent errors before order confirmation.<br><b>3. Order acceptance.</b> All orders are subject to acceptance and stock availability. We may refuse or cancel orders at our discretion (including suspected resale or fraud).<br><b>4. Prohibited uses.</b> You may not use EcoShop for any unlawful purpose, nor reproduce, distribute, or scrape our content without written permission.<br><b>5. Limitation of liability.</b> EcoShop's total liability shall not exceed the purchase price of the product giving rise to the claim. We are not liable for indirect, incidental, or consequential damages.<br><b>6. Changes.</b> We may update these terms at any time; continued use constitutes acceptance of the latest version.",
+
+          "policy.privacy": "Privacy Policy — Your privacy matters to us. EcoShop collects only the minimum personal data necessary to process orders, deliver shipments, and provide customer support.<br><br><b>📌 What we collect:</b> Name, email, phone number, shipping address, and payment token (we never store full credit-card numbers).<br><b>🔒 How we protect it:</b> Data is encrypted in transit (TLS 1.3) and at rest (AES-256). Access is restricted to authorised personnel under NDA.<br><b>🚫 No data selling:</b> We never sell, rent, or trade your personal information to third parties for marketing.<br><b>🍪 Cookies:</b> We use essential cookies for cart functionality and session management. Optional analytics cookies (Google Analytics) can be declined via the cookie banner.<br><b>📧 Marketing:</b> You may opt out of promotional emails at any time by clicking the unsubscribe link or contacting <a href='#' style='color:var(--primary)'>privacy@ecoshop.com</a>.<br><b>📅 Retention:</b> Data is retained for the duration of your account plus 24 months for legal/accounting purposes, after which it is permanently deleted.",
+
+          "policy.shipping": "Shipping Policy — We partner with leading carriers to deliver orders promptly and sustainably.<br><br><b>🚚 Carriers:</b> GHN, GHTK, Viettel Post, J&T Express, DHL eCommerce, and EcoShip (our carbon-neutral last-mile fleet in select cities).<br><b>💰 Rates & free shipping:</b> Standard delivery $3.99 — FREE for orders over $50 (or local equivalent). Express (1-2 days) $6.99.<br><b>🌍 International:</b> We ship to 27 countries across Europe, Southeast Asia, and North America. Duties and taxes are calculated at checkout.<br><b>📦 Packaging:</b> 100% recycled cardboard, compostable mailers, and biodegradable void fill. No single-use plastics.<br><b>⏱️ Delivery times:</b> Urban: 1-2 business days. Rural: 2-4 business days. International: 5-10 business days.<br><b>🔍 Tracking:</b> A tracking link is emailed to you as soon as the label is created. You can also track via your order history page.",
+
+          "policy.refund": "Refund & Return Policy — We want you to love every purchase. If something isn't right, we're here to help.<br><br><b>🔄 Returns window:</b> 30 calendar days from delivery for unopened, resaleable items. Perishable goods (fresh produce, dairy) are non-returnable for hygiene reasons.<br><b>💵 Refunds:</b> Processed within 5 business days after we receive and inspect the return. Funds are returned to the original payment method.<br><b>🚚 Return shipping:</b> Free for defective or incorrect items. For change-of-mind returns, a flat $3.99 fee is deducted from the refund.<br><b>📋 How to initiate:</b> Go to your account → Order History → Request Return, or contact <a href='#' style='color:var(--primary)'>returns@ecoshop.com</a> with your order number.<br><b>⚠️ Damaged in transit:</b> Please photograph the damage and notify us within 48 hours for a full refund or immediate replacement — no questions asked.",
           "policy.suffix": "policy",
           "news.placeholder": "your@email.com",
           "news.invalid": "Please enter a valid email",
@@ -5193,11 +5198,11 @@
           "nav.search_btn": "Tìm kiếm",
           "nav.cart_btn": "Giỏ hàng",
           "nav.account_btn": "Tài khoản",
-          "policy.legal": "Chính sách pháp lý: EcoShop tuân thủ luật bảo vệ người tiêu dùng và tiêu chuẩn tìm nguồn cung ứng đạo đức.",
-          "policy.terms": "Điều khoản sử dụng: Khi sử dụng trang web, bạn đồng ý với các điều khoản mua hàng và sử dụng hợp pháp.",
-          "policy.privacy": "Chính sách bảo mật: Chúng tôi thu thập dữ liệu tối thiểu cần thiết để xử lý đơn hàng. Chúng tôi không bao giờ bán dữ liệu của bạn.",
-          "policy.shipping": "Chính sách vận chuyển: Miễn phí giao hàng trên 50$. Đơn vị vận chuyển: GHN, GHTK, Viettel Post, J&T. Giao hàng 1-3 ngày.",
-          "policy.refund": "Chính sách hoàn tiền: Đổi trả trong 30 ngày với sản phẩm chưa mở. Hoàn tiền trong 5 ngày làm việc.",
+          "policy.legal": "Chính sách pháp lý — EcoShop Ltd. tuân thủ đầy đủ luật bảo vệ người tiêu dùng (bao gồm Chỉ thị Quyền lợi Người tiêu dùng 2011/83/EU), quy định thương mại công bằng và tiêu chuẩn tìm nguồn cung ứng đạo đức trên tất cả các khu vực hoạt động. Chúng tôi sở hữu chứng nhận từ Hiệp hội Thương mại Hữu cơ (OTA), Liên minh Rừng nhiệt đới (Rainforest Alliance) và Tiêu chuẩn Dệt may Hữu cơ Toàn cầu (GOTS). Chuỗi cung ứng của chúng tôi được kiểm toán hàng năm bởi bên thứ ba độc lập để đảm bảo không có lao động cưỡng bức, lao động trẻ em hoặc suy thoái môi trường. Bất kỳ vi phạm nào sẽ dẫn đến chấm dứt hợp đồng ngay lập tức và báo cáo pháp lý.<br><br><b>✅ Tuân thủ sản phẩm:</b> Tất cả sản phẩm bán trên EcoShop đều mang logo chứng nhận hợp lệ và số lô có thể truy xuất nguồn gốc.<br><b>📄 Tài liệu:</b> Giấy chứng nhận phân tích (CoA), bảng dữ liệu an toàn vật liệu (MSDS) và tuyên bố xuất xứ có sẵn theo yêu cầu qua <a href='#' style='color:var(--primary)'>legal@ecoshop.com</a>.<br><b>⚖️ Luật điều chỉnh:</b> Các chính sách này được điều chỉnh bởi luật pháp Bỉ, với tranh chấp được giải quyết thông qua Tòa Trọng tài ICC tại Brussels.",
+          "policy.terms": "Điều khoản sử dụng — Khi truy cập hoặc mua hàng trên EcoShop, bạn đồng ý với các điều khoản ràng buộc sau:<br><br><b>1. Trách nhiệm tài khoản.</b> Bạn phải cung cấp thông tin đăng ký chính xác, cập nhật và giữ bí mật mật khẩu. Bạn chịu trách nhiệm cho mọi hoạt động dưới tài khoản của mình.<br><b>2. Giá cả & tình trạng hàng.</b> Giá được niêm yết bằng USD (hoặc nội tệ nếu được hỗ trợ) và chưa bao gồm thuế. EcoShop có quyền điều chỉnh giá và sửa lỗi vô ý trước khi xác nhận đơn hàng.<br><b>3. Xác nhận đơn hàng.</b> Mọi đơn hàng đều phụ thuộc vào xác nhận và tình trạng tồn kho. Chúng tôi có thể từ chối hoặc hủy đơn hàng theo quyết định riêng của mình.<br><b>4. Sử dụng bị cấm.</b> Bạn không được sử dụng EcoShop cho bất kỳ mục đích bất hợp pháp nào, cũng như sao chép, phân phối hoặc thu thập nội dung của chúng tôi khi chưa được phép bằng văn bản.<br><b>5. Giới hạn trách nhiệm.</b> Tổng trách nhiệm của EcoShop không vượt quá giá mua của sản phẩm gây ra khiếu nại. Chúng tôi không chịu trách nhiệm cho thiệt hại gián tiếp, phát sinh hoặc do hậu quả.<br><b>6. Thay đổi.</b> Chúng tôi có thể cập nhật các điều khoản này bất kỳ lúc nào; việc tiếp tục sử dụng được coi là chấp nhận phiên bản mới nhất.",
+          "policy.privacy": "Chính sách bảo mật — Quyền riêng tư của bạn rất quan trọng với chúng tôi. EcoShop chỉ thu thập dữ liệu cá nhân tối thiểu cần thiết để xử lý đơn hàng, giao hàng và hỗ trợ khách hàng.<br><br><b>📌 Chúng tôi thu thập:</b> Họ tên, email, số điện thoại, địa chỉ giao hàng và mã thông báo thanh toán (chúng tôi không bao giờ lưu số thẻ tín dụng đầy đủ).<br><b>🔒 Cách chúng tôi bảo vệ:</b> Dữ liệu được mã hóa khi truyền tải (TLS 1.3) và khi lưu trữ (AES-256). Chỉ nhân viên được ủy quyền theo NDA mới có quyền truy cập.<br><b>🚫 Không bán dữ liệu:</b> Chúng tôi không bao giờ bán, cho thuê hoặc trao đổi thông tin cá nhân của bạn cho bên thứ ba vì mục đích tiếp thị.<br><b>🍪 Cookie:</b> Chúng tôi sử dụng cookie thiết yếu cho chức năng giỏ hàng và quản lý phiên. Cookie phân tích tùy chọn (Google Analytics) có thể từ chối qua banner cookie.<br><b>📧 Tiếp thị:</b> Bạn có thể hủy nhận email quảng cáo bất kỳ lúc nào bằng cách nhấp vào liên kết hủy đăng ký hoặc liên hệ <a href='#' style='color:var(--primary)'>privacy@ecoshop.com</a>.<br><b>📅 Lưu trữ:</b> Dữ liệu được giữ trong suốt thời gian tài khoản của bạn cộng thêm 24 tháng cho mục đích kế toán/pháp lý, sau đó sẽ bị xóa vĩnh viễn.",
+          "policy.shipping": "Chính sách vận chuyển — Chúng tôi hợp tác với các đơn vị vận chuyển hàng đầu để giao hàng nhanh chóng và bền vững.<br><br><b>🚚 Đơn vị vận chuyển:</b> GHN, GHTK, Viettel Post, J&T Express, DHL eCommerce và EcoShip (đội xe giao hàng chặng cuối trung hòa carbon tại các thành phố được chọn).<br><b>💰 Biểu phí & miễn phí ship:</b> Giao chuẩn 3,99$ — MIỄN PHÍ cho đơn trên 50$ (hoặc tương đương nội tệ). Giao nhanh (1-2 ngày) 6,99$.<br><b>🌍 Quốc tế:</b> Chúng tôi giao hàng đến 27 quốc gia trên khắp châu Âu, Đông Nam Á và Bắc Mỹ. Thuế và phí được tính tại thanh toán.<br><b>📦 Đóng gói:</b> Thùng carton tái chế 100%, túi gửi hàng phân hủy sinh học và vật liệu chèn lót thân thiện môi trường. Không sử dụng nhựa dùng một lần.<br><b>⏱️ Thời gian giao:</b> Nội thành: 1-2 ngày. Nông thôn: 2-4 ngày. Quốc tế: 5-10 ngày.<br><b>🔍 Theo dõi:</b> Liên kết theo dõi được gửi qua email ngay khi nhãn vận chuyển được tạo. Bạn cũng có thể theo dõi qua trang lịch sử đơn hàng.",
+          "policy.refund": "Chính sách hoàn tiền & đổi trả — Chúng tôi mong bạn yêu thích mọi sản phẩm đã mua. Nếu có điều gì không ổn, chúng tôi sẵn sàng hỗ trợ.<br><br><b>🔄 Thời gian đổi trả:</b> 30 ngày kể từ ngày nhận hàng đối với sản phẩm chưa mở, còn nguyên giá trị bán lại. Hàng dễ hỏng (nông sản tươi, sữa) không thể đổi trả vì lý do vệ sinh.<br><b>💵 Hoàn tiền:</b> Xử lý trong vòng 5 ngày làm việc sau khi chúng tôi nhận và kiểm tra hàng trả lại. Tiền được hoàn về phương thức thanh toán ban đầu.<br><b>🚚 Phí vận chuyển trả lại:</b> Miễn phí cho hàng lỗi hoặc sai. Đối với đổi trả vì thay đổi ý định, phí cố định 3,99$ được khấu trừ từ tiền hoàn.<br><b>📋 Cách yêu cầu:</b> Vào Tài khoản → Lịch sử đơn hàng → Yêu cầu đổi trả, hoặc liên hệ <a href='#' style='color:var(--primary)'>returns@ecoshop.com</a> kèm mã đơn hàng.<br><b>⚠️ Hư hỏng khi vận chuyển:</b> Vui lòng chụp ảnh hàng hư hỏng và thông báo cho chúng tôi trong vòng 48 giờ để được hoàn tiền đầy đủ hoặc gửi hàng thay thế ngay — không cần thắc mắc.",
           "policy.suffix": "chính sách",
           "news.placeholder": "email@cuaban.com",
           "news.invalid": "Vui lòng nhập email hợp lệ",
@@ -5321,6 +5326,12 @@
           "footer.news_placeholder": "بريدك@example.com",
           "footer.subscribe": "اشتراك",
           "footer.developed": "تم تطوير الموقع بواسطة المجموعة 2",
+          "policy.legal": "السياسة القانونية — تلتزم EcoShop Ltd. بالكامل بقوانين حماية المستهلك (بما في ذلك توجيه حقوق المستهلك 2011/83/EU)، ولوائح التجارة العادلة، ومعايير التوريد الأخلاقية في جميع مناطق التشغيل. نحن حاصلون على شهادات من رابطة التجارة العضوية (OTA)، وتحالف الغابات المطيرة (Rainforest Alliance)، والمعيار العالمي للمنسوجات العضوية (GOTS). يتم تدقيق سلسلة التوريد لدينا سنويًا من قبل أطراف ثالثة مستقلة لضمان عدم وجود عمل قسري أو عمل الأطفال أو تدهور بيئي. أي انتهاك يؤدي إلى إنهاء العقد فوريًا وإبلاغ الجهات القانونية.<br><br><b>✅ الامتثال للمنتج:</b> جميع المنتجات المباعة على EcoShop تحمل شعارات شهادة صالحة وأرقام دفعات يمكن تتبع مصدرها.<br><b>📄 الوثائق:</b> شهادات التحليل الكاملة (CoA)، وصحائف بيانات السلامة (MSDS)، وإعلانات المنشأ متاحة عند الطلب عبر <a href='#' style='color:var(--primary)'>legal@ecoshop.com</a>.<br><b>⚖️ القانون الواجب التطبيق:</b> تخضع هذه السياسات لقوانين بلجيكا، مع تسوية النزاعات عبر محكمة التحكيم الدولية ICC في بروكسل.",
+          "policy.terms": "شروط الاستخدام — عند الوصول أو الشراء من EcoShop، فإنك توافق على الشروط الملزمة التالية:<br><br><b>1. مسؤولية الحساب.</b> يجب عليك تقديم بيانات تسجيل دقيقة ومحدثة والحفاظ على سرية كلمة المرور الخاصة بك. أنت مسؤول عن جميع الأنشطة التي تتم تحت حسابك.<br><b>2. التسعير والتوفر.</b> الأسعار مدرجة بالدولار الأمريكي (أو بالعملة المحلية حيثما كان ذلك مدعومًا) ولا تشمل الضرائب المطبقة. تحتفظ EcoShop بالحق في تعديل الأسعار وتصحيح الأخطاء غير المقصودة قبل تأكيد الطلب.<br><b>3. قبول الطلب.</b> جميع الطلبات تخضع للقبول وتوفر المخزون. قد نرفض أو نلغي الطلبات وفقًا لتقديرنا (بما في ذلك الاشتباه في إعادة البيع أو الاحتيال).<br><b>4. الاستخدامات المحظورة.</b> لا يجوز لك استخدام EcoShop لأي غرض غير قانوني، أو نسخ أو توزيع أو استخراج محتوانا دون إذن كتابي.<br><b>5. تحديد المسؤولية.</b> لا تتجاوز المسؤولية الإجمالية لـ EcoShop سعر شراء المنتج المسبب للمطالبة. نحن غير مسؤولين عن الأضرار غير المباشرة أو التبعية.<br><b>6. التغييرات.</b> قد نقوم بتحديث هذه الشروط في أي وقت؛ الاستخدام المستمر يعتبر قبولًا لأحدث إصدار.",
+          "policy.privacy": "سياسة الخصوصية — خصوصيتك مهمة بالنسبة لنا. تجمع EcoShop فقط الحد الأدنى من البيانات الشخصية اللازمة لمعالجة الطلبات وتسليم الشحنات وتقديم دعم العملاء.<br><br><b>📌 ما نجمعه:</b> الاسم، البريد الإلكتروني، رقم الهاتف، عنوان الشحن، ورمز الدفع (نحن لا نخزن أرقام بطاقات الائتمان الكاملة أبدًا).<br><b>🔒 كيف نحميها:</b> البيانات مشفرة أثناء النقل (TLS 1.3) وعند التخزين (AES-256). الوصول مقصور على الموظفين المصرح لهم بموجب اتفاقية عدم الإفشاء (NDA).<br><b>🚫 لا نبيع البيانات:</b> نحن لا نبيع أو نؤجر أو نتبادل معلوماتك الشخصية أبدًا مع أطراف ثالثة لأغراض التسويق.<br><b>🍪 ملفات تعريف الارتباط:</b> نستخدم ملفات تعريف الارتباط الأساسية لوظائف سلة التسوق وإدارة الجلسة. يمكن رفض ملفات تعريف الارتباط التحليلية الاختيارية (Google Analytics) عبر لافتة ملفات تعريف الارتباط.<br><b>📧 التسويق:</b> يمكنك إلغاء الاشتراك في رسائل البريد الإلكتروني الترويجية في أي وقت بالنقر على رابط إلغاء الاشتراك أو الاتصال بـ <a href='#' style='color:var(--primary)'>privacy@ecoshop.com</a>.<br><b>📅 الاحتفاظ:</b> يتم الاحتفاظ بالبيانات طوال مدة حسابك بالإضافة إلى 24 شهرًا للأغراض القانونية والمحاسبية، ثم يتم حذفها نهائيًا.",
+          "policy.shipping": "سياسة الشحن — نحن نتعاون مع شركات النقل الرائدة لتسليم الطلبات بسرعة وبشكل مستدام.<br><br><b>🚚 شركات النقل:</b> GHN، GHTK، Viettel Post، J&T Express، DHL eCommerce، وEcoShip (أسطول التوصيل للميل الأخير المحايد للكربون في مدن مختارة).<br><b>💰 الأسعار والشحن المجاني:</b> التوصيل القياسي 3.99$ — مجاني للطلبات التي تزيد عن 50$ (أو ما يعادلها بالعملة المحلية). التوصيل السريع (1-2 يوم) 6.99$.<br><b>🌍 دولي:</b> نشحن إلى 27 دولة في جميع أنحاء أوروبا وجنوب شرق آسيا وأمريكا الشمالية. يتم حساب الرسوم والضرائب عند الدفع.<br><b>📦 التغليف:</b> كرتون معاد تدويره 100%، وأكياس بريد قابلة للتحلل، وحشو فراغات قابل للتحلل البيولوجي. لا يوجد بلاستيك أحادي الاستخدام.<br><b>⏱️ أوقات التوصيل:</b> المناطق الحضرية: 1-2 يوم عمل. الريفية: 2-4 أيام عمل. دولي: 5-10 أيام عمل.<br><b>🔍 التتبع:</b> يتم إرسال رابط التتبع عبر البريد الإلكتروني فور إنشاء الملصق. يمكنك أيضًا التتبع عبر صفحة سجل الطلبات.",
+          "policy.refund": "سياسة الاسترداد والإرجاع — نريدك أن تحب كل عملية شراء. إذا كان هناك شيء غير صحيح، نحن هنا للمساعدة.<br><br><b>🔄 فترة الإرجاع:</b> 30 يومًا تقويميًا من التوصيل للعناصر غير المفتوحة والقابلة لإعادة البيع. السلع القابلة للتلف (المنتجات الطازجة والألبان) غير قابلة للإرجاع لأسباب صحية.<br><b>💵 المبالغ المستردة:</b> تتم المعالجة في غضون 5 أيام عمل بعد استلامنا وفحص المرتجعات. يتم إرجاع الأموال إلى طريقة الدفع الأصلية.<br><b>🚚 رسوم شحن الإرجاع:</b> مجانية للعناصر المعيبة أو غير الصحيحة. للإرجاع لتغيير الرأي، يتم خصم رسوم ثابتة قدرها 3.99$ من المبلغ المسترد.<br><b>📋 كيفية البدء:</b> انتقل إلى حسابك → سجل الطلبات → طلب إرجاع، أو اتصل بـ <a href='#' style='color:var(--primary)'>returns@ecoshop.com</a> مع رقم طلبك.<br><b>⚠️ تلف أثناء الشحن:</b> يرجى تصوير التلف وإبلاغنا خلال 48 ساعة لاسترداد كامل المبلغ أو استبدال فوري — دون أي أسئلة.",
+          "policy.suffix": "سياسة",
         },
       };
       let LANG = sessionStorage.getItem("eco_lang") || "vi";
@@ -6833,6 +6844,10 @@
         r.setProperty('--grad',      isDark ? s.gradDark  : s.grad);
         r.setProperty('--grad-dark', s.gradDark);
         r.setProperty('--flash-grad', s.flashGrad || 'linear-gradient(135deg,#b45309 0%,#d97706 50%,#f59e0b 100%)');
+        r.setProperty('--footer-text', s.dText);
+        r.setProperty('--footer-muted', s.dMuted);
+        r.setProperty('--footer-border', isDark ? s.dBorder : 'rgba(255,255,255,0.12)');
+        r.setProperty('--footer-input-bg', isDark ? s.dSoft : 'rgba(255,255,255,0.08)');
         document.documentElement.dataset.season = key;
         var btn = document.getElementById('seasonBtn');
         if (btn) btn.textContent = s.particle;
@@ -9826,8 +9841,13 @@
       /* ---------------- POLICIES ---------------- */
       function openPolicy(type) {
         const policyKeys = { legal: "policy.legal", terms: "policy.terms", privacy: "policy.privacy", shipping: "policy.shipping", refund: "policy.refund" };
+        const titles = { legal: t("footer.legal_policy"), terms: t("footer.terms"), privacy: t("footer.privacy"), shipping: t("footer.shipping"), refund: t("footer.refund") };
+        const icons = { legal: "fa-solid fa-scale-balanced", terms: "fa-solid fa-file-signature", privacy: "fa-solid fa-shield-halved", shipping: "fa-solid fa-truck-fast", refund: "fa-solid fa-rotate-left" };
         $("#genericBody").html(
-          `<h4 style="font-weight:800;text-transform:capitalize">${type} ${t("policy.suffix")}</h4><p style="color:var(--muted);line-height:1.8">${t(policyKeys[type])}</p>`,
+          `<div style="max-height:65vh;overflow-y:auto;padding-right:8px">`
+          + `<h4 style="font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:18px">`
+          + `<i class="${icons[type]}" style="color:var(--primary)"></i> ${titles[type]}</h4>`
+          + `<div style="color:var(--muted);line-height:1.9;font-size:.94rem">${t(policyKeys[type])}</div></div>`,
         );
         openModal("genericModal");
       }
