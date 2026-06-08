@@ -10829,11 +10829,12 @@
     var ctx = c.getContext('2d');
     var cx = c.width / 2, cy = c.height / 2, r = cx - 10;
     var totalW = spinTotalWeight();
-    ctx.clearRect(0, 0, c.width, c.height);
+      ctx.clearRect(0, 0, c.width, c.height);
+    var seg = (2 * Math.PI) / SPIN_PRIZES.length;
     var currAngle = -Math.PI / 2;
     for (var i = 0; i < SPIN_PRIZES.length; i++) {
       var p = SPIN_PRIZES[i];
-      var arc = (p.weight / totalW) * 2 * Math.PI;
+      var arc = seg;
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.arc(cx, cy, r, currAngle, currAngle + arc);
@@ -10896,9 +10897,9 @@
     var totalW = spinTotalWeight();
 
     // Tính góc quay cần để dừng ở midpoint của segment idx
-    var degStart = 0;
-    for (var i = 0; i < idx; i++) degStart += (SPIN_PRIZES[i].weight / totalW) * 360;
-    var degArc = (prize.weight / totalW) * 360;
+    var segDeg = 360 / SPIN_PRIZES.length;
+    var degStart = segDeg * idx;
+    var degArc = segDeg;
     var targetDeg = degStart + degArc / 2;
     var fullSpins = 5 + Math.floor(Math.random() * 3);
     var spinTo = 360 - targetDeg + fullSpins * 360;
