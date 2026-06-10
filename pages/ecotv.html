@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoTV – Sống Xanh Mỗi Ngày | Nền tảng Video & Livestream</title>
+<meta name="description" content="EcoTV - Nền tảng video và livestream chuyên sâu về sống xanh, organic, nông sản sạch, permaculture và lối sống bền vững. Tích hợp YouTube API, giao diện Netflix/YouTube premium.">
+<meta property="og:title" content="EcoTV – Sống Xanh Mỗi Ngày">
+<meta property="og:description" content="Khám phá video hữu ích về nông sản sạch, mẹo sống xanh và livestream bán hàng trực tiếp.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80">
+<meta name="theme-color" content="#2E7D32">
+<link rel="canonical" href="/pages/ecotv.html">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="../assets/css/ecotv.css">
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="etv-nav">
+  <a href="../pages/ecotv.html" class="etv-nav-brand">
+    <i class="fas fa-leaf etv-brand-icon"></i>
+    <span class="etv-brand-text">Eco<span>TV</span></span>
+  </a>
+  <div class="etv-nav-search">
+    <i class="fas fa-search etv-search-icon"></i>
+    <input type="text" id="etvSearch" placeholder="Tìm kiếm video, kênh, nông sản..." aria-label="Tìm kiếm">
+  </div>
+  <div class="etv-nav-actions">
+    <button class="etv-nav-btn" id="etvThemeBtn" title="Chế độ sáng/tối"><i class="fas fa-sun"></i></button>
+  </div>
+</nav>
+
+<!-- ===== HERO SECTION ===== -->
+<section class="etv-hero" id="etvHero">
+  <div class="etv-hero-particles"></div>
+  <div class="etv-hero-content">
+    <div class="etv-hero-badge">
+      <i class="fas fa-circle"></i> Hệ thống video & livestream EcoTV
+    </div>
+    <h1>EcoTV – Sống Xanh Mỗi Ngày</h1>
+    <p>Khám phá video hữu ích về sống xanh, organic, nông sản sạch, permaculture, và livestream trực tiếp từ các kênh eco hàng đầu.</p>
+    <div class="etv-hero-stats" id="etvHeroStats"></div>
+    <div class="etv-hero-btns">
+      <a href="#etvLiveSection" class="etv-btn-primary"><i class="fas fa-broadcast-tower"></i> Xem livestream</a>
+      <a href="#etvGrid" class="etv-btn-ghost"><i class="fas fa-play"></i> Khám phá video</a>
+    </div>
+  </div>
+  <div class="etv-hero-floating">
+    <div class="etv-hero-float-badge">
+      <div class="etv-float-icon"><i class="fas fa-circle" style="font-size:0.6rem;color:var(--etv-live);animation:etvPulse 1.5s infinite"></i></div>
+      <div class="etv-float-text">
+        <strong>Đang phát trực tiếp</strong>
+        <span id="etvHeroLiveCount"><i class="fas fa-eye"></i> Đang tải...</span>
+      </div>
+    </div>
+    <div class="etv-hero-float-badge" style="animation-delay:0.5s">
+      <div class="etv-float-icon" style="background:rgba(255,152,0,0.2);color:var(--etv-accent)"><i class="fas fa-video"></i></div>
+      <div class="etv-float-text">
+        <strong>60+ Video</strong>
+        <span>Nội dung chất lượng cao</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COUNTDOWN BAR ===== -->
+<div class="etv-countdown-bar" id="etvCountdown"></div>
+
+<!-- ===== LIVESTREAM TV SECTION ===== -->
+<section class="etv-live-section" id="etvLiveSection" style="display:none">
+  <div class="etv-live-header">
+    <h2>
+      <span class="etv-live-dot"></span>
+      EcoTV Live
+      <span class="etv-live-viewers-badge" id="etvLiveBadge" style="font-size:0.75rem;padding:4px 12px;margin-left:8px">0 đang phát</span>
+    </h2>
+    <span class="etv-live-viewers-badge" id="etvLiveViewers"><i class="fas fa-eye"></i> 0</span>
+  </div>
+  <div class="etv-live-layout">
+    <div class="etv-live-player" id="etvLivePlayer">
+      <div class="etv-live-info-overlay">
+        <strong id="etvLiveTitle">Chọn kênh để xem livestream</strong>
+      </div>
+    </div>
+    <div class="etv-live-channels" id="etvLiveChannels"></div>
+  </div>
+</section>
+
+<!-- ===== CATEGORY TABS ===== -->
+<div class="etv-tabs" id="etvTabs"></div>
+
+<!-- ===== TOOLBAR ===== -->
+<div class="etv-toolbar" id="etvToolbar"></div>
+
+<!-- ===== VIDEO GRID ===== -->
+<section class="etv-section">
+  <div class="etv-section-header">
+    <h2><i class="fas fa-play-circle"></i> Video nổi bật</h2>
+    <span class="etv-section-link" id="etvGridCount"></span>
+  </div>
+  <div class="etv-grid" id="etvGrid"></div>
+  <div class="etv-load-more" id="etvLoadMore">
+    <button class="etv-btn-load" id="etvLoadMoreBtn">
+      <span id="etvLoadMoreText">Xem thêm</span>
+    </button>
+  </div>
+  <div class="etv-retry-bar" id="etvRetryBar" style="display:none">
+    <p id="etvRetryMsg">Không thể tải video.</p>
+    <button id="etvRetryBtn">Thử lại</button>
+  </div>
+</section>
+
+<!-- ===== SCHEDULE ===== -->
+<section class="etv-section">
+  <div class="etv-section-header">
+    <h2><i class="fas fa-calendar-alt"></i> Lịch phát sóng</h2>
+  </div>
+  <div class="etv-schedule" id="etvSchedule"></div>
+</section>
+
+<!-- ===== BOTTOM SECTION: SIDEBAR ===== -->
+<section class="etv-section" style="padding-top:0">
+  <div style="display:flex;gap:24px;flex-wrap:wrap">
+    <div style="flex:1;min-width:280px">
+      <div class="etv-sidebar" id="etvSidebar"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js" defer></script>
+<script src="../assets/js/ecotv.js"></script>
+</body>
+</html>
