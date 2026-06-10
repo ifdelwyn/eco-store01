@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoTV Studio – Dashboard</title>
+<meta name="description" content="EcoTV Studio – Quản lý kênh, video và livestream">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/ecotv.css">
+<script type="importmap">
+{ "imports": {
+  "ecotv-core": "/js/ecotv-core.js",
+  "ecotv-studio": "/js/ecotv-studio.js"
+}}
+</script>
+</head>
+<body class="tv-body light-mode">
+<nav class="tv-nav">
+  <a href="ecotv.html" class="tv-nav-brand"><i class="fas fa-leaf"></i> EcoTV</a>
+  <div style="flex:1"></div>
+  <div class="tv-nav-actions">
+    <a href="ecotv.html" class="tv-nav-btn" title="Về EcoTV"><i class="fas fa-home"></i></a>
+    <button class="tv-nav-btn" id="tvThemeToggle" title="Sáng/tối"><i class="fas fa-moon"></i></button>
+    <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?w=40&q=80" alt="Avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-left:4px">
+  </div>
+</nav>
+
+<div class="tv-studio-layout">
+  <!-- Sidebar -->
+  <nav class="tv-studio-sidebar">
+    <div class="tv-studio-nav-item active" data-tab="dashboard">
+      <i class="fas fa-th-large"></i> Dashboard
+    </div>
+    <div class="tv-studio-nav-item" data-tab="upload">
+      <i class="fas fa-upload"></i> Upload
+    </div>
+    <div class="tv-studio-nav-item" data-tab="videos">
+      <i class="fas fa-video"></i> Video của tôi
+    </div>
+    <div class="tv-studio-nav-item" data-tab="livestream">
+      <i class="fas fa-broadcast-tower"></i> Livestream
+    </div>
+    <div class="tv-studio-nav-item" data-tab="analytics">
+      <i class="fas fa-chart-bar"></i> Analytics
+    </div>
+    <div class="tv-studio-nav-item" data-tab="comments">
+      <i class="fas fa-comments"></i> Bình luận
+    </div>
+    <div class="tv-studio-nav-item" data-tab="settings">
+      <i class="fas fa-cog"></i> Cài đặt kênh
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="tv-studio-main" id="tvStudioMain">
+    <h1>Dashboard</h1>
+    <p style="color:var(--tv-text-muted)">Đang tải...</p>
+  </main>
+</div>
+
+<script type="module">
+import { EcoTV } from 'ecotv-core';
+import { EcoTVStudio } from 'ecotv-studio';
+
+const { utils, state } = EcoTV;
+
+// Theme
+document.getElementById('tvThemeToggle').addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+  const isLight = document.body.classList.contains('light-mode');
+  localStorage.setItem('tv_theme', isLight ? 'light' : 'dark');
+  document.getElementById('tvThemeToggle').innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+});
+if (localStorage.getItem('tv_theme') === 'dark') {
+  document.body.classList.remove('light-mode');
+  document.getElementById('tvThemeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+}
+const tvNav = document.querySelector('.tv-nav');
+window.addEventListener('scroll', () => {
+  tvNav.classList.toggle('scrolled', window.pageYOffset > 60);
+}, { passive: true });
+
+const studio = new EcoTVStudio();
+studio.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quỹ Trồng Cây Xanh – EcoShop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    :root { --primary: #1D9E75; --primary-dark: #167A5A; --bg: #F5FBF7; --soft: #E6F4EE; --glow: #C8EADB; --dark: #0F3D2E; --text: #0F2417; --muted: #5B6B62; --card: #FFFFFF; --border: rgba(29,158,117,.15); --shadow: 0 10px 30px -10px rgba(29,158,117,.2); --shadow-lg: 0 30px 60px -20px rgba(29,158,117,.3); --radius: 18px; --grad: linear-gradient(135deg, #1D9E75 0%, #2ECC71 60%, #A8E6C1 100%); --grad-dark: linear-gradient(135deg, #0F3D2E 0%, #1D9E75 100%); }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: "Plus Jakarta Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; margin: 0; }
+    ::selection { background: var(--primary); color: #fff; }
+    .container-eco { max-width: 1200px; margin: 0 auto; padding: 0 22px; }
+    .section { padding: 70px 0; }
+    .section-head { text-align: center; max-width: 680px; margin: 0 auto 44px; }
+    .section-head .eyebrow { color: var(--primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: .78rem; }
+    .section-head h2 { font-size: clamp(1.8rem,3.2vw,2.6rem); font-weight: 800; margin: 10px 0; letter-spacing: -.5px; }
+
+    .navbar-eco { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 1200px; z-index: 1040; background: rgba(255,255,255,.85); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1rem; color: var(--primary-dark); text-decoration: none; }
+    .brand-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--grad); display: flex; align-items: center; justify-content: center; color: #fff; font-size: .95rem; }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-links a { padding: 6px 14px; border-radius: 10px; font-weight: 600; font-size: .85rem; color: var(--text); text-decoration: none; transition: all .2s; }
+    .nav-links a:hover, .nav-links a.active { background: var(--soft); color: var(--primary); }
+    @media (max-width: 768px) {
+      .navbar-eco { padding: 8px 14px; }
+      .nav-links { display: none; }
+      .brand span { display: none; }
+    }
+
+    .btn-eco { background: var(--grad); color: #fff; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; box-shadow: 0 8px 20px -6px rgba(29,158,117,.5); transition: all .3s; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+    .btn-eco:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(29,158,117,.7); color: #fff; }
+    .btn-eco-sm { padding: 8px 16px; font-size: .85rem; }
+    .btn-ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); padding: 11px 22px; border-radius: 12px; font-weight: 700; transition: all .3s; cursor: pointer; }
+    .btn-ghost:hover { background: var(--primary); color: #fff; }
+
+    .hero-fund { position: relative; padding: 140px 0 80px; overflow: hidden; background: linear-gradient(160deg, #0F3D2E 0%, #1D9E75 40%, #2ECC71 70%, #A8E6C1 100%); }
+    .hero-fund::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); opacity: .5; }
+    .hero-fund .hero-content { position: relative; z-index: 2; text-align: center; color: #fff; }
+    .hero-fund .hero-content h1 { font-size: clamp(2.4rem,5vw,4rem); font-weight: 800; margin: 0 0 12px; letter-spacing: -1px; text-shadow: 0 4px 30px rgba(0,0,0,.2); }
+    .hero-fund .hero-content p { font-size: 1.1rem; opacity: .9; max-width: 560px; margin: 0 auto 30px; }
+    .hero-stats { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+    .hero-stats .hs-item { text-align: center; }
+    .hero-stats .hs-item .hs-num { font-size: 2.4rem; font-weight: 800; display: block; line-height: 1.2; }
+    .hero-stats .hs-item .hs-label { font-size: .85rem; opacity: .85; }
+    .progress-wrap { max-width: 500px; margin: 30px auto 0; }
+    .progress-wrap .progress { height: 10px; border-radius: 10px; background: rgba(255,255,255,.2); overflow: hidden; }
+    .progress-wrap .progress .progress-bar { background: #fff; border-radius: 10px; transition: width 1.5s ease; }
+    .progress-wrap .progress-meta { display: flex; justify-content: space-between; font-size: .85rem; margin-top: 6px; opacity: .85; }
+
+    @media (max-width: 768px) {
+      .hero-fund { padding: 120px 0 50px; }
+      .hero-stats { gap: 24px; }
+      .hero-stats .hs-item .hs-num { font-size: 1.8rem; }
+    }
+
+    .donation-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 32px; max-width: 520px; margin: 0 auto; }
+    .donation-card h3 { font-weight: 800; text-align: center; margin-bottom: 6px; }
+    .donation-card .donation-sub { text-align: center; color: var(--muted); font-size: .9rem; margin-bottom: 24px; }
+    .amount-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+    .amount-btn { padding: 14px; border-radius: 12px; border: 2px solid var(--border); background: var(--card); font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all .2s; color: var(--text); }
+    .amount-btn:hover { border-color: var(--primary); background: var(--soft); }
+    .amount-btn.active { border-color: var(--primary); background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(29,158,117,.3); }
+    .custom-amount { display: flex; gap: 8px; margin-bottom: 16px; }
+    .custom-amount input { flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 1rem; font-weight: 600; outline: none; background: var(--card); color: var(--text); }
+    .custom-amount input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--soft); }
+    .donor-info input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: .95rem; outline: none; background: var(--card); color: var(--text); margin-bottom: 10px; }
+    .donor-info input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--soft); }
+    .donation-result { text-align: center; padding: 30px 0; }
+    .donation-result .dr-icon { width: 72px; height: 72px; border-radius: 50%; background: var(--soft); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 16px; animation: popIn .5s ease; }
+    .donation-result h4 { font-weight: 800; font-size: 1.3rem; }
+    .donation-result .dr-trees { font-size: 3rem; font-weight: 800; color: var(--primary); margin: 8px 0; }
+    .donation-result .dr-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    @keyframes popIn { 0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+    .map-section { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 32px; max-width: 800px; margin: 0 auto; }
+    .map-section h3 { text-align: center; font-weight: 800; margin-bottom: 20px; }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 18px; }
+    .gallery-card { background: var(--card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); transition: all .3s; }
+    .gallery-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .gallery-card .gc-img { aspect-ratio: 4/3; overflow: hidden; }
+    .gallery-card .gc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .gallery-card:hover .gc-img img { transform: scale(1.05); }
+    .gallery-card .gc-body { padding: 14px 16px; }
+    .gallery-card .gc-body .gc-farm { font-weight: 700; font-size: .95rem; }
+    .gallery-card .gc-body .gc-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem; margin-top: 4px; }
+
+    .leaderboard-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); padding: 32px; max-width: 600px; margin: 0 auto; }
+    .leaderboard-card h3 { font-weight: 800; text-align: center; margin-bottom: 20px; }
+    .lb-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .lb-row:last-child { border: none; }
+    .lb-row .lb-rank { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .8rem; background: var(--soft); color: var(--primary); flex-shrink: 0; }
+    .lb-row:nth-child(1) .lb-rank { background: linear-gradient(135deg,#F59E0B,#D97706); color: #fff; }
+    .lb-row:nth-child(2) .lb-rank { background: linear-gradient(135deg,#9CA3AF,#6B7280); color: #fff; }
+    .lb-row:nth-child(3) .lb-rank { background: linear-gradient(135deg,#D4A843,#A0762C); color: #fff; }
+    .lb-row .lb-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: .8rem; flex-shrink: 0; }
+    .lb-row .lb-info { flex: 1; min-width: 0; }
+    .lb-row .lb-info .lb-name { font-weight: 700; font-size: .9rem; }
+    .lb-row .lb-info .lb-sub { font-size: .78rem; color: var(--muted); }
+    .lb-row .lb-trees { font-weight: 800; color: var(--primary); font-size: 1.1rem; white-space: nowrap; }
+
+    .cert-modal-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; padding: 20px; }
+    .cert-modal-overlay.show { display: flex; }
+    .cert-modal { background: var(--card); border-radius: var(--radius); max-width: 480px; width: 100%; padding: 32px; text-align: center; box-shadow: var(--shadow-lg); animation: popIn .4s ease; position: relative; }
+    .cert-modal .cm-close { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--soft); cursor: pointer; font-size: .9rem; color: var(--muted); }
+    .cert-modal .cm-badge { width: 80px; height: 80px; border-radius: 50%; background: var(--grad); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; color: #fff; animation: popIn .5s ease; }
+    .cert-modal h3 { font-weight: 800; }
+    .cert-modal .cm-trees { font-size: 2.6rem; font-weight: 800; color: var(--primary); margin: 8px 0; }
+    .cert-modal .cm-cert-id { font-family: monospace; background: var(--soft); padding: 8px 12px; border-radius: 8px; font-size: .85rem; color: var(--muted); margin: 12px 0; display: inline-block; }
+    .cert-modal .cm-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+    .eco-modal { position: fixed; inset: 0; z-index: 1070; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .eco-modal.show { display: flex; }
+    .eco-modal-bg { position: absolute; inset: 0; background: rgba(15,61,46,.5); }
+    .eco-modal-content { position: relative; background: var(--card); border-radius: 22px; max-width: 560px; width: 100%; max-height: 90vh; overflow: auto; box-shadow: var(--shadow-lg); border: 1px solid var(--border); animation: popIn .35s ease; padding: 32px; }
+    .eco-modal-content .modal-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: var(--soft); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--muted); }
+
+    footer { background: var(--grad-dark); color: #fff; padding: 50px 0 24px; margin-top: 60px; }
+    footer a { color: rgba(255,255,255,.7); text-decoration: none; }
+    footer a:hover { color: #fff; }
+    .f-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.4fr; gap: 40px; }
+    @media (max-width: 768px) { .f-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .f-grid { grid-template-columns: 1fr; } }
+    .f-col h5 { font-weight: 800; margin-bottom: 14px; font-size: 1rem; }
+    .f-col p, .f-col a { font-size: .88rem; display: block; margin-bottom: 6px; }
+    .f-social { display: flex; gap: 10px; margin-top: 12px; }
+    .f-social a { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; }
+    .f-social a:hover { background: var(--primary); }
+    .f-bot { margin-top: 30px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.1); text-align: center; font-size: .85rem; opacity: .7; }
+
+    svg#vietnam-map path { fill: #e8f5e9; stroke: #a5d6a7; stroke-width: 0.5; cursor: pointer; transition: all .3s; }
+    svg#vietnam-map path:hover { fill: var(--primary); stroke: #fff; stroke-width: 1.5; filter: drop-shadow(0 2px 6px rgba(29,158,117,.4)); }
+    svg#vietnam-map path.planted { fill: #a5d6a7; }
+    svg#vietnam-map path.planted:hover { fill: var(--primary); }
+    .map-tooltip { position: absolute; background: var(--card); border-radius: 12px; padding: 10px 14px; box-shadow: var(--shadow-lg); border: 1px solid var(--border); font-size: .85rem; pointer-events: none; z-index: 10; display: none; font-weight: 600; }
+    .map-tooltip .mt-trees { color: var(--primary); font-weight: 800; font-size: 1.2rem; }
+    .map-container { position: relative; }
+
+    .toast-container { position: fixed; bottom: 80px; right: 24px; z-index: 9998; display: flex; flex-direction: column-reverse; gap: 10px; pointer-events: none; }
+    .toast-eco { pointer-events: auto; background: var(--card); border-radius: 14px; padding: 14px 16px; box-shadow: 0 16px 48px -12px rgba(0,0,0,.3); min-width: 300px; max-width: 400px; display: flex; align-items: flex-start; gap: 12px; font-size: .88rem; border: 1px solid var(--border); animation: toastSlide .35s ease; }
+    .toast-eco .ti { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .toast-eco.success .ti { background: #dcfce7; color: var(--primary); }
+    .toast-eco .tb { flex: 1; }
+    .toast-eco .tb .tm { font-weight: 600; }
+    @keyframes toastSlide { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    @media (max-width: 576px) {
+      .donation-card { padding: 20px; }
+      .amount-grid { grid-template-columns: repeat(2,1fr); }
+      .leaderboard-card { padding: 20px; }
+      .gallery-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar-eco">
+    <a href="/" class="brand"><div class="brand-logo"><i class="fa-solid fa-leaf"></i></div><span>EcoShop</span></a>
+    <div class="nav-links">
+      <a href="/">Trang chủ</a>
+      <a href="quy-xanh.html" class="active">Quỹ Xanh</a>
+      <a href="quy-cong-dong.html">Quỹ Cộng Đồng</a>
+    </div>
+    <a href="checkout.html" class="btn-eco btn-eco-sm"><i class="fa-solid fa-bag-shopping"></i> Mua sắm</a>
+  </nav>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <section class="hero-fund">
+    <div class="container-eco">
+      <div class="hero-content">
+        <h1>🌱 Quỹ Trồng Cây Xanh</h1>
+        <p>Mỗi 50.000đ = 1 cây xanh cho Việt Nam. Cùng chúng tôi phủ xanh đất nước, mang lại bầu không khí trong lành cho thế hệ tương lai.</p>
+        <a href="#donate" class="btn-eco" style="background:#fff;color:var(--primary-dark);font-size:1.05rem;padding:14px 32px">Quyên góp ngay <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="hero-stats">
+          <div class="hs-item"><span class="hs-num" id="totalTrees">0</span><span class="hs-label">Cây đã trồng</span></div>
+          <div class="hs-item"><span class="hs-num" id="monthTrees">0</span><span class="hs-label">Cây tháng này</span></div>
+          <div class="hs-item"><span class="hs-num" id="totalDonors">0</span><span class="hs-label">Người đóng góp</span></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress"><div class="progress-bar" id="yearlyProgress" style="width:0%"></div></div>
+          <div class="progress-meta"><span id="progressCurrent">0 cây</span><span id="progressGoal">Mục tiêu: 15.000 cây</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="donate">
+    <div class="container-eco">
+      <div class="section-head">
+        <div class="eyebrow">Đóng góp</div>
+        <h2>Góp cây xanh hôm nay</h2>
+        <p>Chọn mệnh giá hoặc nhập số tiền bạn muốn đóng góp. Mỗi 50.000đ sẽ trồng thêm một cây xanh.</p>
+      </div>
+      <div class="donation-card" id="donationCard">
+        <div id="donateForm">
+          <h3>🌿 Chọn số tiền</h3>
+          <p class="donation-sub">20.000đ = 1 cây con · 50.000đ = 1 cây lớn · 100.000đ = 3 cây</p>
+          <div class="amount-grid">
+            <button class="amount-btn" data-amount="20000">20.000đ</button>
+            <button class="amount-btn active" data-amount="50000">50.000đ</button>
+            <button class="amount-btn" data-amount="100000">100.000đ</button>
+          </div>
+          <div class="custom-amount">
+            <input type="number" id="customAmount" placeholder="Nhập số tiền khác..." min="10000" step="10000" />
+          </div>
+          <div class="donor-info">
+            <input type="text" id="donorName" placeholder="Tên của bạn (hoặc để trống = Ẩn danh)" />
+          </div>
+          <button class="btn-eco" id="donateBtn" style="width:100%;justify-content:center;padding:14px">
+            <i class="fa-solid fa-heart"></i> Đóng góp ngay
+          </button>
+        </div>
+        <div id="donateResult" style="display:none">
+          <div class="donation-result">
+            <div class="dr-icon"><i class="fa-solid fa-seedling"></i></div>
+            <h4>Cảm ơn bạn đã đóng góp!</h4>
+            <div class="dr-trees"><span id="resultTrees">0</span> 🌳</div>
+            <p style="color:var(--muted)">Bạn vừa góp thêm <strong id="resultTrees2">0</strong> cây xanh cho Việt Nam!</p>
+            <button class="btn-eco" onclick="showCertificate()" style="width:100%;justify-content:center;margin-top:8px">
+              <i class="fa-solid fa-certificate"></i> Nhận chứng chỉ cây
+            </button>
+            <button class="btn-ghost" onclick="resetDonate()" style="margin-top:8px;width:100%">
+              <i class="fa-solid fa-arrow-left"></i> Đóng góp tiếp
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container-eco">
+      <div class="section-head">
+        <div class="eyebrow">Bản đồ</div>
+        <h2>Cây xanh trên khắp Việt Nam</h2>
+        <p>Những tỉnh thành đã có cây được trồng từ sự đóng góp của cộng đồng EcoShop.</p>
+      </div>
+      <div class="map-section">
+        <div class="map-container" id="mapContainer">
+          <div class="map-tooltip" id="mapTooltip"></div>
+          <svg id="vietnam-map" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+            <path id="province-lao-cai" d="M200,40 L220,35 L240,50 L235,70 L215,75 L200,65 Z" />
+            <path id="province-ha-giang" d="M230,30 L260,25 L275,40 L270,60 L250,65 L235,55 Z" />
+            <path id="province-son-la" d="M170,80 L200,75 L210,95 L200,110 L175,115 L165,100 Z" />
+            <path id="province-dien-bien" d="M140,70 L165,75 L170,95 L155,105 L135,100 L130,85 Z" />
+            <path id="province-hoa-binh" d="M190,120 L215,115 L225,130 L215,145 L195,145 L185,135 Z" />
+            <path id="province-quang-tri" d="M190,260 L215,255 L225,270 L215,285 L195,285 L185,275 Z" />
+            <path id="province-quang-nam" d="M200,310 L225,305 L235,325 L220,340 L200,335 L195,320 Z" />
+            <path id="province-gia-lai" d="M220,360 L245,355 L255,375 L245,390 L220,385 L215,370 Z" />
+            <path id="province-lam-dong" d="M240,400 L265,395 L275,415 L265,430 L240,425 L235,410 Z" />
+            <path id="province-ca-mau" d="M230,560 L255,555 L260,575 L250,590 L230,585 L225,570 Z" />
+          </svg>
+        </div>
+        <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:12px">Hover vào từng tỉnh để xem số cây đã trồng</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container-eco">
+      <div class="section-head">
+        <div class="eyebrow">Khoảnh khắc xanh</div>
+        <h2>Những cánh rừng đã được gieo mầm</h2>
+        <p>Hình ảnh từ các đợt trồng cây của EcoShop cùng đội ngũ tình nguyện viên.</p>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container-eco">
+      <div class="section-head">
+        <div class="eyebrow">Vinh danh</div>
+        <h2>Top 10 người đóng góp tháng này</h2>
+        <p>Cảm ơn những tấm lòng vàng đã góp phần làm xanh Việt Nam.</p>
+      </div>
+      <div class="leaderboard-card">
+        <div id="leaderboardList"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cert-modal-overlay" id="certModal">
+    <div class="cert-modal">
+      <button class="cm-close" onclick="closeCertModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="cm-badge"><i class="fa-solid fa-certificate"></i></div>
+      <h3>Chứng chỉ trồng cây</h3>
+      <div class="cm-trees"><span id="certTrees">0</span> 🌳</div>
+      <p style="color:var(--muted);font-size:.9rem">Chứng chỉ này xác nhận bạn đã đóng góp cho Quỹ Trồng Cây Xanh EcoShop.</p>
+      <div class="cm-cert-id" id="certId">ECOTREE-XXXXXXXX</div>
+      <div class="cm-actions">
+        <button class="btn-eco" onclick="downloadCert()"><i class="fa-solid fa-download"></i> Tải PDF</button>
+        <button class="btn-ghost" onclick="shareFBCert()"><i class="fa-brands fa-facebook"></i> Facebook</button>
+        <button class="btn-ghost" onclick="shareZaloCert()"><i class="fa-solid fa-message"></i> Zalo</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container-eco">
+      <div class="f-grid">
+        <div class="f-col">
+          <h5><i class="fa-solid fa-leaf"></i> EcoShop</h5>
+          <p>Thực phẩm hữu cơ, sống xanh, yêu thương môi trường. Cùng chúng tôi xây dựng một Việt Nam xanh hơn.</p>
+          <div class="f-social">
+            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="f-col">
+          <h5>Về EcoShop</h5>
+          <a href="#">Về chúng tôi</a>
+          <a href="#">Sản phẩm</a>
+          <a href="#">Blog</a>
+          <a href="#">Tuyển dụng</a>
+        </div>
+        <div class="f-col">
+          <h5>Hỗ trợ</h5>
+          <a href="#">Trung tâm hỗ trợ</a>
+          <a href="#">Chính sách đổi trả</a>
+          <a href="#">Giao hàng</a>
+          <a href="#">Liên hệ</a>
+        </div>
+        <div class="f-col">
+          <h5>Quỹ Xanh</h5>
+          <a href="quy-xanh.html">Quỹ Trồng Cây Xanh</a>
+          <a href="quy-cong-dong.html">Quỹ Hỗ Trợ Cộng Đồng</a>
+          <a href="#">Báo cáo minh bạch</a>
+        </div>
+      </div>
+      <div class="f-bot">© 2026 EcoShop – Organic & Eco-Friendly Store. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="js/green-fund.js"></script>
+  <script src="js/certificate.js"></script>
+  <script>
+    let lastDonation = null;
+
+    function showToast(msg, type = 'success') {
+      const c = document.getElementById('toastContainer');
+      const t = document.createElement('div');
+      t.className = `toast-eco ${type}`;
+      t.innerHTML = `<div class="ti"><i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i></div><div class="tb"><div class="tm">${msg}</div></div>`;
+      c.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+    }
+
+    async function initPage() {
+      await ecoFund.init();
+      const data = ecoFund.data;
+      renderHero(data);
+      renderMap(data);
+      renderGallery(data);
+      renderLeaderboard(data);
+      setupDonation();
+      document.addEventListener('fund:update', (e) => {
+        renderHero(e.detail);
+      });
+    }
+
+    function renderHero(data) {
+      const gf = data.greenFund;
+      ecoFund.animateCounter(document.getElementById('totalTrees'), gf.totalTrees);
+      ecoFund.animateCounter(document.getElementById('monthTrees'), gf.treesThisMonth);
+      ecoFund.animateCounter(document.getElementById('totalDonors'), gf.donorsThisMonth);
+      const pct = ecoFund.getProgress(gf.totalTrees, gf.yearlyGoal);
+      document.getElementById('yearlyProgress').style.width = pct + '%';
+      document.getElementById('progressCurrent').textContent = ecoFund.formatNumber(gf.totalTrees) + ' cây';
+    }
+
+    function renderMap(data) {
+      const provinces = data.greenFund.provinces;
+      Object.keys(provinces).forEach(key => {
+        const el = document.getElementById('province-' + key);
+        if (el) {
+          el.classList.add('planted');
+          el.addEventListener('mouseenter', (e) => {
+            const p = provinces[key];
+            const tt = document.getElementById('mapTooltip');
+            tt.innerHTML = `<strong>${p.name}</strong><br><span class="mt-trees">${ecoFund.formatNumber(p.trees)} 🌳</span>`;
+            tt.style.display = 'block';
+            const rect = el.getBoundingClientRect();
+            const containerRect = document.getElementById('mapContainer').getBoundingClientRect();
+            tt.style.left = (rect.left - containerRect.left + rect.width / 2 - 60) + 'px';
+            tt.style.top = (rect.top - containerRect.top - 50) + 'px';
+          });
+          el.addEventListener('mouseleave', () => {
+            document.getElementById('mapTooltip').style.display = 'none';
+          });
+        }
+      });
+    }
+
+    function renderGallery(data) {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = data.greenFund.galleries.map(g => `
+        <div class="gallery-card">
+          <div class="gc-img"><img src="${g.image}" alt="${g.farm}" loading="lazy" /></div>
+          <div class="gc-body">
+            <div class="gc-farm">${g.farm}</div>
+            <div class="gc-meta">
+              <span><i class="fa-regular fa-user"></i> ${g.volunteer}</span>
+              <span><i class="fa-regular fa-calendar"></i> ${g.date}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderLeaderboard(data) {
+      const list = document.getElementById('leaderboardList');
+      list.innerHTML = data.greenFund.leaderboard.map((p, i) => `
+        <div class="lb-row">
+          <div class="lb-rank">${p.rank}</div>
+          <div class="lb-avatar">${p.avatar}</div>
+          <div class="lb-info">
+            <div class="lb-name">${p.name}</div>
+            <div class="lb-sub">${ecoFund.formatCurrency(p.amount)}</div>
+          </div>
+          <div class="lb-trees">${p.trees} 🌳</div>
+        </div>
+      `).join('');
+    }
+
+    function setupDonation() {
+      let selectedAmount = 50000;
+      document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedAmount = parseInt(btn.dataset.amount);
+          document.getElementById('customAmount').value = '';
+        });
+      });
+      document.getElementById('customAmount').addEventListener('input', function() {
+        if (this.value) {
+          document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+          selectedAmount = parseInt(this.value) || 0;
+        }
+      });
+      document.getElementById('donateBtn').addEventListener('click', async () => {
+        if (!selectedAmount || selectedAmount < 10000) {
+          showToast('Vui lòng chọn số tiền hợp lệ (tối thiểu 10.000đ)', 'error');
+          return;
+        }
+        const name = document.getElementById('donorName').value.trim() || 'Ẩn danh';
+        const result = await ecoFund.donateTreeFund(selectedAmount, name);
+        lastDonation = { ...result, donorName: name, amount: selectedAmount, date: new Date().toLocaleDateString('vi-VN'), location: 'Lâm Đồng / Sơn La' };
+        document.getElementById('donateForm').style.display = 'none';
+        document.getElementById('donateResult').style.display = 'block';
+        document.getElementById('resultTrees').textContent = result.trees;
+        document.getElementById('resultTrees2').textContent = result.trees;
+        showToast(`🎉 Cảm ơn bạn! Bạn đã góp ${result.trees} cây xanh!`);
+      });
+    }
+
+    function resetDonate() {
+      document.getElementById('donateForm').style.display = 'block';
+      document.getElementById('donateResult').style.display = 'none';
+      document.getElementById('customAmount').value = '';
+      document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.amount-btn[data-amount="50000"]').classList.add('active');
+    }
+
+    async function showCertificate() {
+      if (!lastDonation) return;
+      document.getElementById('certTrees').textContent = lastDonation.trees;
+      document.getElementById('certId').textContent = lastDonation.certificateId;
+      document.getElementById('certModal').classList.add('show');
+    }
+
+    function closeCertModal() {
+      document.getElementById('certModal').classList.remove('show');
+    }
+
+    async function downloadCert() {
+      if (!lastDonation) return;
+      await treeCert.download(lastDonation);
+      showToast('📄 Đã tải chứng chỉ PDF!');
+    }
+
+    function shareFBCert() {
+      if (!lastDonation) return;
+      treeCert.shareFacebook(lastDonation);
+    }
+
+    function shareZaloCert() {
+      if (!lastDonation) return;
+      treeCert.shareZalo(lastDonation);
+    }
+
+    document.addEventListener('DOMContentLoaded', initPage);
+  </script>
+</body>
+</html>

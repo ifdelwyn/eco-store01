@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Host Dashboard - Livestream | EcoShop</title>
+  <meta name="description" content="Dashboard quản lý livestream trang trại hữu cơ dành cho host.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #16a34a; --secondary: #15803d; --accent: #22c55e;
+      --bg: #f0fdf4; --soft: #dcfce7; --glow: #bbf7d0;
+      --dark: #14532d; --text: #0f2417; --muted: #5b6b62;
+      --card: #ffffff; --border: rgba(20,83,45,0.1);
+      --shadow: 0 10px 30px -10px rgba(20,83,45,0.18);
+      --shadow-lg: 0 30px 60px -20px rgba(20,83,45,0.25);
+      --radius: 18px; --radius-sm: 12px;
+      --glass: rgba(255,255,255,0.65);
+      --grad: linear-gradient(135deg, #16a34a 0%, #22c55e 60%, #bbf7d0 100%);
+      --host-bg: #0c1e17;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: var(--host-bg); color: #e8fbef;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: var(--accent); color: #fff; }
+
+    /* Layout */
+    .host-layout { display: flex; height: 100vh; }
+
+    /* Sidebar */
+    .host-sidebar {
+      width: 260px; min-width: 260px; background: #0a1a13;
+      border-right: 1px solid rgba(255,255,255,.06);
+      display: flex; flex-direction: column; padding: 0;
+    }
+    .host-sidebar .hs-brand {
+      padding: 20px 18px; border-bottom: 1px solid rgba(255,255,255,.06);
+      display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1rem;
+    }
+    .host-sidebar .hs-brand .brand-logo {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: var(--grad); display: flex; align-items: center;
+      justify-content: center; color: #fff; font-size: .9rem;
+    }
+    .host-sidebar .hs-nav { flex: 1; padding: 12px 10px; }
+    .host-sidebar .hs-nav a {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border-radius: 10px; color: rgba(255,255,255,.6); font-weight: 600;
+      font-size: .85rem; transition: all .2s; margin-bottom: 2px;
+    }
+    .host-sidebar .hs-nav a:hover, .host-sidebar .hs-nav a.active {
+      background: rgba(255,255,255,.06); color: #fff;
+    }
+    .host-sidebar .hs-nav a i { width: 20px; text-align: center; }
+    .host-sidebar .hs-bottom {
+      padding: 14px 18px; border-top: 1px solid rgba(255,255,255,.06);
+      font-size: .8rem; color: rgba(255,255,255,.4);
+    }
+
+    /* Main */
+    .host-main { flex: 1; overflow-y: auto; padding: 30px; }
+    .host-main::-webkit-scrollbar { width: 6px; }
+    .host-main::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+
+    /* Status bar */
+    .status-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap; margin-bottom: 30px;
+    }
+    .status-bar .sb-left { display: flex; align-items: center; gap: 16px; }
+    .status-bar .sb-left h1 { font-size: 1.4rem; font-weight: 800; margin: 0; }
+    .status-bar .sb-status {
+      display: flex; align-items: center; gap: 8px; padding: 4px 14px;
+      border-radius: 20px; font-weight: 700; font-size: .8rem;
+    }
+    .status-bar .sb-status.offline { background: rgba(255,255,255,.08); color: rgba(255,255,255,.5); }
+    .status-bar .sb-status.live { background: rgba(239,68,68,.2); color: #ef4444; }
+    .status-bar .sb-status i { font-size: .5rem; }
+    .status-bar .sb-status.live i { animation: lsPulse 1.5s infinite; }
+
+    /* Buttons */
+    .btn-host {
+      padding: 10px 22px; border-radius: 12px; border: none; font-weight: 700;
+      font-size: .85rem; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 8px; transition: all .25s;
+    }
+    .btn-host-primary { background: var(--grad); color: #fff; box-shadow: 0 6px 16px -4px rgba(22,163,74,.5); }
+    .btn-host-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px -4px rgba(22,163,74,.6); }
+    .btn-host-danger { background: #ef4444; color: #fff; box-shadow: 0 6px 16px -4px rgba(239,68,68,.4); }
+    .btn-host-danger:hover { transform: translateY(-2px); }
+    .btn-host-outline { background: transparent; border: 1.5px solid rgba(255,255,255,.15); color: rgba(255,255,255,.8); }
+    .btn-host-outline:hover { border-color: var(--primary); color: var(--accent); }
+    .btn-host-sm { padding: 6px 14px; font-size: .78rem; }
+
+    /* Cards grid */
+    .cards-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 30px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius-sm); padding: 20px;
+    }
+    .stat-card .sc-label { font-size: .78rem; color: rgba(255,255,255,.5); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+    .stat-card .sc-value { font-size: 1.8rem; font-weight: 800; margin: 6px 0 0; }
+    .stat-card .sc-sub { font-size: .75rem; color: rgba(255,255,255,.4); margin-top: 2px; }
+    .stat-card .sc-icon { float: right; font-size: 1.6rem; opacity: .2; }
+
+    /* Section */
+    .host-section {
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius); padding: 24px; margin-bottom: 24px;
+    }
+    .host-section h3 {
+      font-size: 1rem; font-weight: 800; margin: 0 0 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .host-section h3 .badge-section {
+      font-size: .65rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;
+      background: rgba(255,255,255,.08); color: rgba(255,255,255,.6);
+    }
+
+    /* Stream key */
+    .stream-key-box {
+      display: flex; gap: 10px; align-items: center;
+    }
+    .stream-key-box input {
+      flex: 1; padding: 10px 14px; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.3);
+      color: #fff; font-size: .85rem; font-family: monospace; outline: none;
+    }
+    .stream-key-box input:focus { border-color: var(--primary); }
+
+    /* Setup steps */
+    .setup-steps { display: flex; gap: 20px; flex-wrap: wrap; }
+    .setup-step {
+      flex: 1; min-width: 200px; padding: 16px; border-radius: var(--radius-sm);
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06);
+    }
+    .setup-step .step-num {
+      width: 28px; height: 28px; border-radius: 50%; background: var(--grad);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 800; margin-bottom: 10px;
+    }
+    .setup-step h4 { font-size: .88rem; font-weight: 700; margin: 0 0 4px; }
+    .setup-step p { font-size: .8rem; color: rgba(255,255,255,.5); line-height: 1.5; }
+    .setup-step code {
+      display: block; background: rgba(0,0,0,.3); padding: 8px 12px;
+      border-radius: 8px; font-size: .78rem; margin-top: 8px;
+      word-break: break-all;
+    }
+
+    /* Product selector */
+    .prod-selector { display: flex; gap: 8px; flex-wrap: wrap; }
+    .prod-chip {
+      padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,.12);
+      background: transparent; color: rgba(255,255,255,.7); font-size: .82rem;
+      font-weight: 600; cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 6px;
+    }
+    .prod-chip:hover { border-color: var(--primary); color: var(--accent); }
+    .prod-chip.active { background: rgba(22,163,74,.2); border-color: var(--primary); color: var(--accent); }
+    .prod-chip .chip-badge { font-size: .6rem; padding: 1px 6px; border-radius: 4px; background: var(--primary); color: #fff; }
+
+    /* Flash deal form */
+    .deal-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 500px; }
+    .deal-form label { font-size: .78rem; font-weight: 600; color: rgba(255,255,255,.6); }
+    .deal-form select, .deal-form input {
+      padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.3); color: #fff; font-size: .85rem; outline: none; width: 100%;
+    }
+    .deal-form select:focus, .deal-form input:focus { border-color: var(--primary); }
+    .deal-form .df-full { grid-column: 1 / -1; }
+
+    /* Live indicator */
+    .live-dot {
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      background: #6b7280; margin-right: 5px;
+    }
+    .live-dot.active { background: #ef4444; animation: lsPulse 1.5s infinite; }
+
+    /* Table */
+    .deal-history { width: 100%; border-collapse: collapse; font-size: .84rem; }
+    .deal-history th { text-align: left; padding: 8px 10px; color: rgba(255,255,255,.5); font-weight: 600; font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .deal-history td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,.04); }
+    .deal-history .badge-status { padding: 2px 8px; border-radius: 6px; font-size: .7rem; font-weight: 700; }
+    .badge-active { background: rgba(22,163,74,.2); color: var(--accent); }
+    .badge-ended { background: rgba(255,255,255,.08); color: rgba(255,255,255,.5); }
+
+    /* Tabs */
+    .host-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+    .host-tab { padding: 8px 18px; border-radius: 10px; border: none; background: transparent; color: rgba(255,255,255,.5); font-weight: 600; font-size: .84rem; cursor: pointer; transition: all .2s; }
+    .host-tab.active { background: rgba(22,163,74,.15); color: var(--accent); }
+    .host-tab:hover:not(.active) { color: rgba(255,255,255,.8); }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .host-sidebar { display: none; }
+      .host-main { padding: 20px; }
+      .status-bar { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 768px) {
+      .cards-grid { grid-template-columns: 1fr 1fr; }
+      .deal-form { grid-template-columns: 1fr; }
+      .setup-steps { flex-direction: column; }
+    }
+    @media (max-width: 480px) {
+      .host-main { padding: 16px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .status-bar .sb-left h1 { font-size: 1.1rem; }
+      .stream-key-box { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="host-layout">
+    <!-- Sidebar -->
+    <div class="host-sidebar">
+      <div class="hs-brand">
+        <div class="brand-logo"><i class="fa-solid fa-leaf"></i></div>
+        <span>EcoShop Host</span>
+      </div>
+      <div class="hs-nav">
+        <a href="#" class="active" data-view="dashboard"><i class="fa-solid fa-chart-simple"></i> Dashboard</a>
+        <a href="#" data-view="stream"><i class="fa-solid fa-tower-broadcast"></i> Quản lý Stream</a>
+        <a href="#" data-view="deals"><i class="fa-solid fa-bolt"></i> Flash Deals</a>
+        <a href="/"><i class="fa-solid fa-arrow-left"></i> Về trang chủ</a>
+        <a href="livestream-schedule.html"><i class="fa-regular fa-calendar"></i> Lịch phát</a>
+      </div>
+      <div class="hs-bottom">
+        <span class="live-dot" id="sidebarLiveDot"></span> Trạng thái: <span id="sidebarStatus">Chưa hoạt động</span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="host-main" id="hostMain">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div class="sb-left">
+          <h1>Host Dashboard</h1>
+          <div class="sb-status offline" id="streamStatusBadge">
+            <i class="fa-solid fa-circle"></i> <span>Chưa hoạt động</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-host btn-host-primary" id="btnStartStream" onclick="startStream()">
+            <i class="fa-solid fa-play"></i> Bắt đầu Live
+          </button>
+          <button class="btn-host btn-host-danger" id="btnEndStream" style="display:none" onclick="endStream()">
+            <i class="fa-solid fa-stop"></i> Kết thúc Live
+          </button>
+          <button class="btn-host btn-host-outline" onclick="window.open('livestream.html','_blank')">
+            <i class="fa-regular fa-eye"></i> Xem trước
+          </button>
+        </div>
+      </div>
+
+      <!-- Analytics Cards -->
+      <div class="cards-grid" id="analyticsCards">
+        <div class="stat-card">
+          <div class="sc-icon"><i class="fa-regular fa-eye"></i></div>
+          <div class="sc-label">Người xem</div>
+          <div class="sc-value" id="statViewers">0</div>
+          <div class="sc-sub">theo dõi realtime</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-icon"><i class="fa-solid fa-cart-plus"></i></div>
+          <div class="sc-label">Thêm vào giỏ</div>
+          <div class="sc-value" id="statCartAdds">0</div>
+          <div class="sc-sub">số lượng sản phẩm</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-icon"><i class="fa-solid fa-coins"></i></div>
+          <div class="sc-label">Doanh thu ước tính</div>
+          <div class="sc-value" id="statRevenue">0₫</div>
+          <div class="sc-sub">từ giỏ hàng</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-icon"><i class="fa-regular fa-clock"></i></div>
+          <div class="sc-label">Thời gian live</div>
+          <div class="sc-value" id="statDuration">00:00</div>
+          <div class="sc-sub">giờ:phút</div>
+        </div>
+      </div>
+
+      <!-- Stream Setup -->
+      <div class="host-section" id="sectionStreamSetup">
+        <h3><i class="fa-solid fa-tower-broadcast" style="color:var(--accent)"></i> Cấu hình Stream</h3>
+        <div class="stream-key-box" style="margin-bottom:16px">
+          <input type="text" id="streamKeyInput" placeholder="Nhập stream key (ví dụ: live_farm1_abc123)" value="live_farm1_abc123">
+          <button class="btn-host btn-host-outline btn-host-sm" onclick="document.getElementById('streamKeyInput').select();navigator.clipboard.writeText(document.getElementById('streamKeyInput').value);showHostToast('Đã copy stream key!')"><i class="fa-regular fa-copy"></i></button>
+        </div>
+        <div class="setup-steps">
+          <div class="setup-step">
+            <div class="step-num">1</div>
+            <h4>Mở OBS Studio</h4>
+            <p>Tải và cài đặt OBS Studio miễn phí trên máy tính của bạn.</p>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">2</div>
+            <h4>Cấu hình server</h4>
+            <p>Vào Settings → Stream, chọn "Custom Streaming Server".</p>
+            <code>rtmp://live.ecoshop.vn/stream</code>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">3</div>
+            <h4>Dán stream key</h4>
+            <p>Dán stream key từ ô trên vào mục "Stream Key" trong OBS.</p>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">4</div>
+            <h4>Bắt đầu phát</h4>
+            <p>Nhấn "Start Streaming" trong OBS, sau đó bấm "Bắt đầu Live" ở đây.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Pinning -->
+      <div class="host-section">
+        <h3><i class="fa-solid fa-thumbtack" style="color:var(--accent)"></i> Ghim sản phẩm đang giới thiệu</h3>
+        <p style="font-size:.84rem;color:rgba(255,255,255,.5);margin-bottom:14px">Chọn sản phẩm muốn hiển thị nổi bật trong buổi live. Sản phẩm được ghim sẽ xuất hiện đầu danh sách và có đánh dấu ⭐.</p>
+        <div class="prod-selector" id="prodSelector"></div>
+        <p style="font-size:.78rem;color:rgba(255,255,255,.3);margin-top:10px">Đang giới thiệu: <strong id="currentFeaturedName">Chưa chọn</strong></p>
+      </div>
+
+      <!-- Flash Deal Creator -->
+      <div class="host-section">
+        <h3><i class="fa-solid fa-bolt" style="color:var(--accent)"></i> Tạo Flash Deal</h3>
+        <p style="font-size:.84rem;color:rgba(255,255,255,.5);margin-bottom:14px">Tạo ưu đãi giới hạn thời gian trong buổi live để kích thích mua hàng.</p>
+        <div class="deal-form">
+          <div class="df-full">
+            <label>Chọn sản phẩm</label>
+            <select id="dealProductSelect"></select>
+          </div>
+          <div>
+            <label>Giảm giá (%)</label>
+            <input type="number" id="dealDiscount" min="1" max="90" value="20" placeholder="20">
+          </div>
+          <div>
+            <label>Thời gian (phút)</label>
+            <input type="number" id="dealDuration" min="1" max="120" value="15" placeholder="15">
+          </div>
+          <div>
+            <label>Số lượng tối đa</label>
+            <input type="number" id="dealMaxQty" min="1" max="999" value="20" placeholder="20">
+          </div>
+          <div>
+            <label></label>
+            <button class="btn-host btn-host-primary btn-host-sm" onclick="createFlashDeal()"><i class="fa-solid fa-bolt"></i> Kích hoạt Deal</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deal History -->
+      <div class="host-section">
+        <h3><i class="fa-regular fa-clock" style="color:var(--accent)"></i> Lịch sử Flash Deal</h3>
+        <table class="deal-history">
+          <thead><tr><th>Sản phẩm</th><th>Giảm</th><th>Thời lượng</th><th>Đã bán</th><th>Trạng thái</th></tr></thead>
+          <tbody id="dealHistoryBody">
+            <tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,.3);padding:30px">Chưa có deal nào</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { LiveStreamData, formatPrice, showLiveToast } from '/js/livestream.js';
+
+    const store = new LiveStreamData();
+    let isLive = false;
+    let liveStartTime = null;
+    let durationTimer = null;
+    let analyticsSim = null;
+    let currentFeaturedId = null;
+    let dealHistory = [];
+
+    // Host farm selection (default to first farm)
+    let selectedFarmId = 'farm1';
+
+    (async () => {
+      await store.init();
+
+      // Populate products
+      renderProductSelector();
+      renderDealProductSelect();
+
+      // Initial analytics
+      updateAnalytics({ cartAdds: 0, revenue: 0, viewers: 0 });
+
+      // Check if any stream is already live for this farm
+      const liveStream = store.getStreams().find(s => s.farmId === selectedFarmId && s.status === 'live');
+      if (liveStream) {
+        // Resume live state
+        document.getElementById('btnStartStream').style.display = 'none';
+        document.getElementById('btnEndStream').style.display = 'inline-flex';
+        document.getElementById('streamStatusBadge').className = 'sb-status live';
+        document.getElementById('streamStatusBadge').innerHTML = '<i class="fa-solid fa-circle"></i> <span>Đang phát trực tiếp</span>';
+        document.getElementById('sidebarStatus').textContent = 'Đang Live';
+        document.getElementById('sidebarLiveDot').classList.add('active');
+        isLive = true;
+        liveStartTime = Date.now() - 600000; // estimated 10 min ago
+        startAnalytics();
+        startDurationTimer();
+      }
+
+      // Nav
+      document.querySelectorAll('.hs-nav a').forEach(a => {
+        a.addEventListener('click', (e) => {
+          const view = a.dataset.view;
+          if (!view) return;
+          e.preventDefault();
+          document.querySelectorAll('.hs-nav a').forEach(x => x.classList.remove('active'));
+          a.classList.add('active');
+          // Scroll to section
+          if (view === 'dashboard') document.getElementById('hostMain').scrollTo({ top: 0, behavior: 'smooth' });
+          else if (view === 'stream') document.getElementById('sectionStreamSetup').scrollIntoView({ behavior: 'smooth' });
+          else if (view === 'deals') document.querySelector('.host-section:last-child').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    })();
+
+    // Expose to global for onclick handlers
+    window.startStream = function() {
+      const streamKey = document.getElementById('streamKeyInput').value.trim();
+      if (!streamKey) { showHostToast('Vui lòng nhập stream key', 'error'); return; }
+
+      // Find or create stream
+      let stream = store.getStreams().find(s => s.farmId === selectedFarmId && s.status === 'upcoming');
+      if (!stream) {
+        stream = store.getStreams().find(s => s.farmId === selectedFarmId);
+      }
+      if (!stream) { showHostToast('Không tìm thấy luồng phát cho trang trại này', 'error'); return; }
+
+      stream.status = 'live';
+      stream.streamKey = streamKey;
+      stream.viewerCount = Math.floor(Math.random() * 20) + 10;
+      stream.startTime = new Date().toISOString();
+      store.data.currentLive = stream;
+
+      isLive = true;
+      liveStartTime = Date.now();
+
+      document.getElementById('btnStartStream').style.display = 'none';
+      document.getElementById('btnEndStream').style.display = 'inline-flex';
+      document.getElementById('streamStatusBadge').className = 'sb-status live';
+      document.getElementById('streamStatusBadge').innerHTML = '<i class="fa-solid fa-circle"></i> <span>Đang phát trực tiếp</span>';
+      document.getElementById('sidebarStatus').textContent = 'Đang Live';
+      document.getElementById('sidebarLiveDot').classList.add('active');
+      document.getElementById('statViewers').textContent = stream.viewerCount;
+
+      startAnalytics();
+      startDurationTimer();
+      showHostToast('Livestream đã bắt đầu! 🎉', 'success');
+    };
+
+    window.endStream = function() {
+      const stream = store.getStreams().find(s => s.farmId === selectedFarmId && s.status === 'live');
+      if (stream) {
+        stream.status = 'ended';
+        stream.endTime = new Date().toISOString();
+      }
+
+      isLive = false;
+      if (durationTimer) clearInterval(durationTimer);
+      if (analyticsSim) clearInterval(analyticsSim);
+
+      document.getElementById('btnStartStream').style.display = 'inline-flex';
+      document.getElementById('btnEndStream').style.display = 'none';
+      document.getElementById('streamStatusBadge').className = 'sb-status offline';
+      document.getElementById('streamStatusBadge').innerHTML = '<i class="fa-solid fa-circle"></i> <span>Chưa hoạt động</span>';
+      document.getElementById('sidebarStatus').textContent = 'Kết thúc';
+      document.getElementById('sidebarLiveDot').classList.remove('active');
+
+      showHostToast('Đã kết thúc livestream. Cảm ơn bạn!', 'info');
+    };
+
+    window.createFlashDeal = function() {
+      if (!isLive) { showHostToast('Vui lòng bắt đầu live trước khi tạo Flash Deal', 'warn'); return; }
+
+      const productId = document.getElementById('dealProductSelect').value;
+      const discount = parseInt(document.getElementById('dealDiscount').value) || 20;
+      const duration = parseInt(document.getElementById('dealDuration').value) || 15;
+      const maxQty = parseInt(document.getElementById('dealMaxQty').value) || 20;
+
+      if (!productId) { showHostToast('Vui lòng chọn sản phẩm', 'error'); return; }
+
+      const product = store.getProductById(productId);
+      if (!product) { showHostToast('Sản phẩm không tồn tại', 'error'); return; }
+
+      const originalPrice = product.price;
+      const dealPrice = Math.round(originalPrice * (100 - discount) / 100);
+
+      const stream = store.getStreams().find(s => s.farmId === selectedFarmId && s.status === 'live');
+      const deal = {
+        id: 'deal_' + Date.now(),
+        streamId: stream?.id || 'stream_custom',
+        productId,
+        discountPercent: discount,
+        originalPrice,
+        dealPrice,
+        startTime: new Date().toISOString(),
+        durationMinutes: duration,
+        maxQuantity: maxQty,
+        soldQuantity: 0,
+        active: true
+      };
+
+      store.data.flashDeals.push(deal);
+      dealHistory.push(deal);
+      renderDealHistory();
+
+      showHostToast(`⚡ Flash Deal: ${product.name} giảm ${discount}% trong ${duration} phút!`, 'success');
+    };
+
+    // Product pinning
+    function renderProductSelector() {
+      const container = document.getElementById('prodSelector');
+      const products = store.getProductsByFarm(selectedFarmId);
+      container.innerHTML = products.map(p => {
+        const active = p.id === currentFeaturedId;
+        return `<button class="prod-chip ${active ? 'active' : ''}" data-product-id="${p.id}">
+          ${p.name} <span class="chip-badge">${formatPrice(p.price)}</span>
+        </button>`;
+      }).join('');
+
+      container.querySelectorAll('.prod-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pid = btn.dataset.productId;
+          currentFeaturedId = pid === currentFeaturedId ? null : pid;
+          container.querySelectorAll('.prod-chip').forEach(c => c.classList.remove('active'));
+          if (currentFeaturedId) btn.classList.add('active');
+          const product = store.getProductById(currentFeaturedId);
+          document.getElementById('currentFeaturedName').textContent = product?.name || 'Chưa chọn';
+
+          // Update stream's featured product
+          const stream = store.getStreams().find(s => s.farmId === selectedFarmId);
+          if (stream) stream.featuredProductId = currentFeaturedId;
+
+          showHostToast(currentFeaturedId ? `Đã ghim: ${product?.name}` : 'Đã bỏ ghim sản phẩm', 'info');
+        });
+      });
+
+      // Set initial featured name
+      const initial = store.getStreams().find(s => s.farmId === selectedFarmId)?.featuredProductId;
+      if (initial) {
+        currentFeaturedId = initial;
+        const product = store.getProductById(initial);
+        document.getElementById('currentFeaturedName').textContent = product?.name || 'Chưa chọn';
+        const activeChip = container.querySelector(`[data-product-id="${initial}"]`);
+        if (activeChip) activeChip.classList.add('active');
+      }
+    }
+
+    function renderDealProductSelect() {
+      const sel = document.getElementById('dealProductSelect');
+      const products = store.getProductsByFarm(selectedFarmId);
+      sel.innerHTML = products.map(p => `<option value="${p.id}">${p.name} - ${formatPrice(p.price)}</option>`).join('');
+    }
+
+    function startAnalytics() {
+      window.analyticsState = { cartAdds: 0, revenue: 0 };
+      // Simulate live viewers fluctuation
+      analyticsSim = store.startViewerSimulation(
+        store.getStreams().find(s => s.farmId === selectedFarmId)?.id || '',
+        (count) => { document.getElementById('statViewers').textContent = count; }
+      );
+      // Simulate cart adds & revenue
+      if (analyticsSim) clearInterval(analyticsSim);
+      analyticsSim = setInterval(() => {
+        if (!isLive) return;
+        window.analyticsState.cartAdds += Math.floor(Math.random() * 2);
+        window.analyticsState.revenue += Math.floor(Math.random() * 80000);
+        document.getElementById('statCartAdds').textContent = window.analyticsState.cartAdds;
+        document.getElementById('statRevenue').textContent = formatPrice(window.analyticsState.revenue);
+      }, 4000);
+    }
+
+    function startDurationTimer() {
+      if (durationTimer) clearInterval(durationTimer);
+      durationTimer = setInterval(() => {
+        if (!liveStartTime) return;
+        const elapsed = Math.floor((Date.now() - liveStartTime) / 1000);
+        const m = Math.floor(elapsed / 60);
+        const s = elapsed % 60;
+        document.getElementById('statDuration').textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function updateAnalytics(state) {
+      document.getElementById('statViewers').textContent = state.viewers || 0;
+      document.getElementById('statCartAdds').textContent = state.cartAdds || 0;
+      document.getElementById('statRevenue').textContent = formatPrice(state.revenue || 0);
+    }
+
+    function renderDealHistory() {
+      const tbody = document.getElementById('dealHistoryBody');
+      if (!dealHistory.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,.3);padding:30px">Chưa có deal nào</td></tr>';
+        return;
+      }
+      tbody.innerHTML = dealHistory.reverse().map(d => {
+        const p = store.getProductById(d.productId);
+        return `<tr>
+          <td>${p?.name || 'Unknown'}</td>
+          <td><strong style="color:#ef4444">-${d.discountPercent}%</strong></td>
+          <td>${d.durationMinutes} phút</td>
+          <td>${d.soldQuantity} / ${d.maxQuantity}</td>
+          <td><span class="badge-status ${d.active ? 'badge-active' : 'badge-ended'}">${d.active ? 'Đang chạy' : 'Đã kết thúc'}</span></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function showHostToast(msg, type = 'info') {
+      showLiveToast(msg, type, 3500);
+    }
+  </script>
+</body>
+</html>

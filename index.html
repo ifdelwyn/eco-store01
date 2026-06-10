@@ -29,6 +29,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="js/green-fund.js"></script>
     <script>document.addEventListener('contextmenu',e=>e.preventDefault());document.addEventListener('keydown',e=>{if(e.key==='F12'||e.key==='f12'||(e.ctrlKey&&(e.key==='u'||e.key==='U'))||(e.ctrlKey&&e.shiftKey&&['I','C','J','i','c','j'].includes(e.key))){e.preventDefault();e.stopPropagation()}});console.log('%cEcoShop v2.0 (c) 2026 EcoShop Team','font-size:18px;font-weight:bold;color:#16a34a');console.log('%cAll rights reserved.','font-size:12px;color:#666');</script>
     <script>document.addEventListener('contextmenu',e=>e.preventDefault());document.addEventListener('keydown',e=>{if(e.key==='F12'||e.key==='f12'||(e.ctrlKey&&(e.key==='u'||e.key==='U'))||(e.ctrlKey&&e.shiftKey&&['I','C','J','i','c','j'].includes(e.key))){e.preventDefault();e.stopPropagation();}});console.log('%cEcoShop v2.0 ©2026 EcoShop Team','font-size:18px;font-weight:bold;color:#16a34a');console.log('%cAll rights reserved. Unauthorized copying is prohibited.','font-size:12px;color:#666');</script>
 
@@ -1604,6 +1605,77 @@
         font-weight: 700;
         cursor: pointer;
       }
+
+      /* =========================================================
+   LIVESTREAM FEATURED CARD (top section)
+   ========================================================= */
+      .ls-hero-section { position: relative; z-index: 3; }
+      .ls-featured-card {
+        display: flex; align-items: center; gap: 30px;
+        background: var(--card); border-radius: var(--radius);
+        border: 1.5px solid var(--border); overflow: hidden;
+        padding: 28px 32px; box-shadow: var(--shadow-lg);
+        position: relative; transition: all .3s;
+        cursor: pointer;
+      }
+      .ls-featured-card:hover { transform: translateY(-2px); box-shadow: 0 25px 50px -12px rgba(20,83,45,.3); }
+      .ls-featured-card .ls-fc-bg {
+        position: absolute; top: -50%; right: -20%; width: 400px; height: 400px;
+        border-radius: 50%; background: var(--grad); opacity: .05; pointer-events: none;
+      }
+      .ls-featured-card .ls-fc-content { flex: 1; min-width: 0; position: relative; z-index: 1; }
+      .ls-featured-card .ls-fc-tag {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: .75rem; font-weight: 700; color: var(--primary);
+        background: var(--soft); padding: 4px 12px; border-radius: 20px;
+        margin-bottom: 10px;
+      }
+      .ls-featured-card .ls-fc-tag.live i { color: #ef4444; animation: lsPulse 1.5s infinite; }
+      .ls-featured-card h3 { font-size: 1.2rem; font-weight: 800; margin: 0 0 4px; }
+      .ls-featured-card p { font-size: .85rem; color: var(--muted); margin: 0 0 14px; line-height: 1.5; }
+      .ls-fc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      .ls-fc-btn {
+        padding: 8px 20px; border-radius: 12px; font-weight: 700; font-size: .82rem;
+        display: inline-flex; align-items: center; gap: 6px; transition: all .25s; cursor: pointer;
+      }
+      .ls-fc-btn-primary { background: var(--grad); color: #fff; border: none; box-shadow: 0 6px 16px -4px rgba(22,163,74,.5); }
+      .ls-fc-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -4px rgba(22,163,74,.6); }
+      .ls-fc-btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+      .ls-fc-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+      .ls-featured-card .ls-fc-visual {
+        width: 160px; height: 120px; border-radius: var(--radius-sm);
+        background: linear-gradient(135deg, #14532d 0%, #16a34a 100%);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 8px; flex-shrink: 0; position: relative; overflow: hidden;
+      }
+      .ls-featured-card .ls-fc-visual::before {
+        content: ''; position: absolute; inset: 0;
+        background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.03) 10px, rgba(255,255,255,.03) 20px);
+      }
+      .ls-featured-card .ls-fc-video-icon {
+        width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.2);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 1rem; position: relative; z-index: 1;
+        backdrop-filter: blur(4px);
+      }
+      .ls-featured-card .ls-fc-farms {
+        display: flex; gap: 4px; position: relative; z-index: 1;
+      }
+      .ls-featured-card .ls-fc-farm-dot {
+        width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.3);
+      }
+      @media (max-width: 768px) {
+        .ls-featured-card { flex-direction: column; text-align: center; padding: 20px; }
+        .ls-featured-card .ls-fc-actions { justify-content: center; }
+        .ls-featured-card .ls-fc-visual { width: 100%; height: 100px; }
+        .ls-fc-actions .ls-fc-btn { flex: 1; justify-content: center; }
+      }
+
+      /* =========================================================
+   LIVESTREAM HOMEPAGE CARDS
+   ========================================================= */
+      .ls-stream-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-top:30px; }
+      .ls-stream-grid a:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,.3); }
 
       /* =========================================================
    FOOTER
@@ -3305,6 +3377,10 @@
         <a href="#" data-view="about" data-i18n="nav.about">About</a>
         <a href="#" data-view="community" style="color:var(--accent);font-weight:600" data-i18n="nav.lounge">Lounge</a>
         <a href="#" data-view="farmtour" data-i18n="nav.farmtour">Tham quan</a>
+        <a href="ecotv.html" style="font-weight:700;color:var(--accent)" id="navTvLink">
+          <i class="fa-solid fa-tv"></i> EcoTV
+          <span id="navTvLiveBadge" style="display:none;align-items:center;gap:3px;background:#ef4444;color:#fff;font-size:.6rem;padding:1px 7px;border-radius:10px;margin-left:2px;font-weight:700"><i class="fa-solid fa-circle" style="font-size:.35rem"></i> LIVE</span>
+        </a>
         <a href="#" onclick="if(requireAuth()) openModal('ticketModal')" data-i18n="nav.support">Hỗ trợ</a>
       </div>
       <div class="nav-actions">
@@ -3437,6 +3513,33 @@
           </div>
         </div>
 
+        <!-- ===== ECOTV + LIVESTREAM CARD ===== -->
+        <div class="section ls-hero-section" style="padding:0;margin-top:30px">
+          <div class="container-eco">
+            <div class="ls-featured-card" id="lsFeaturedCard">
+              <div class="ls-fc-bg"></div>
+              <div class="ls-fc-content">
+                <div class="ls-fc-tag"><i class="fa-solid fa-tv"></i> <span id="lsFcLabel">🎬 EcoTV — Video & Livestream</span></div>
+                <h3 id="lsFcTitle">Xem video farm tour, công thức nấu ăn và livestream mua sắm</h3>
+                <p id="lsFcDesc">Khám phá nội dung xanh từ các trang trại hữu cơ, đầu bếp EcoKitchen và các buổi livestream flash sale trên EcoTV.</p>
+                <div class="ls-fc-actions">
+                  <a href="ecotv.html" class="ls-fc-btn ls-fc-btn-primary"><i class="fa-solid fa-tv"></i> Khám phá EcoTV</a>
+                  <a href="ecotv-live.html?l=live001" class="ls-fc-btn ls-fc-btn-outline" id="lsFcWatchBtn"><i class="fa-solid fa-play"></i> Đang LIVE</a>
+                </div>
+              </div>
+              <div class="ls-fc-visual">
+                <div class="ls-fc-video-icon"><i class="fa-solid fa-tv"></i></div>
+                <div class="ls-fc-farms">
+                  <div class="ls-fc-farm-dot" style="background:#1D9E75"></div>
+                  <div class="ls-fc-farm-dot" style="background:#16a34a"></div>
+                  <div class="ls-fc-farm-dot" style="background:#22c55e"></div>
+                  <div class="ls-fc-farm-dot" style="background:#14532d"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- ====================== BANNER SLIDER ====================== -->
         <div class="section" style="padding-bottom:0">
           <div class="container-eco">
@@ -3526,8 +3629,13 @@
           </div>
         </div>
 
-        <!-- ===== FARM TOUR CARD ===== -->
+        <!-- ===== FARM TOUR + LIVESTREAM CARD ===== -->
         <div class="section" style="background:var(--soft);padding:40px 0 50px">
+          <div class="container-eco" style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:30px">
+            <a href="livestream-schedule.html" class="btn-eco magnetic" style="font-size:.9rem;padding:10px 22px">
+              <i class="fa-solid fa-tower-broadcast"></i> 📺 Lịch Livestream Trang Trại
+            </a>
+          </div>
           <div class="container-eco">
             <div class="section-head">
               <div class="eyebrow"><i class="fa-solid fa-tractor" style="color:var(--primary)"></i> Trải nghiệm</div>
@@ -3554,6 +3662,42 @@
               <button class="btn-eco magnetic" onclick="navigateTo('community')" style="font-size:1.05rem;padding:14px 44px;box-shadow:0 8px 24px -6px var(--primary)">
                 <i class="fa-solid fa-comments"></i> Vào Lounge ngay
               </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== GREEN FUND SECTION ===== -->
+        <div class="section" style="padding:50px 0;background:linear-gradient(135deg,#14532d 0%,#16a34a 50%,#22c55e 100%);color:#fff;overflow:hidden;position:relative">
+          <div style="position:absolute;inset:0;background:url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');opacity:.3"></div>
+          <div class="container-eco" style="position:relative;z-index:2">
+            <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center">
+              <div>
+                <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);backdrop-filter:blur(6px);padding:8px 18px;border-radius:30px;font-size:.85rem;font-weight:600;margin-bottom:16px">
+                  <i class="fa-solid fa-seedling"></i> Quỹ Xanh EcoShop
+                </div>
+                <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;margin:0 0 8px;letter-spacing:-.5px">🌱 Góp xanh cho Việt Nam</h2>
+                <p style="font-size:.95rem;opacity:.9;line-height:1.6;margin-bottom:20px">Mỗi đơn hàng, mỗi khoản quyên góp đều góp phần trồng thêm cây xanh và hỗ trợ những hoàn cảnh khó khăn trên khắp đất nước.</p>
+                <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px">
+                  <div><span style="font-size:2rem;font-weight:800" id="fundHomeTrees">8.300</span><span style="display:block;font-size:.82rem;opacity:.8">🌳 Cây đã trồng</span></div>
+                  <div><span style="font-size:2rem;font-weight:800" id="fundHomeDonors">12.450</span><span style="display:block;font-size:.82rem;opacity:.8">🙋 Khách hàng tham gia</span></div>
+                  <div><span style="font-size:2rem;font-weight:800" id="fundHomeStories">3</span><span style="display:block;font-size:.82rem;opacity:.8">💚 Hoàn cảnh đang giúp</span></div>
+                </div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap">
+                  <a href="quy-xanh.html" class="btn-eco" style="background:#fff;color:var(--dark);box-shadow:0 8px 24px -6px rgba(0,0,0,.2)"><i class="fa-solid fa-tree"></i> Quỹ Trồng Cây</a>
+                  <a href="quy-cong-dong.html" class="btn-ghost" style="border-color:rgba(255,255,255,.5);color:#fff"><i class="fa-solid fa-heart"></i> Quỹ Cộng Đồng</a>
+                  <a href="quy-cong-dong.html" style="padding:11px 22px;border-radius:12px;border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700;font-size:.88rem;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s">Xem tất cả <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+              </div>
+              <div id="fundHomeStoryCard" style="background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border-radius:18px;padding:24px;border:1px solid rgba(255,255,255,.15)">
+                <div style="font-weight:700;font-size:.9rem;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+                  <span style="background:#EF4444;width:8px;height:8px;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite"></span> ĐANG CẦN HỖ TRỢ
+                </div>
+                <div id="fundHomeStoryContent">
+                  <div style="aspect-ratio:16/9;border-radius:12px;overflow:hidden;margin-bottom:12px;background:rgba(0,0,0,.2)"></div>
+                  <div style="height:16px;width:70%;background:rgba(255,255,255,.15);border-radius:8px;margin-bottom:6px"></div>
+                  <div style="height:12px;width:100%;background:rgba(255,255,255,.1);border-radius:8px"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -8348,7 +8492,26 @@
         closeModal("authModal");
         $('#authOverlay').remove();
         initApp();
-        if (u.role === "admin") setTimeout(() => window.location.href = "admin.html", 400);
+        if (u.role === "admin") {
+          if (u.username === "admtv1") {
+            $.ajax({
+              url: '/api/admin/login',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({ username: u.username, password: pass }),
+              dataType: 'json',
+              success: function (res) {
+                if (res.success) {
+                  localStorage.setItem('tv_admin_session', res.sessionId);
+                  localStorage.setItem('tv_admin_user', res.username);
+                }
+              }
+            });
+            setTimeout(() => window.location.href = "admin-tv.html", 400);
+          } else {
+            setTimeout(() => window.location.href = "admin.html", 400);
+          }
+        }
       }
       function doAdminLogin() {
         const id = $("#li_user").val().trim().toLowerCase(),
@@ -8370,7 +8533,24 @@
         updateUserUI();
         toast(`${t("auth.welcome_back")} ${u.fullName || u.username}`, "success");
         closeModal("authModal");
-        window.location.href = "admin.html";
+        if (u.username === "admtv1") {
+          $.ajax({
+            url: '/api/admin/login',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ username: u.username, password: pass }),
+            dataType: 'json',
+            success: function (res) {
+              if (res.success) {
+                localStorage.setItem('tv_admin_session', res.sessionId);
+                localStorage.setItem('tv_admin_user', res.username);
+              }
+            }
+          });
+          window.location.href = "admin-tv.html";
+        } else {
+          window.location.href = "admin.html";
+        }
       }
       function sendOtp() {
         const id = $("#f_user").val().trim().toLowerCase();
@@ -10053,6 +10233,7 @@
         updateUserUI();
         spawnParticles();
         bindMagnetic();
+        initHomeFund();
         setTimeout(() => $("#loader").addClass("hide"), 700);
         $(".nav-links a[data-view]").on("click", function (e) { e.preventDefault(); navigateTo($(this).data("view")); });
         $(".brand").on("click", function (e) { e.preventDefault(); navigateTo("home"); });
@@ -10168,6 +10349,9 @@
           }
         });
 
+        // Livestream preview on homepage
+        loadLivePreview();
+
         // sync DB across tabs (ban/delete from admin) + real-time notification + auto-logout on delete
         window.addEventListener("storage", e => {
           if (e.key === 'eco_pending_withdrawals' && $('#profMain:visible').length && $('#profMain h4:contains("Ví tiền")').length) {
@@ -10206,6 +10390,45 @@
             } catch(_) {}
           }
         });
+      }
+
+      /* ---- Livestream preview on homepage ---- */
+      function loadLivePreview() {
+        var card = document.getElementById('lsFeaturedCard');
+        if (!card) return;
+        fetch('/mock/livestream-data.json').then(function(r) { return r.json(); }).then(function(data) {
+          var streams = data.streams || [];
+          var farms = data.farms || [];
+          var liveStreams = streams.filter(function(s) { return s.status === 'live'; });
+          var isLive = liveStreams.length > 0;
+          var tag = document.getElementById('lsFcLabel');
+          var title = document.getElementById('lsFcTitle');
+          var desc = document.getElementById('lsFcDesc');
+          var watchBtn = document.getElementById('lsFcWatchBtn');
+          if (isLive) {
+            var s = liveStreams[0];
+            var farm = farms.find(function(f) { return f.id === s.farmId; });
+            tag.innerHTML = '<i class="fa-solid fa-circle" style="color:#ef4444;font-size:.45rem;animation:lsPulse 1.5s infinite"></i> 🔴 LIVE: ' + (farm ? farm.name : 'Trang trại');
+            tag.classList.add('live');
+            title.textContent = s.title;
+            desc.textContent = s.description.substring(0, 100) + '…';
+            watchBtn.href = 'livestream.html?id=' + s.id;
+            watchBtn.innerHTML = '<i class="fa-solid fa-play"></i> Xem ngay';
+            // Add live indicator to navbar
+            var navLiveBadge = document.getElementById('navLiveBadge');
+            if (navLiveBadge) navLiveBadge.style.display = 'inline-flex';
+            // EcoTV live badge
+            var tvLiveBadge = document.getElementById('navTvLiveBadge');
+            if (tvLiveBadge) tvLiveBadge.style.display = 'inline-flex';
+          } else {
+            tag.innerHTML = '<i class="fa-solid fa-tv"></i> 🎬 EcoTV — Video & Livestream';
+            tag.classList.remove('live');
+            title.textContent = 'Xem video farm tour, công thức nấu ăn và livestream mua sắm';
+            desc.textContent = 'Khám phá nội dung xanh từ các trang trại hữu cơ, đầu bếp EcoKitchen và các buổi livestream flash sale trên EcoTV.';
+            watchBtn.innerHTML = '<i class="fa-solid fa-tv"></i> Khám phá EcoTV';
+            watchBtn.href = 'ecotv.html';
+          }
+        }).catch(function() { /* ignore */ });
       }
     </script>
 
@@ -11321,6 +11544,33 @@
     $('#closeSpin, #spinOverlay').on('click', closeSpin);
     drawSpinWheel();
   });
+
+  /* ===== GREEN FUND HOME SECTION ===== */
+  function initHomeFund() {
+    if (typeof ecoFund === 'undefined') return;
+    ecoFund.init().then(function() {
+      var d = ecoFund.data;
+      document.getElementById('fundHomeTrees').textContent = ecoFund.formatNumber(d.greenFund.totalTrees);
+      document.getElementById('fundHomeDonors').textContent = ecoFund.formatNumber(d.stats.totalCustomers);
+      document.getElementById('fundHomeStories').textContent = d.communityFund.stories.filter(function(s) { return s.status === 'active'; }).length;
+
+      var urgentStory = d.communityFund.stories.find(function(s) { return s.status === 'active' && s.urgent; }) || d.communityFund.stories.find(function(s) { return s.status === 'active'; });
+      if (urgentStory) {
+        var pct = Math.min(100, Math.round((urgentStory.raised / urgentStory.goal) * 100));
+        var img = (urgentStory.images && urgentStory.images[0]) ? urgentStory.images[0] : 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&q=80';
+        document.getElementById('fundHomeStoryContent').innerHTML =
+          '<div style="aspect-ratio:16/9;border-radius:12px;overflow:hidden;margin-bottom:12px;background-size:cover;background-position:center;background-image:url(' + img + ')"></div>' +
+          '<div style="font-weight:700;font-size:.95rem;margin-bottom:4px">' + urgentStory.name + '</div>' +
+          '<div style="font-size:.82rem;opacity:.8;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">' + urgentStory.summary + '</div>' +
+          '<div style="height:6px;border-radius:6px;background:rgba(255,255,255,.2);overflow:hidden;margin-bottom:4px"><div style="height:100%;width:' + pct + '%;background:#22c55e;border-radius:6px"></div></div>' +
+          '<div style="display:flex;justify-content:space-between;font-size:.78rem;opacity:.8"><span>' + ecoFund.formatCurrency(urgentStory.raised) + '</span><span>' + pct + '%</span></div>';
+      }
+      document.addEventListener('fund:update', function(e) {
+        var d2 = e.detail;
+        document.getElementById('fundHomeTrees').textContent = ecoFund.formatNumber(d2.greenFund.totalTrees);
+      });
+    });
+  }
   </script>
 
   </body>

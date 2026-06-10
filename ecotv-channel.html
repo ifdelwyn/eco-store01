@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">EcoTV – Kênh</title>
+<meta name="description" id="pageDesc" content="Trang kênh trên EcoTV">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/ecotv.css">
+<script type="importmap">
+{ "imports": {
+  "ecotv-core": "/js/ecotv-core.js",
+  "ecotv-data": "/js/ecotv-data.js"
+}}
+</script>
+</head>
+<body class="tv-body light-mode">
+<nav class="tv-nav">
+  <a href="ecotv.html" class="tv-nav-brand"><i class="fas fa-leaf"></i> EcoTV</a>
+  <div class="tv-nav-search">
+    <i class="fas fa-search"></i>
+    <input type="text" placeholder="Tìm kiếm..." aria-label="Tìm kiếm">
+  </div>
+  <div class="tv-nav-actions">
+    <button class="tv-nav-btn" id="tvThemeToggle" title="Sáng/tối"><i class="fas fa-moon"></i></button>
+  </div>
+</nav>
+
+<!-- Banner -->
+<div class="tv-channel-banner">
+  <img id="chBanner" src="" alt="">
+  <div class="tv-ch-banner-overlay"></div>
+</div>
+
+<!-- Header -->
+<div class="tv-channel-header">
+  <img id="chAvatar" src="" alt="">
+  <div class="tv-ch-header-info">
+    <h1>
+      <span id="chName">---</span>
+      <span class="tv-ch-verified" id="chVerified" style="display:none"><i class="fas fa-check-circle"></i></span>
+    </h1>
+    <div class="tv-ch-tagline" id="chTagline"></div>
+    <div class="tv-ch-stats">
+      <span id="chSubsCount">--- người theo dõi</span>
+      <span>•</span>
+      <span id="chViewsCount">--- lượt xem</span>
+      <span>•</span>
+      <span id="chJoined">Tham gia từ ---</span>
+    </div>
+  </div>
+  <div class="tv-ch-header-actions">
+    <button class="tv-ch-bell" id="chBell"><i class="fas fa-bell"></i></button>
+    <button class="tv-ch-sub-btn" id="chSubBtn">Theo dõi</button>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tv-ch-tabs" id="chTabs">
+  <button class="tv-ch-tab active" data-tab="home">Trang chủ</button>
+  <button class="tv-ch-tab" data-tab="videos">Video</button>
+  <button class="tv-ch-tab" data-tab="livestreams">Livestream</button>
+  <button class="tv-ch-tab" data-tab="products">Sản phẩm</button>
+  <button class="tv-ch-tab" data-tab="about">Giới thiệu</button>
+</div>
+
+<!-- Tab content -->
+<div class="tv-ch-tab-content" id="chTabContent">
+  <div id="tabHome" class="tv-tab-panel">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div class="tv-section-header"><h3><i class="fas fa-star"></i> Video nổi bật</h3></div>
+        <div id="featuredVideo"></div>
+      </div>
+      <div>
+        <div class="tv-section-header"><h3><i class="fas fa-clock"></i> Upload mới nhất</h3></div>
+        <div id="latestVideos" class="tv-video-grid" style="grid-template-columns:1fr"></div>
+      </div>
+    </div>
+  </div>
+  <div id="tabVideos" class="tv-tab-panel" style="display:none">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px">
+      <select id="videoSort" class="tv-select" style="width:auto">
+        <option value="newest">Mới nhất</option>
+        <option value="popular">Phổ biến</option>
+        <option value="oldest">Cũ nhất</option>
+      </select>
+      <select id="videoFilter" class="tv-select" style="width:auto">
+        <option value="all">Tất cả</option>
+        <option value="video">Video thường</option>
+        <option value="shorts">Shorts</option>
+        <option value="archive">Livestream archive</option>
+      </select>
+    </div>
+    <div id="channelVideoGrid" class="tv-video-grid"></div>
+  </div>
+  <div id="tabLivestreams" class="tv-tab-panel" style="display:none">
+    <div id="channelLivestreams" class="tv-video-grid" style="grid-template-columns:repeat(3,1fr)"></div>
+  </div>
+  <div id="tabProducts" class="tv-tab-panel" style="display:none">
+    <div id="channelProducts" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px"></div>
+  </div>
+  <div id="tabAbout" class="tv-tab-panel" style="display:none">
+    <div class="tv-about-section" id="aboutContent"></div>
+  </div>
+</div>
+
+<script type="module">
+import { EcoTV } from 'ecotv-core';
+import { ecoTVData } from 'ecotv-data';
+
+const { utils, state } = EcoTV;
+
+// Theme
+document.getElementById('tvThemeToggle').addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+  const isLight = document.body.classList.contains('light-mode');
+  localStorage.setItem('tv_theme', isLight ? 'light' : 'dark');
+  document.getElementById('tvThemeToggle').innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+});
+if (localStorage.getItem('tv_theme') === 'dark') {
+  document.body.classList.remove('light-mode');
+  document.getElementById('tvThemeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+}
+const tvNav = document.querySelector('.tv-nav');
+window.addEventListener('scroll', () => {
+  tvNav.classList.toggle('scrolled', window.pageYOffset > 60);
+}, { passive: true });
+
+const channelId = utils.getUrlParam('c');
+if (!channelId) {
+  document.body.innerHTML = '<div style="padding:40px;text-align:center"><h2>Không tìm thấy kênh</h2><a href="ecotv.html">Quay về trang chủ</a></div>';
+} else {
+  const channel = await ecoTVData.getChannel(channelId);
+  if (!channel) {
+    document.body.innerHTML = '<div style="padding:40px;text-align:center"><h2>Kênh không tồn tại</h2><a href="ecotv.html">Quay về trang chủ</a></div>';
+  } else {
+    document.title = channel.name + ' - EcoTV';
+    document.getElementById('pageDesc').content = channel.tagline || channel.name;
+
+    // Header
+    document.getElementById('chBanner').src = channel.banner;
+    document.getElementById('chAvatar').src = channel.avatar;
+    document.getElementById('chName').textContent = channel.name;
+    document.getElementById('chTagline').textContent = channel.tagline || '';
+    document.getElementById('chSubsCount').textContent = utils.formatViews(channel.subscriberCount) + ' người theo dõi';
+    document.getElementById('chViewsCount').textContent = utils.formatViews(channel.totalViews) + ' lượt xem';
+    document.getElementById('chJoined').textContent = 'Tham gia từ ' + (channel.createdAt || 'N/A');
+    if (channel.verified) {
+      document.getElementById('chVerified').style.display = 'inline';
+    }
+
+    // Subscribe
+    const isSubbed = state.isSubscribed(channel.id);
+    const subBtn = document.getElementById('chSubBtn');
+    subBtn.textContent = isSubbed ? 'Đã theo dõi' : 'Theo dõi';
+    subBtn.classList.toggle('subscribed', isSubbed);
+    subBtn.addEventListener('click', () => {
+      const nowSubbed = state.toggleSubscribe(channel.id);
+      state.save();
+      subBtn.textContent = nowSubbed ? 'Đã theo dõi' : 'Theo dõi';
+      subBtn.classList.toggle('subscribed', nowSubbed);
+    });
+
+    // Tabs
+    const videos = await ecoTVData.getVideosByChannel(channel.id);
+    const livestreams = (await ecoTVData.getLivestreams()).filter(l => l.channelId === channel.id);
+    const products = channel.products || [];
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tv-tab-panel').forEach(p => p.style.display = 'none');
+      document.getElementById('tab' + tabId.charAt(0).toUpperCase() + tabId.slice(1)).style.display = '';
+      document.querySelectorAll('.tv-ch-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.tv-ch-tab[data-tab="${tabId}"]`).classList.add('active');
+    }
+
+    document.getElementById('chTabs').addEventListener('click', e => {
+      const tab = e.target.closest('.tv-ch-tab');
+      if (tab) switchTab(tab.dataset.tab);
+    });
+
+    // Tab Home
+    if (videos.length > 0) {
+      const featured = videos[0];
+      const featuredEl = document.getElementById('featuredVideo');
+      featuredEl.innerHTML = `
+        <a class="tv-video-card" href="ecotv-watch.html?v=${featured.id}">
+          <div class="tv-vid-thumb">
+            <img src="${featured.thumbnail}" alt="" loading="lazy">
+            <span class="tv-vid-duration">${utils.formatDuration(featured.duration)}</span>
+          </div>
+          <div class="tv-vid-body">
+            <div class="tv-vid-meta">
+              <h4>${utils.escapeHtml(featured.title)}</h4>
+              <div class="tv-vid-stats">
+                <span>${utils.formatViews(featured.views)} lượt xem</span>
+                <span>•</span>
+                <span>${utils.timeAgo(featured.publishedAt)}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      `;
+
+      const latest = videos.slice(0, 5);
+      const latestEl = document.getElementById('latestVideos');
+      latestEl.innerHTML = latest.map(v => `
+        <a class="tv-video-card" href="ecotv-watch.html?v=${v.id}">
+          <div class="tv-vid-thumb" style="display:flex;gap:8px">
+            <img src="${v.thumbnail}" alt="" style="width:120px;aspect-ratio:16/9;border-radius:var(--tv-radius);object-fit:cover;flex-shrink:0" loading="lazy">
+            <div style="flex:1;min-width:0;padding:4px 0">
+              <h4 style="font-size:0.85rem;font-weight:700;margin:0 0 4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${utils.escapeHtml(v.title)}</h4>
+              <div style="font-size:0.75rem;color:var(--tv-text-muted)">${utils.formatViews(v.views)} lượt xem • ${utils.timeAgo(v.publishedAt)}</div>
+            </div>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    // Tab Videos
+    function renderChannelVideos(sort = 'newest', filter = 'all') {
+      let list = [...videos];
+      if (filter === 'archive') list = list.filter(v => v.category === 'LiveShopping');
+      if (sort === 'popular') list.sort((a, b) => b.views - a.views);
+      else if (sort === 'oldest') list.sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt));
+      else list.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+      const grid = document.getElementById('channelVideoGrid');
+      grid.innerHTML = list.map(v => `
+        <a class="tv-video-card" href="ecotv-watch.html?v=${v.id}">
+          <div class="tv-vid-thumb">
+            <img src="${v.thumbnail}" alt="" loading="lazy">
+            <span class="tv-vid-duration">${utils.formatDuration(v.duration)}</span>
+          </div>
+          <div class="tv-vid-body">
+            <div class="tv-vid-meta">
+              <h4>${utils.escapeHtml(v.title)}</h4>
+              <div class="tv-vid-stats">
+                <span>${utils.formatViews(v.views)} lượt xem</span>
+                <span>•</span>
+                <span>${utils.timeAgo(v.publishedAt)}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    document.getElementById('videoSort').addEventListener('change', () => {
+      renderChannelVideos(document.getElementById('videoSort').value, document.getElementById('videoFilter').value);
+    });
+    document.getElementById('videoFilter').addEventListener('change', () => {
+      renderChannelVideos(document.getElementById('videoSort').value, document.getElementById('videoFilter').value);
+    });
+    renderChannelVideos();
+
+    // Tab Livestreams
+    const lsGrid = document.getElementById('channelLivestreams');
+    if (livestreams.length) {
+      lsGrid.innerHTML = livestreams.map(l => `
+        <a class="tv-video-card" href="ecotv-live.html?l=${l.id}">
+          <div class="tv-vid-thumb">
+            <img src="${l.thumbnail}" alt="" loading="lazy">
+            ${l.status === 'live' ? '<span class="tv-live-badge" style="position:absolute;top:8px;left:8px"><i class="fas fa-circle"></i> LIVE</span>' : ''}
+          </div>
+          <div class="tv-vid-body">
+            <div class="tv-vid-meta">
+              <h4>${utils.escapeHtml(l.title)}</h4>
+              <div class="tv-vid-stats">
+                <span>${l.status === 'live' ? utils.formatViews(l.viewerCount) + ' đang xem' : 'Đã kết thúc'}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      `).join('');
+    } else {
+      lsGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--tv-text-muted)">Chưa có livestream nào</div>';
+    }
+
+    // Tab Products
+    const prodGrid = document.getElementById('channelProducts');
+    if (products.length) {
+      prodGrid.innerHTML = products.map(p => `
+        <div style="background:var(--tv-card);border:1px solid var(--tv-border);border-radius:var(--tv-radius-lg);overflow:hidden">
+          <img src="${p.image}" alt="${utils.escapeHtml(p.name)}" style="aspect-ratio:1/1;object-fit:cover" loading="lazy">
+          <div style="padding:10px 12px">
+            <h4 style="font-size:0.88rem;font-weight:700;margin:0 0 4px">${utils.escapeHtml(p.name)}</h4>
+            <div style="font-size:0.95rem;font-weight:800;color:var(--tv-primary)">
+              ${utils.formatCurrency(p.price)}
+              ${p.originalPrice ? `<strike style="font-size:0.75rem;color:var(--tv-text-muted);font-weight:400;margin-left:4px">${utils.formatCurrency(p.originalPrice)}</strike>` : ''}
+            </div>
+            <span style="font-size:0.72rem;color:var(--tv-text-muted)">${p.category || ''}</span>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      prodGrid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--tv-text-muted)">Kênh chưa có sản phẩm nào</div>';
+    }
+
+    // Tab About
+    const aboutEl = document.getElementById('aboutContent');
+    const desc = channel.description || '';
+    aboutEl.innerHTML = desc.split('\n').map(line => {
+      if (line.startsWith('## ')) return `<h4>${line.slice(3)}</h4>`;
+      if (line.startsWith('- ')) return `<li>${line.slice(2)}</li>`;
+      if (!line.trim()) return '<br>';
+      return `<p>${line}</p>`;
+    }).join('');
+  }
+}
+</script>
+</body>
+</html>

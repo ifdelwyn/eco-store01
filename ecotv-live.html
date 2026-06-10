@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoTV – Xem Livestream</title>
+<meta name="description" content="Xem livestream mua sắm trực tiếp trên EcoTV">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/ecotv.css">
+<script type="importmap">
+{ "imports": {
+  "ecotv-core": "/js/ecotv-core.js",
+  "ecotv-data": "/js/ecotv-data.js",
+  "ecotv-live": "/js/ecotv-live.js"
+}}
+</script>
+</head>
+<body class="tv-body light-mode">
+<nav class="tv-nav">
+  <a href="ecotv.html" class="tv-nav-brand"><i class="fas fa-leaf"></i> EcoTV</a>
+  <div style="flex:1"></div>
+  <div class="tv-nav-actions">
+    <button class="tv-nav-btn" id="tvThemeToggle" title="Sáng/tối"><i class="fas fa-moon"></i></button>
+  </div>
+</nav>
+
+<div class="tv-live-layout">
+  <div class="tv-live-main">
+    <div class="tv-player-wrap" id="tvLivePlayerContainer">
+      <div style="padding:40px;text-align:center;color:var(--tv-text-muted)">
+        <i class="fas fa-spinner fa-spin" style="font-size:2rem"></i>
+        <p>Đang tải livestream...</p>
+      </div>
+    </div>
+    <!-- Flash Deal & Poll containers (positioned relative to player) -->
+    <div id="tvFlashDeal"></div>
+    <div id="tvPoll"></div>
+  </div>
+
+  <!-- Chat -->
+  <div class="tv-live-chat">
+    <div class="tv-chat-header">
+      <span><i class="fas fa-comment"></i> Chat trực tiếp</span>
+      <span style="font-size:0.78rem;color:var(--tv-text-muted)" id="chatMsgCount">0</span>
+    </div>
+    <div class="tv-chat-messages" id="tvChatMessages"></div>
+    <div class="tv-reactions" id="tvReactions">
+      <button class="tv-react-btn" data-icon="🌿"><span>🌿</span><span class="tv-react-count">0</span></button>
+      <button class="tv-react-btn" data-icon="🥬"><span>🥬</span><span class="tv-react-count">0</span></button>
+      <button class="tv-react-btn" data-icon="❤️"><span>❤️</span><span class="tv-react-count">0</span></button>
+      <button class="tv-react-btn" data-icon="🔥"><span>🔥</span><span class="tv-react-count">0</span></button>
+      <button class="tv-react-btn" data-icon="👏"><span>👏</span><span class="tv-react-count">0</span></button>
+    </div>
+    <div class="tv-chat-input-area">
+      <button id="tvEmojiBtn" class="tv-chat-emoji-btn">😀</button>
+      <input type="text" id="tvChatInput" placeholder="Nhập tin nhắn..." maxlength="200">
+      <button class="tv-chat-send" id="tvChatSend"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { EcoTV } from 'ecotv-core';
+import { ecoTVData } from 'ecotv-data';
+import { EcoTVLive } from 'ecotv-live';
+
+const { utils, state } = EcoTV;
+
+// Theme
+document.getElementById('tvThemeToggle').addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+  const isLight = document.body.classList.contains('light-mode');
+  localStorage.setItem('tv_theme', isLight ? 'light' : 'dark');
+  document.getElementById('tvThemeToggle').innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+});
+if (localStorage.getItem('tv_theme') === 'dark') {
+  document.body.classList.remove('light-mode');
+  document.getElementById('tvThemeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+}
+const tvNav = document.querySelector('.tv-nav');
+window.addEventListener('scroll', () => {
+  tvNav.classList.toggle('scrolled', window.pageYOffset > 60);
+}, { passive: true });
+
+const liveId = utils.getUrlParam('l');
+if (!liveId) {
+  document.body.innerHTML = '<div style="padding:40px;text-align:center"><h2>Không tìm thấy livestream</h2><a href="ecotv.html">Quay về trang chủ</a></div>';
+} else {
+  const liveData = await ecoTVData.getLivestream(liveId);
+  if (!liveData) {
+    document.body.innerHTML = '<div style="padding:40px;text-align:center"><h2>Livestream không tồn tại</h2><a href="ecotv.html">Quay về trang chủ</a></div>';
+  } else {
+    document.title = liveData.title + ' - EcoTV Live';
+
+    const liveModule = new EcoTVLive({
+      liveData: liveData,
+      container: document.getElementById('tvLivePlayerContainer'),
+      chatContainer: document.getElementById('tvChatMessages'),
+      chatInput: document.getElementById('tvChatInput'),
+      chatSend: document.getElementById('tvChatSend'),
+      reactionsContainer: document.getElementById('tvReactions'),
+      flashDealContainer: document.getElementById('tvFlashDeal'),
+      pollContainer: document.getElementById('tvPoll'),
+    });
+    await liveModule.init(liveData);
+
+    // Demo: Show flash deal after 10s
+    setTimeout(() => {
+      liveModule.showFlashDeal({
+        productName: 'Set quà EcoBox',
+        originalPrice: 299000,
+        price: 149000,
+        discountPercent: 50,
+        duration: 5,
+        remainingStock: 23,
+      });
+    }, 10000);
+
+    // Demo: Show poll after 15s
+    setTimeout(() => {
+      liveModule.showPoll({
+        question: 'Bạn thích sản phẩm nào nhất?',
+        options: [
+          { id: 'opt1', label: 'Rau hữu cơ' },
+          { id: 'opt2', label: 'Mật ong rừng' },
+          { id: 'opt3', label: 'Set quà EcoBox' },
+          { id: 'opt4', label: 'Túi vải Eco' },
+        ],
+      });
+    }, 15000);
+
+    // Demo: Show poll result after 45s
+    setTimeout(() => {
+      liveModule.showPollResult();
+    }, 45000);
+
+    // Chat message count
+    setInterval(() => {
+      document.getElementById('chatMsgCount').textContent = document.querySelectorAll('.tv-chat-msg').length;
+    }, 2000);
+
+    // Update viewer count in nav
+    setInterval(() => {
+      const countEl = document.getElementById('liveViewerCount');
+      if (countEl) {
+        const current = parseInt(countEl.textContent.replace(/[^0-9]/g, ''));
+        if (!isNaN(current)) {
+          countEl.textContent = utils.formatViews(Math.max(0, current + Math.floor(Math.random() * 5) - 2));
+        }
+      }
+    }, 8000);
+  }
+}
+</script>
+</body>
+</html>

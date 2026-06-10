@@ -8,9 +8,26 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="js/green-fund.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <style>
     :root { --primary: #16a34a; --secondary: #15803d; --accent: #22c55e; --bg: #f0fdf4; --soft: #dcfce7; --glow: #bbf7d0; --dark: #14532d; --text: #0f2417; --muted: #5b6b62; --card: #ffffff; --border: rgba(20,83,45,.1); --shadow: 0 10px 30px -10px rgba(20,83,45,.18); --radius: 18px; --grad: linear-gradient(135deg,#16a34a 0%,#22c55e 60%,#bbf7d0 100%); }
+    .fund-widget { background: linear-gradient(135deg,#f0fdf4,#dcfce7); border-radius: 14px; padding: 18px; margin: 14px 0; border: 1.5px dashed var(--primary); }
+    .fund-widget .fw-head { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: .92rem; margin-bottom: 10px; }
+    .fund-widget .fw-head i { color: var(--primary); font-size: 1.1rem; }
+    .fund-widget .fw-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .fund-widget .fw-btn { padding: 8px 16px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--card); font-weight: 700; font-size: .85rem; cursor: pointer; transition: all .2s; color: var(--text); }
+    .fund-widget .fw-btn:hover { border-color: var(--primary); background: var(--soft); }
+    .fund-widget .fw-btn.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+    .fund-widget .fw-custom { display: flex; gap: 6px; align-items: center; }
+    .fund-widget .fw-custom input { width: 100px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: .85rem; outline: none; background: var(--card); }
+    .fund-widget .fw-custom input:focus { border-color: var(--primary); }
+    .fund-widget .fw-micro { font-size: .78rem; color: var(--muted); margin-top: 8px; display: flex; align-items: center; gap: 6px; }
+    .fund-widget .fw-micro strong { color: var(--primary); }
+    .fund-result { background: #f0fdf4; border-radius: 12px; padding: 16px; margin-bottom: 14px; text-align: center; border: 1px solid var(--glow); }
+    .fund-result .fr-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; margin: 0 auto 8px; }
+    .fund-result .fr-text { font-weight: 600; font-size: .88rem; }
+    .fund-result .fr-text strong { color: var(--primary); }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: "Plus Jakarta Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
     .container { max-width: 720px; margin: 0 auto; padding: 30px 20px; }
@@ -304,6 +321,19 @@
         </div>
         <div class="card" id="payInfoCard">
           ${payInfoHtml}
+          <div class="fund-widget" id="fundWidget">
+            <div class="fw-head"><i class="fa-solid fa-seedling"></i> Thêm vào Quỹ Xanh?</div>
+            <div class="fw-btns">
+              <button class="fw-btn" data-fw-amount="5000">+5.000đ</button>
+              <button class="fw-btn active" data-fw-amount="10000">+10.000đ</button>
+              <button class="fw-btn" data-fw-amount="20000">+20.000đ</button>
+              <div class="fw-custom">
+                <input type="number" id="fwCustom" placeholder="Khác..." min="1000" step="1000" />
+              </div>
+            </div>
+            <div class="fw-micro"><i class="fa-regular fa-circle-check"></i> Cùng <strong id="fwCustomers">12.450</strong> khách hàng đã trồng <strong id="fwTrees">8.300</strong> cây</div>
+            <input type="hidden" id="fwAmount" value="10000" />
+          </div>
           <div id="payActionArea" style="margin-top:14px">
             <button class="btn-pay" id="payBtn" onclick="startPayment()">
               <i class="fa-solid fa-check-circle"></i> Đã hoàn thành thanh toán
@@ -311,9 +341,15 @@
           </div>
         </div>
       `);
+      setupFundWidget();
 
       if (order.paymentKey === 'qr') {
         setTimeout(function() { generateQR(); startQRTimer(); }, 100);
+      }
+      if (typeof ecoFund !== 'undefined' && ecoFund.data) {
+        var d = ecoFund.data;
+        $('#fwCustomers').text(ecoFund.formatNumber(d.stats.totalCustomers));
+        $('#fwTrees').text(ecoFund.formatNumber(d.greenFund.totalTrees));
       }
     }
 
@@ -365,12 +401,19 @@
       var dateStr = new Date(order.createdAt).toLocaleString('vi-VN');
       var methodStr = order.payment || order.paymentKey || '—';
 
+      var fundAmount = parseInt(document.getElementById('fwAmount')?.value || '0');
+      var fundTrees = Math.floor(fundAmount / 50000);
+      var fundHtml = fundAmount > 0
+        ? '<div class="fund-result"><div class="fr-icon"><i class="fa-solid fa-seedling"></i></div><div class="fr-text">Đơn hàng #' + order.id + ' của bạn đã góp thêm <strong>' + fundTrees + ' cây xanh</strong> cho Việt Nam! 🌱</div></div>'
+        : '';
+
       $('#receiptOrderId').text(order.id);
       $('#receiptMethod').text(methodStr);
       $('#receiptDate').text(dateStr);
       $('#receiptCustomer').text(order.customer || '—');
       $('#receiptItems').html(itemsHtml);
       $('#receiptTotal').text('$' + (order.total || 0).toFixed(2));
+      $('#receiptFundArea').html(fundHtml);
 
       $('#receiptOverlay').css('display','flex');
       $('#receiptCd').text('15');
@@ -415,6 +458,24 @@
       }
     });
 
+    function setupFundWidget() {
+      var fwAmount = 10000;
+      $('.fw-btn').on('click', function() {
+        $('.fw-btn').removeClass('active');
+        $(this).addClass('active');
+        fwAmount = parseInt($(this).data('fw-amount'));
+        $('#fwCustom').val('');
+        $('#fwAmount').val(fwAmount);
+      });
+      $('#fwCustom').on('input', function() {
+        if ($(this).val()) {
+          $('.fw-btn').removeClass('active');
+          fwAmount = parseInt($(this).val()) || 0;
+          $('#fwAmount').val(fwAmount);
+        }
+      });
+    }
+
     $(function() { renderPaymentPage(); });
   </script>
 
@@ -455,6 +516,7 @@
         </div>
         <div style="border-radius:12px;background:#f0fdf4;padding:10px 12px;font-size:.83rem" id="receiptItems"></div>
 
+        <div id="receiptFundArea"></div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:2px solid #dcfce7">
           <span style="font-weight:800;font-size:.95rem">Tổng tiền</span>
           <span id="receiptTotal" style="font-weight:800;font-size:1.25rem;color:#16a34a">$0.00</span>

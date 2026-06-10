@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quỹ Hỗ Trợ Cộng Đồng – EcoShop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    :root { --primary: #1D9E75; --primary-dark: #167A5A; --bg: #F5FBF7; --soft: #E6F4EE; --glow: #C8EADB; --dark: #0F3D2E; --text: #0F2417; --muted: #5B6B62; --card: #FFFFFF; --border: rgba(29,158,117,.15); --shadow: 0 10px 30px -10px rgba(29,158,117,.2); --shadow-lg: 0 30px 60px -20px rgba(29,158,117,.3); --radius: 18px; --grad: linear-gradient(135deg, #1D9E75 0%, #2ECC71 60%, #A8E6C1 100%); --grad-dark: linear-gradient(135deg, #0F3D2E 0%, #1D9E75 100%); }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: "Plus Jakarta Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; margin: 0; }
+    ::selection { background: var(--primary); color: #fff; }
+    .container-eco { max-width: 1200px; margin: 0 auto; padding: 0 22px; }
+    .section { padding: 70px 0; }
+    .section-head { text-align: center; max-width: 680px; margin: 0 auto 44px; }
+    .section-head .eyebrow { color: var(--primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: .78rem; }
+    .section-head h2 { font-size: clamp(1.8rem,3.2vw,2.6rem); font-weight: 800; margin: 10px 0; letter-spacing: -.5px; }
+
+    .navbar-eco { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 1200px; z-index: 1040; background: rgba(255,255,255,.85); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1rem; color: var(--primary-dark); text-decoration: none; }
+    .brand-logo { width: 32px; height: 32px; border-radius: 10px; background: var(--grad); display: flex; align-items: center; justify-content: center; color: #fff; font-size: .95rem; }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-links a { padding: 6px 14px; border-radius: 10px; font-weight: 600; font-size: .85rem; color: var(--text); text-decoration: none; transition: all .2s; }
+    .nav-links a:hover, .nav-links a.active { background: var(--soft); color: var(--primary); }
+    @media (max-width: 768px) { .navbar-eco { padding: 8px 14px; } .nav-links { display: none; } .brand span { display: none; } }
+
+    .btn-eco { background: var(--grad); color: #fff; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; box-shadow: 0 8px 20px -6px rgba(29,158,117,.5); transition: all .3s; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; text-decoration: none; }
+    .btn-eco:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -6px rgba(29,158,117,.7); color: #fff; }
+    .btn-eco-sm { padding: 8px 16px; font-size: .85rem; }
+    .btn-ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); padding: 11px 22px; border-radius: 12px; font-weight: 700; transition: all .3s; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-ghost:hover { background: var(--primary); color: #fff; }
+
+    .hero-fund { position: relative; padding: 140px 0 60px; overflow: hidden; background: linear-gradient(160deg, #0F3D2E 0%, #1D9E75 40%, #2ECC71 70%, #A8E6C1 100%); }
+    .hero-fund::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); opacity: .5; }
+    .hero-fund .hero-content { position: relative; z-index: 2; text-align: center; color: #fff; }
+    .hero-fund .hero-content h1 { font-size: clamp(2.2rem,4.5vw,3.6rem); font-weight: 800; margin: 0 0 12px; letter-spacing: -1px; }
+    .hero-fund .hero-content p { font-size: 1.1rem; opacity: .9; max-width: 560px; margin: 0 auto 30px; }
+    .hero-stats { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+    .hero-stats .hs-item { text-align: center; }
+    .hero-stats .hs-item .hs-num { font-size: 2rem; font-weight: 800; display: block; line-height: 1.2; }
+    .hero-stats .hs-item .hs-label { font-size: .85rem; opacity: .85; }
+    @media (max-width: 768px) { .hero-fund { padding: 120px 0 40px; } .hero-stats { gap: 24px; } .hero-stats .hs-item .hs-num { font-size: 1.6rem; } }
+
+    .story-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(340px,1fr)); gap: 22px; }
+    .story-card { background: var(--card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); transition: all .3s; display: flex; flex-direction: column; cursor: pointer; }
+    .story-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .story-card .sc-img { position: relative; aspect-ratio: 16/9; overflow: hidden; background: var(--soft); }
+    .story-card .sc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .story-card:hover .sc-img img { transform: scale(1.05); }
+    .story-card .sc-badge { position: absolute; top: 10px; left: 10px; padding: 4px 12px; border-radius: 8px; font-size: .72rem; font-weight: 700; background: var(--primary); color: #fff; z-index: 2; display: flex; align-items: center; gap: 4px; }
+    .story-card .sc-badge.urgent { background: #EF4444; animation: urgPulse 2s ease-in-out infinite; }
+    .story-card .sc-badge.completed { background: #6B7280; }
+    .story-card .sc-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+    .story-card .sc-body .sc-name { font-weight: 800; font-size: 1.05rem; margin-bottom: 4px; }
+    .story-card .sc-body .sc-summary { font-size: .85rem; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 12px; }
+    .story-card .sc-body .sc-progress { margin-bottom: 8px; }
+    .story-card .sc-body .sc-progress .sp-bar { height: 8px; border-radius: 8px; background: var(--soft); overflow: hidden; }
+    .story-card .sc-body .sc-progress .sp-bar span { display: block; height: 100%; border-radius: 8px; background: var(--grad); transition: width 1s ease; }
+    .story-card .sc-body .sc-progress .sp-meta { display: flex; justify-content: space-between; font-size: .78rem; margin-top: 4px; }
+    .story-card .sc-body .sc-progress .sp-meta .sp-raised { font-weight: 700; color: var(--primary); }
+    .story-card .sc-body .sc-progress .sp-meta .sp-pct { color: var(--muted); }
+    .story-card .sc-body .sc-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--border); }
+    .story-card .sc-body .sc-footer .sc-supporters { font-size: .82rem; color: var(--muted); }
+    .story-card .sc-body .sc-footer .sc-supporters strong { color: var(--text); }
+    @keyframes urgPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,.5); } 50% { box-shadow: 0 0 0 8px rgba(239,68,68,0); } }
+
+    .eco-modal { position: fixed; inset: 0; z-index: 1070; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .eco-modal.show { display: flex; }
+    .eco-modal-bg { position: absolute; inset: 0; background: rgba(15,61,46,.55); }
+    .eco-modal-content { position: relative; background: var(--card); border-radius: 22px; max-width: 720px; width: 100%; max-height: 90vh; overflow: auto; box-shadow: var(--shadow-lg); border: 1px solid var(--border); animation: popIn .35s ease; }
+    .eco-modal-content .modal-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; background: var(--soft); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--muted); z-index: 5; }
+    .modal-body { padding: 32px; }
+    .modal-body h2 { font-weight: 800; font-size: 1.3rem; margin-bottom: 4px; }
+    .modal-body .mm-sub { color: var(--muted); font-size: .9rem; margin-bottom: 16px; }
+
+    .slideshow { position: relative; border-radius: 14px; overflow: hidden; margin-bottom: 16px; aspect-ratio: 16/9; background: var(--soft); }
+    .slideshow img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .slideshow img.active { display: block; }
+    .slideshow .ss-nav { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
+    .slideshow .ss-nav span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.5); cursor: pointer; }
+    .slideshow .ss-nav span.active { background: #fff; width: 20px; border-radius: 4px; }
+
+    .tl { position: relative; padding-left: 28px; margin: 16px 0; }
+    .tl::before { content: ''; position: absolute; top: 0; bottom: 0; left: 10px; width: 2px; background: var(--border); }
+    .tl-item { position: relative; padding: 8px 0 16px; }
+    .tl-item::before { content: ''; position: absolute; left: -22px; top: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); border: 2px solid var(--card); }
+    .tl-item .tl-date { font-size: .78rem; color: var(--primary); font-weight: 600; }
+    .tl-item .tl-text { font-size: .88rem; }
+
+    .donation-list { margin-top: 16px; }
+    .donation-list .dl-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .donation-list .dl-row:last-child { border: none; }
+    .donation-list .dl-row .dl-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--soft); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .75rem; color: var(--primary); flex-shrink: 0; }
+    .donation-list .dl-row .dl-info { flex: 1; min-width: 0; }
+    .donation-list .dl-row .dl-info .dl-name { font-weight: 700; font-size: .88rem; }
+    .donation-list .dl-row .dl-info .dl-msg { font-size: .8rem; color: var(--muted); }
+    .donation-list .dl-row .dl-amount { font-weight: 800; color: var(--primary); white-space: nowrap; font-size: .9rem; }
+
+    .donate-modal-content { max-width: 480px; }
+    .donate-modal-content .dm-body { padding: 32px; text-align: center; }
+    .donate-modal-content .dm-body h3 { font-weight: 800; margin-bottom: 6px; }
+    .donate-modal-content .dm-body p { color: var(--muted); font-size: .9rem; margin-bottom: 20px; }
+    .donate-modal-content .dm-body .amount-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+    .donate-modal-content .dm-body .amount-btn { padding: 14px; border-radius: 12px; border: 2px solid var(--border); background: var(--card); font-weight: 700; font-size: 1rem; cursor: pointer; transition: all .2s; color: var(--text); }
+    .donate-modal-content .dm-body .amount-btn:hover { border-color: var(--primary); background: var(--soft); }
+    .donate-modal-content .dm-body .amount-btn.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+    .donate-modal-content .dm-body .custom-input { margin-bottom: 12px; }
+    .donate-modal-content .dm-body .custom-input input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: 1rem; font-weight: 600; outline: none; background: var(--card); color: var(--text); }
+    .donate-modal-content .dm-body .custom-input input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--soft); }
+    .donate-modal-content .dm-body .field { margin-bottom: 10px; }
+    .donate-modal-content .dm-body .field input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); font-size: .95rem; outline: none; background: var(--card); color: var(--text); }
+    .donate-modal-content .dm-body .field input:focus { border-color: var(--primary); }
+
+    .thankyou-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; padding: 20px; }
+    .thankyou-overlay.show { display: flex; }
+    .thankyou-modal { background: var(--card); border-radius: var(--radius); max-width: 420px; width: 100%; padding: 32px; text-align: center; box-shadow: var(--shadow-lg); animation: popIn .4s ease; }
+    .thankyou-modal .tm-icon { width: 72px; height: 72px; border-radius: 50%; background: var(--soft); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 16px; animation: popIn .5s ease; }
+    .thankyou-modal h3 { font-weight: 800; }
+    .thankyou-modal .tm-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--soft); color: var(--primary); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: .85rem; margin: 12px 0; }
+    .thankyou-modal .tm-amount { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+    @keyframes popIn { 0% { transform: scale(0); } 60% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+    .toast-container { position: fixed; bottom: 80px; right: 24px; z-index: 9998; display: flex; flex-direction: column-reverse; gap: 10px; pointer-events: none; }
+    .toast-eco { pointer-events: auto; background: var(--card); border-radius: 14px; padding: 14px 16px; box-shadow: 0 16px 48px -12px rgba(0,0,0,.3); min-width: 300px; max-width: 400px; display: flex; align-items: flex-start; gap: 12px; font-size: .88rem; border: 1px solid var(--border); animation: toastSlide .35s ease; }
+    .toast-eco .ti { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .toast-eco.success .ti { background: #dcfce7; color: var(--primary); }
+    .toast-eco .tb { flex: 1; }
+    .toast-eco .tb .tm { font-weight: 600; }
+    @keyframes toastSlide { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    footer { background: var(--grad-dark); color: #fff; padding: 50px 0 24px; margin-top: 60px; }
+    footer a { color: rgba(255,255,255,.7); text-decoration: none; }
+    footer a:hover { color: #fff; }
+    .f-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.4fr; gap: 40px; }
+    @media (max-width: 768px) { .f-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .f-grid { grid-template-columns: 1fr; } }
+    .f-col h5 { font-weight: 800; margin-bottom: 14px; font-size: 1rem; }
+    .f-col p, .f-col a { font-size: .88rem; display: block; margin-bottom: 6px; }
+    .f-social { display: flex; gap: 10px; margin-top: 12px; }
+    .f-social a { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; }
+    .f-bot { margin-top: 30px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.1); text-align: center; font-size: .85rem; opacity: .7; }
+
+    @media (max-width: 576px) {
+      .story-grid { grid-template-columns: 1fr; }
+      .modal-body { padding: 20px; }
+      .donate-modal-content .dm-body { padding: 20px; }
+      .donate-modal-content .dm-body .amount-grid { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar-eco">
+    <a href="/" class="brand"><div class="brand-logo"><i class="fa-solid fa-leaf"></i></div><span>EcoShop</span></a>
+    <div class="nav-links">
+      <a href="/">Trang chủ</a>
+      <a href="quy-xanh.html">Quỹ Xanh</a>
+      <a href="quy-cong-dong.html" class="active">Quỹ Cộng Đồng</a>
+    </div>
+    <a href="checkout.html" class="btn-eco btn-eco-sm"><i class="fa-solid fa-bag-shopping"></i> Mua sắm</a>
+  </nav>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <section class="hero-fund">
+    <div class="container-eco">
+      <div class="hero-content">
+        <h1>🤝 Quỹ Hỗ Trợ Cộng Đồng</h1>
+        <p>Mỗi đóng góp dù nhỏ nhất cũng mang lại nụ cười và hy vọng cho những hoàn cảnh khó khăn. Cùng EcoShop lan tỏa yêu thương.</p>
+        <div class="hero-stats">
+          <div class="hs-item"><span class="hs-num" id="totalRaised">0</span><span class="hs-label">Đã quyên góp</span></div>
+          <div class="hs-item"><span class="hs-num" id="totalBeneficiaries">0</span><span class="hs-label">Hoàn cảnh được giúp</span></div>
+          <div class="hs-item"><span class="hs-num" id="activeStories">0</span><span class="hs-label">Đang kêu gọi</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-eco">
+      <div class="section-head">
+        <div class="eyebrow">Hoàn cảnh</div>
+        <h2>Những mảnh đời cần sẻ chia</h2>
+        <p>Mỗi câu chuyện là một mảnh đời thực. Sự giúp đỡ của bạn có thể thay đổi cả cuộc sống của họ.</p>
+      </div>
+      <div class="story-grid" id="storyGrid"></div>
+    </div>
+  </section>
+
+  <div class="eco-modal" id="storyModal">
+    <div class="eco-modal-bg" onclick="closeStoryModal()"></div>
+    <div class="eco-modal-content" id="storyModalContent">
+      <button class="modal-close" onclick="closeStoryModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-body" id="storyModalBody"></div>
+    </div>
+  </div>
+
+  <div class="eco-modal donate-modal" id="donateModal">
+    <div class="eco-modal-bg" onclick="closeDonateModal()"></div>
+    <div class="eco-modal-content donate-modal-content">
+      <button class="modal-close" onclick="closeDonateModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="dm-body">
+        <h3>❤️ Ủng hộ ngay</h3>
+        <p id="donateStoryName">Chọn số tiền bạn muốn ủng hộ</p>
+        <div class="amount-grid" id="donateAmountGrid">
+          <button class="amount-btn" data-amount="50000">50.000đ</button>
+          <button class="amount-btn active" data-amount="100000">100.000đ</button>
+          <button class="amount-btn" data-amount="200000">200.000đ</button>
+        </div>
+        <div class="custom-input">
+          <input type="number" id="donateCustomAmount" placeholder="Nhập số tiền khác..." min="10000" step="10000" />
+        </div>
+        <div class="field">
+          <input type="text" id="donateDonorName" placeholder="Tên của bạn (hoặc để trống = Ẩn danh)" />
+        </div>
+        <div class="field">
+          <input type="text" id="donateMessage" placeholder="Lời nhắn gửi (không bắt buộc)" />
+        </div>
+        <button class="btn-eco" id="confirmDonateBtn" style="width:100%;justify-content:center;padding:14px">
+          <i class="fa-solid fa-heart"></i> Xác nhận ủng hộ
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="thankyou-overlay" id="thankyouOverlay">
+    <div class="thankyou-modal">
+      <div class="tm-icon"><i class="fa-solid fa-heart"></i></div>
+      <h3>Cảm ơn bạn!</h3>
+      <div class="tm-badge"><i class="fa-solid fa-check-circle"></i> Người ủng hộ</div>
+      <div class="tm-amount" id="thankyouAmount">0đ</div>
+      <p style="color:var(--muted);margin:8px 0 16px">Sự đóng góp của bạn đã được ghi nhận. Cùng nhau chúng ta tạo nên điều kỳ diệu!</p>
+      <button class="btn-eco" onclick="closeThankyou()" style="width:100%;justify-content:center">Đã hiểu</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container-eco">
+      <div class="f-grid">
+        <div class="f-col">
+          <h5><i class="fa-solid fa-leaf"></i> EcoShop</h5>
+          <p>Thực phẩm hữu cơ, sống xanh, yêu thương môi trường.</p>
+          <div class="f-social">
+            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="f-col">
+          <h5>Về EcoShop</h5>
+          <a href="#">Về chúng tôi</a>
+          <a href="#">Sản phẩm</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="f-col">
+          <h5>Hỗ trợ</h5>
+          <a href="#">Trung tâm hỗ trợ</a>
+          <a href="#">Chính sách đổi trả</a>
+          <a href="#">Liên hệ</a>
+        </div>
+        <div class="f-col">
+          <h5>Quỹ Xanh</h5>
+          <a href="quy-xanh.html">Quỹ Trồng Cây Xanh</a>
+          <a href="quy-cong-dong.html">Quỹ Hỗ Trợ Cộng Đồng</a>
+          <a href="#">Báo cáo minh bạch</a>
+        </div>
+      </div>
+      <div class="f-bot">© 2026 EcoShop – Organic & Eco-Friendly Store. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="js/green-fund.js"></script>
+  <script>
+    let currentStoryId = null;
+    let currentStoryData = null;
+    let donateSelectedAmount = 100000;
+
+    function showToast(msg, type = 'success') {
+      const c = document.getElementById('toastContainer');
+      const t = document.createElement('div');
+      t.className = `toast-eco ${type}`;
+      t.innerHTML = `<div class="ti"><i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i></div><div class="tb"><div class="tm">${msg}</div></div>`;
+      c.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+    }
+
+    async function initPage() {
+      await ecoFund.init();
+      const data = ecoFund.data;
+      renderHero(data);
+      renderStories(data);
+      document.addEventListener('fund:update', (e) => {
+        renderHero(e.detail);
+        renderStories(e.detail);
+      });
+    }
+
+    function renderHero(data) {
+      const cf = data.communityFund;
+      ecoFund.animateCounter(document.getElementById('totalRaised'), cf.totalRaised, 'đ', 2500);
+      document.getElementById('totalBeneficiaries').textContent = cf.totalBeneficiaries;
+      document.getElementById('activeStories').textContent = cf.stories.filter(s => s.status === 'active').length;
+    }
+
+    function renderStories(data) {
+      const grid = document.getElementById('storyGrid');
+      grid.innerHTML = data.communityFund.stories.map(s => {
+        const pct = ecoFund.getProgress(s.raised, s.goal);
+        const badgeClass = s.status === 'active' && s.urgent ? 'urgent' : s.status === 'completed' ? 'completed' : '';
+        const badgeText = s.status === 'active' && s.urgent ? 'Khẩn cấp' : s.status === 'completed' ? 'Đã hoàn thành' : 'Đang kêu gọi';
+        const img = s.images && s.images[0] ? s.images[0] : 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&q=80';
+        return `
+          <div class="story-card" onclick="openStoryModal(${s.id})">
+            <div class="sc-img">
+              <img src="${img}" alt="${s.name}" loading="lazy" />
+              <div class="sc-badge ${badgeClass}">${badgeText}</div>
+            </div>
+            <div class="sc-body">
+              <div class="sc-name">${s.anonymous ? 'Ẩn danh' : s.name}</div>
+              <div class="sc-summary">${s.summary}</div>
+              <div class="sc-progress">
+                <div class="sp-bar"><span style="width:${pct}%"></span></div>
+                <div class="sp-meta">
+                  <span class="sp-raised">${ecoFund.formatCurrency(s.raised)}</span>
+                  <span class="sp-pct">${pct}%</span>
+                  <span>Mục tiêu: ${ecoFund.formatCurrency(s.goal)}</span>
+                </div>
+              </div>
+              <div class="sc-footer">
+                <span class="sc-supporters"><strong>${ecoFund.formatNumber(s.supporters)}</strong> người ủng hộ</span>
+                <span class="btn-eco btn-eco-sm">Ủng hộ ngay</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openStoryModal(id) {
+      const data = ecoFund.data;
+      const story = data.communityFund.stories.find(s => s.id === id);
+      if (!story) return;
+      currentStoryData = story;
+      currentStoryId = id;
+
+      const pct = ecoFund.getProgress(story.raised, story.goal);
+      const badgeText = story.status === 'active' && story.urgent ? 'Khẩn cấp' : story.status === 'completed' ? 'Đã hoàn thành' : 'Đang kêu gọi';
+      const badgeClass = story.status === 'active' && story.urgent ? 'urgent' : story.status === 'completed' ? 'completed' : '';
+
+      const slides = (story.images || []).map((img, i) =>
+        `<img src="${img}" class="${i === 0 ? 'active' : ''}" alt="Ảnh ${i+1}" />`
+      ).join('');
+
+      const dots = (story.images || []).map((_, i) =>
+        `<span class="${i === 0 ? 'active' : ''}" onclick="showSlide(${i})"></span>`
+      ).join('');
+
+      const timeline = (story.updates || []).map(u =>
+        `<div class="tl-item"><div class="tl-date">📅 ${u.date}</div><div class="tl-text">${u.content}</div></div>`
+      ).join('');
+
+      const donations = (story.donations || []).map(d =>
+        `<div class="dl-row">
+          <div class="dl-avatar"><i class="fa-regular fa-user"></i></div>
+          <div class="dl-info">
+            <div class="dl-name">${d.name}</div>
+            ${d.message ? `<div class="dl-msg">"${d.message}"</div>` : ''}
+          </div>
+          <div class="dl-amount">${ecoFund.formatCurrency(d.amount)}</div>
+        </div>`
+      ).join('');
+
+      document.getElementById('storyModalBody').innerHTML = `
+        ${slides ? `<div class="slideshow">${slides}<div class="ss-nav">${dots}</div></div>` : ''}
+        <h2>${story.anonymous ? 'Ẩn danh' : story.name}</h2>
+        <div class="mm-sub" style="display:flex;gap:8px;align-items:center">
+          <span class="sc-badge ${badgeClass}" style="position:static">${badgeText}</span>
+          <span>${ecoFund.formatNumber(story.supporters)} người ủng hộ</span>
+        </div>
+        <div class="sc-progress" style="margin:12px 0">
+          <div class="sp-bar"><span style="width:${pct}%"></span></div>
+          <div class="sp-meta">
+            <span class="sp-raised">Đã nhận: ${ecoFund.formatCurrency(story.raised)}</span>
+            <span class="sp-pct">${pct}%</span>
+            <span>Cần: ${ecoFund.formatCurrency(story.goal)}</span>
+          </div>
+        </div>
+        <div style="background:var(--soft);border-radius:12px;padding:16px;margin:12px 0;font-size:.92rem;line-height:1.6">
+          ${story.story}
+        </div>
+        ${timeline ? `<div style="margin:16px 0"><h5 style="font-weight:800">📋 Cập nhật tình hình</h5><div class="tl">${timeline}</div></div>` : ''}
+        ${donations ? `<div style="margin:16px 0"><h5 style="font-weight:800">🙏 Người ủng hộ</h5><div class="donation-list">${donations}</div></div>` : ''}
+        ${story.status !== 'completed' ? `<button class="btn-eco" onclick="event.stopPropagation();openDonateModal(${story.id})" style="width:100%;justify-content:center;margin-top:8px"><i class="fa-solid fa-heart"></i> Ủng hộ ngay</button>` : '<div style="text-align:center;padding:12px;background:var(--soft);border-radius:12px;font-weight:700;color:var(--primary)">✅ Đã hoàn thành mục tiêu</div>'}
+      `;
+
+      document.getElementById('storyModal').classList.add('show');
+    }
+
+    let slideIndex = 0;
+    function showSlide(idx) {
+      const modal = document.getElementById('storyModalContent');
+      const imgs = modal.querySelectorAll('.slideshow img');
+      const dots = modal.querySelectorAll('.ss-nav span');
+      imgs.forEach((img, i) => img.classList.toggle('active', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      slideIndex = idx;
+    }
+
+    function closeStoryModal() {
+      document.getElementById('storyModal').classList.remove('show');
+    }
+
+    function openDonateModal(storyId) {
+      const data = ecoFund.data;
+      const story = data.communityFund.stories.find(s => s.id === storyId);
+      if (!story) return;
+      currentStoryId = storyId;
+      document.getElementById('donateStoryName').textContent = `🌿 ${story.name}`;
+      document.getElementById('donateCustomAmount').value = '';
+      document.getElementById('donateDonorName').value = '';
+      document.getElementById('donateMessage').value = '';
+      donateSelectedAmount = 100000;
+      document.querySelectorAll('#donateAmountGrid .amount-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('#donateAmountGrid .amount-btn[data-amount="100000"]')?.classList.add('active');
+      document.getElementById('donateModal').classList.add('show');
+    }
+
+    function closeDonateModal() {
+      document.getElementById('donateModal').classList.remove('show');
+    }
+
+    function closeThankyou() {
+      document.getElementById('thankyouOverlay').classList.remove('show');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initPage();
+
+      document.querySelectorAll('#donateAmountGrid .amount-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#donateAmountGrid .amount-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          donateSelectedAmount = parseInt(btn.dataset.amount);
+          document.getElementById('donateCustomAmount').value = '';
+        });
+      });
+
+      document.getElementById('donateCustomAmount').addEventListener('input', function() {
+        if (this.value) {
+          document.querySelectorAll('#donateAmountGrid .amount-btn').forEach(b => b.classList.remove('active'));
+          donateSelectedAmount = parseInt(this.value) || 0;
+        }
+      });
+
+      document.getElementById('confirmDonateBtn').addEventListener('click', async () => {
+        if (!donateSelectedAmount || donateSelectedAmount < 10000) {
+          showToast('Vui lòng chọn số tiền hợp lệ (tối thiểu 10.000đ)', 'error');
+          return;
+        }
+        const name = document.getElementById('donateDonorName').value.trim() || 'Ẩn danh';
+        const message = document.getElementById('donateMessage').value.trim();
+        const result = await ecoFund.donateCommunity(currentStoryId, donateSelectedAmount, name, message);
+        if (!result) {
+          showToast('Có lỗi xảy ra, vui lòng thử lại', 'error');
+          return;
+        }
+        document.getElementById('donateModal').classList.remove('show');
+        document.getElementById('thankyouAmount').textContent = ecoFund.formatCurrency(donateSelectedAmount);
+        document.getElementById('thankyouOverlay').classList.add('show');
+        showToast(`🎉 Cảm ơn bạn đã ủng hộ!`);
+        renderStories(ecoFund.data);
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('eco-modal-bg')) {
+        e.target.parentElement.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

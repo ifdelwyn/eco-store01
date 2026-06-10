@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoTV – Quản trị nội dung</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary: #2E7D32; --primary-dark: #1B5E20; --accent: #FF9800; --bg: #f0f7f4; --soft: #E8F5E9; --glow: #bbf7d0; --dark: #0d3b0f; --text: #0f2417; --muted: #5b6b62; --card: #ffffff; --border: rgba(20,83,45,.1); --shadow: 0 10px 30px -10px rgba(20,83,45,.18); --shadow-lg: 0 30px 60px -20px rgba(20,83,45,.25); --radius: 18px; --live: #ef4444; }
+    [data-theme="dark"] { --bg: #06140d; --soft: #0e2418; --text: #e8fbef; --muted: #9ab5a4; --card: #0d2117; --border: rgba(187,247,208,.1); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Plus Jakarta Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+
+    /* Login */
+    #loginScreen { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+    #loginScreen.hidden { display: none; }
+    .login-box { background: var(--card); border-radius: var(--radius); padding: 40px; width: 380px; max-width: 90vw; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+    .login-box .logo { text-align: center; margin-bottom: 28px; }
+    .login-box .logo i { font-size: 2.5rem; color: var(--primary); }
+    .login-box .logo h2 { font-weight: 800; margin-top: 8px; }
+    .login-box .logo p { color: var(--muted); font-size: .85rem; }
+
+    /* Shell */
+    .shell { display: grid; grid-template-columns: 220px 1fr; height: 100vh; overflow: hidden; }
+    @media (max-width:768px) { .shell { grid-template-columns: 1fr; } .sidebar { position: fixed; z-index: 1080; height: 100vh; transform: translateX(-100%); transition: transform .3s; } .sidebar.open { transform: translateX(0); } }
+    .sidebar { background: linear-gradient(180deg, #0d3b0f, #1B5E20); color: #d4f4df; padding: 20px 14px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+    .sidebar .logo { color: #fff; font-weight: 800; font-size: 1.1rem; margin-bottom: 24px; padding: 0 8px; display: flex; align-items: center; gap: 10px; }
+    .sidebar .logo i { font-size: 1.3rem; }
+    .nav-item { padding: 10px 14px; border-radius: 12px; color: #bbe5c8; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all .2s; font-size: .9rem; }
+    .nav-item:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .nav-item.active { background: var(--accent); color: #fff; }
+    .sidebar .spacer { flex: 1; }
+    .sidebar .logout-btn { padding: 10px 14px; border-radius: 12px; color: #fca5a5; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: .9rem; margin-top: 10px; }
+    .sidebar .logout-btn:hover { background: rgba(239,68,68,.15); }
+
+    /* Main */
+    .main { padding: 24px; height: 100vh; overflow-y: auto; }
+    .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+    .top-bar h2 { font-weight: 800; margin: 0; display: flex; align-items: center; gap: 10px; }
+    .menu-toggle { display: none; width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); align-items: center; justify-content: center; cursor: pointer; }
+    @media (max-width:768px) { .menu-toggle { display: inline-flex; } }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 14px; margin-bottom: 24px; }
+    .stat-card { background: var(--card); padding: 18px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .stat-card small { color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: .7rem; }
+    .stat-card strong { display: block; font-size: 1.5rem; font-weight: 800; margin: 4px 0; color: var(--primary); }
+    .stat-card span { color: var(--accent); font-size: .8rem; font-weight: 600; }
+
+    /* Table */
+    .panel { background: var(--card); border-radius: 16px; border: 1px solid var(--border); padding: 20px; box-shadow: var(--shadow); margin-bottom: 18px; }
+    .panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+    .panel-header h3 { font-weight: 800; margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    th { font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: .68rem; letter-spacing: 1px; white-space: nowrap; }
+    td img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: .7rem; font-weight: 700; background: var(--soft); color: var(--primary-dark); }
+    .badge.live { background: #fee2e2; color: #dc2626; }
+    .badge.upcoming { background: #fef3c7; color: #92400e; }
+    .badge.ended { background: #e5e7eb; color: #374151; }
+    .actions { display: flex; gap: 4px; }
+    .actions button { width: 30px; height: 30px; border-radius: 8px; border: none; background: transparent; color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+    .actions button:hover { background: var(--soft); color: var(--primary); }
+    .actions button.danger:hover { background: #fee2e2; color: #dc2626; }
+    .text-muted { color: var(--muted); }
+
+    /* Buttons */
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: .85rem; transition: all .3s; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(46,125,50,.35); }
+    .btn-sm { padding: 7px 14px; font-size: .78rem; }
+    .btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); padding: 9px 18px; border-radius: 12px; font-weight: 700; font-size: .85rem; cursor: pointer; transition: all .3s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-outline:hover { background: var(--primary); color: #fff; }
+    .btn-danger { background: #dc2626; color: #fff; border: none; padding: 9px 18px; border-radius: 12px; font-weight: 700; font-size: .85rem; cursor: pointer; }
+
+    /* Inputs */
+    .f-group { margin-bottom: 12px; }
+    .f-group label { display: block; font-weight: 700; font-size: .82rem; margin-bottom: 4px; }
+    .f-group input, .f-group textarea, .f-group select { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: .9rem; outline: none; transition: border .2s; }
+    .f-group input:focus, .f-group textarea:focus, .f-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(46,125,50,.15); }
+    .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Modal */
+    .modal { position: fixed; inset: 0; z-index: 1070; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal.show { display: flex; animation: fadeIn .25s ease; }
+    .modal-bg { position: absolute; inset: 0; background: rgba(10,30,18,.5); backdrop-filter: blur(4px); }
+    .modal-content { position: relative; background: var(--card); border-radius: 20px; max-width: 680px; width: 100%; max-height: 85vh; overflow: auto; box-shadow: var(--shadow-lg); border: 1px solid var(--border); animation: popIn .3s cubic-bezier(.22,1,.36,1); padding: 28px; }
+    .modal-content.wide { max-width: 860px; }
+    .modal-content h3 { font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .modal-close { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: var(--soft); color: var(--muted); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes popIn { from { transform: scale(.92) translateY(16px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
+    /* Toast */
+    #toasts { position: fixed; bottom: 24px; right: 24px; z-index: 9998; display: flex; flex-direction: column-reverse; gap: 10px; pointer-events: none; max-width: 380px; }
+    .toast-el { pointer-events: auto; background: var(--card); border-radius: 14px; padding: 14px 18px; box-shadow: var(--shadow-lg); display: flex; align-items: flex-start; gap: 12px; font-size: .88rem; border: 1px solid var(--border); animation: toastIn .35s ease; }
+    .toast-el .t-icon { width: 28px; height: 28px; min-width: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: .8rem; }
+    .toast-el.success .t-icon { background: #dcfce7; color: #16a34a; }
+    .toast-el.error .t-icon { background: #fee2e2; color: #dc2626; }
+    .toast-el .t-body { flex: 1; min-width: 0; }
+    .toast-el .t-body strong { display: block; }
+    .toast-el .t-body span { font-size: .8rem; color: var(--muted); }
+    @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* Skeleton */
+    .skel { display: flex; flex-direction: column; gap: 10px; }
+    .skel-row { height: 20px; background: linear-gradient(90deg, var(--soft) 25%, var(--bg) 50%, var(--soft) 75%); background-size: 200% 100%; animation: skelShimmer 1.5s infinite; border-radius: 6px; }
+    @keyframes skelShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    .live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--live); animation: livePulse 1.5s infinite; }
+    @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+  </style>
+</head>
+<body>
+
+<div id="appShell" style="display:none">
+  <div class="shell">
+    <div class="sidebar" id="sidebar">
+      <div class="logo"><i class="fas fa-leaf"></i> EcoTV Admin</div>
+      <div class="nav-item active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Tổng quan</div>
+      <div class="nav-item" data-tab="channels"><i class="fas fa-users"></i> Kênh</div>
+      <div class="nav-item" data-tab="videos"><i class="fas fa-video"></i> Video</div>
+      <div class="nav-item" data-tab="livestreams"><i class="fas fa-broadcast-tower"></i> Livestream</div>
+      <div class="nav-item" data-tab="schedule"><i class="fas fa-calendar-alt"></i> Lịch phát sóng</div>
+      <div class="nav-item" data-tab="challenges"><i class="fas fa-trophy"></i> Thử thách</div>
+      <div class="nav-item" data-tab="rewards"><i class="fas fa-gift"></i> Phần thưởng</div>
+      <div class="spacer"></div>
+      <div class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Đăng xuất</div>
+    </div>
+    <div class="main">
+      <div class="top-bar">
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+          <h2 id="pageTitle"><i class="fas fa-chart-pie"></i> Tổng quan</h2>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted)">
+          <i class="fas fa-user-shield"></i> <span id="adminName">Admin</span>
+        </div>
+      </div>
+
+      <div id="tabContent">
+        <div id="tab-dashboard" class="tab-pane"></div>
+        <div id="tab-channels" class="tab-pane" style="display:none"></div>
+        <div id="tab-videos" class="tab-pane" style="display:none"></div>
+        <div id="tab-livestreams" class="tab-pane" style="display:none"></div>
+        <div id="tab-schedule" class="tab-pane" style="display:none"></div>
+        <div id="tab-challenges" class="tab-pane" style="display:none"></div>
+        <div id="tab-rewards" class="tab-pane" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<div class="modal" id="modal">
+  <div class="modal-bg" onclick="closeModal()"></div>
+  <div class="modal-content" id="modalContent"></div>
+</div>
+
+<script>
+let sessionId = localStorage.getItem('tv_admin_session');
+let adminUser = '';
+let tvData = { channels: [], videos: [], livestreams: [], schedule: [], ecoChallenges: [], rewards: [] };
+
+function toast(msg, type = 'success') {
+  const c = document.getElementById('toasts');
+  const el = document.createElement('div');
+  el.className = 'toast-el ' + type;
+  const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle' };
+  el.innerHTML = `<div class="t-icon"><i class="fas ${icons[type] || 'fa-info-circle'}"></i></div><div class="t-body"><strong>${msg}</strong></div>`;
+  c.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+function showModal(html) {
+  document.getElementById('modal').classList.add('show');
+  document.getElementById('modalContent').innerHTML = html;
+}
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+async function api(method, url, body) {
+  const opts = { method, headers: {} };
+  if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+  if (sessionId) opts.headers['x-admin-session'] = sessionId;
+  const res = await fetch(url, opts);
+  if (!res.ok && res.status === 403) {
+    localStorage.removeItem('tv_admin_session');
+    sessionId = null;
+    window.location.href = 'index.html';
+    throw new Error('Session expired');
+  }
+  return res.json();
+}
+
+// Check existing session - redirect to index.html if not logged in
+if (!sessionId) {
+  window.location.href = 'index.html';
+} else {
+  document.getElementById('appShell').style.display = '';
+  adminUser = localStorage.getItem('tv_admin_user') || 'Admin';
+  document.getElementById('adminName').textContent = adminUser;
+  init();
+}
+
+// Menu toggle
+document.getElementById('menuToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('tv_admin_session');
+  sessionId = null;
+  window.location.href = 'index.html';
+});
+
+// Navigation
+document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+    const tab = document.getElementById('tab-' + item.dataset.tab);
+    if (tab) tab.style.display = '';
+    const titles = { dashboard: 'Tổng quan', channels: 'Quản lý kênh', videos: 'Quản lý video', livestreams: 'Quản lý livestream', schedule: 'Lịch phát sóng', challenges: 'Thử thách xanh', rewards: 'Phần thưởng' };
+    document.getElementById('pageTitle').innerHTML = `<i class="fas ${item.querySelector('i').className}"></i> ${titles[item.dataset.tab] || item.dataset.tab}`;
+    if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+  });
+});
+
+// Init
+async function init() {
+  try {
+    const data = await api('GET', '/api/tv/data');
+    tvData = data;
+    renderDashboard();
+    renderChannels();
+    renderVideos();
+    renderLivestreams();
+    renderSchedule();
+    renderChallenges();
+    renderRewards();
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+// ===== DASHBOARD =====
+function renderDashboard() {
+  const el = document.getElementById('tab-dashboard');
+  const liveCount = (tvData.livestreams || []).filter(s => s.status === 'live').length;
+  const totalViews = (tvData.videos || []).reduce((s, v) => s + (v.views || 0), 0);
+  const totalSubs = (tvData.channels || []).reduce((s, c) => s + (c.subscriberCount || 0), 0);
+  el.innerHTML = `
+    <div class="stats">
+      <div class="stat-card"><small>Kênh</small><strong>${(tvData.channels||[]).length}</strong><span><i class="fas fa-users"></i></span></div>
+      <div class="stat-card"><small>Video</small><strong>${(tvData.videos||[]).length}</strong><span><i class="fas fa-video"></i></span></div>
+      <div class="stat-card"><small>Đang phát LIVE</small><strong>${liveCount}</strong><span><i class="fas fa-broadcast-tower"></i></span></div>
+      <div class="stat-card"><small>Tổng lượt xem</small><strong>${formatNum(totalViews)}</strong><span><i class="fas fa-eye"></i></span></div>
+      <div class="stat-card"><small>Người theo dõi</small><strong>${formatNum(totalSubs)}</strong><span><i class="fas fa-user-check"></i></span></div>
+      <div class="stat-card"><small>Lịch phát sóng</small><strong>${(tvData.schedule||[]).length}</strong><span><i class="fas fa-calendar"></i></span></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><h3><i class="fas fa-fire"></i> Video nổi bật</h3></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Video</th><th>Kênh</th><th>Lượt xem</th><th>Danh mục</th><th>Ngày</th></tr></thead>
+          <tbody>
+            ${(tvData.videos||[]).slice(0, 8).map(v => `
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:8px;max-width:280px"><img src="${v.thumbnail}" alt=""> <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(v.title)}</span></div></td>
+                <td>${esc(v.channelName)}</td>
+                <td>${formatNum(v.views)}</td>
+                <td><span class="badge">${esc(v.category||'')}</span></td>
+                <td style="font-size:.78rem;color:var(--muted)">${(v.publishedAt||'').slice(0,10)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ===== CHANNELS =====
+function renderChannels() {
+  const el = document.getElementById('tab-channels');
+  el.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-users"></i> Danh sách kênh (${(tvData.channels||[]).length})</h3>
+        <button class="btn-primary btn-sm" onclick="channelForm()"><i class="fas fa-plus"></i> Thêm kênh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Tên kênh</th><th>Danh mục</th><th>Người theo dõi</th><th>Video</th><th>Sản phẩm</th><th></th></tr></thead>
+          <tbody>
+            ${(tvData.channels||[]).map((ch, i) => `
+              <tr>
+                <td><img src="${ch.avatar}" style="width:36px;height:36px;border-radius:50%"></td>
+                <td><strong>${esc(ch.name)}</strong> ${ch.verified ? '<i class="fas fa-check-circle" style="color:#3b82f6;font-size:.7rem"></i>' : ''}</td>
+                <td><span class="badge">${esc(ch.category||'')}</span></td>
+                <td>${formatNum(ch.subscriberCount)}</td>
+                <td>${ch.totalVideos||0}</td>
+                <td>${(ch.products||[]).length}</td>
+                <td><div class="actions"><button onclick="channelForm(${i})" title="Sửa"><i class="fas fa-edit"></i></button><button class="danger" onclick="deleteChannel(${i})" title="Xóa"><i class="fas fa-trash"></i></button></div></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function channelForm(idx) {
+  const ch = idx !== undefined ? tvData.channels[idx] : { id: 'ch' + String(Date.now()).slice(-6), name: '', slug: '', avatar: '', banner: '', tagline: '', category: '', subscriberCount: 0, totalViews: 0, totalVideos: 0, verified: false, description: '', products: [] };
+  const isNew = idx === undefined;
+  showModal(`
+    <h3>${isNew ? '<i class="fas fa-plus-circle"></i> Thêm kênh' : '<i class="fas fa-edit"></i> Sửa kênh'}</h3>
+    <div class="f-row">
+      <div class="f-group"><label>Tên kênh</label><input id="chName" value="${esc(ch.name)}" /></div>
+      <div class="f-group"><label>Slug</label><input id="chSlug" value="${esc(ch.slug)}" /></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label>Avatar URL</label><input id="chAvatar" value="${esc(ch.avatar)}" /></div>
+      <div class="f-group"><label>Banner URL</label><input id="chBanner" value="${esc(ch.banner||'')}" /></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label>Tagline</label><input id="chTagline" value="${esc(ch.tagline||'')}" /></div>
+      <div class="f-group"><label>Danh mục</label><input id="chCategory" value="${esc(ch.category||'')}" /></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label>Người theo dõi</label><input type="number" id="chSubs" value="${ch.subscriberCount}" /></div>
+      <div class="f-group"><label>Tổng lượt xem</label><input type="number" id="chViews" value="${ch.totalViews}" /></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label>Tổng video</label><input type="number" id="chVideos" value="${ch.totalVideos}" /></div>
+      <div class="f-group"><label><input type="checkbox" id="chVerified" ${ch.verified ? 'checked' : ''} /> Đã xác thực</label></div>
+    </div>
+    <div class="f-group"><label>Mô tả</label><textarea id="chDesc" rows="3">${esc(ch.description||'')}</textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn-outline" onclick="closeModal()">Hủy</button>
+      <button class="btn-primary" onclick="saveChannel(${idx === undefined ? -1 : idx})"><i class="fas fa-save"></i> Lưu</button>
+    </div>
+  `);
+}
+
+async function saveChannel(idx) {
+  const data = {
+    id: idx === -1 ? 'ch' + String(Date.now()).slice(-6) : tvData.channels[idx].id,
+    name: document.getElementById('chName').value.trim(),
+    slug: document.getElementById('chSlug').value.trim(),
+    avatar: document.getElementById('chAvatar').value.trim(),
+    banner: document.getElementById('chBanner').value.trim(),
+    tagline: document.getElementById('chTagline').value.trim(),
+    category: document.getElementById('chCategory').value.trim(),
+    subscriberCount: parseInt(document.getElementById('chSubs').value) || 0,
+    totalViews: parseInt(document.getElementById('chViews').value) || 0,
+    totalVideos: parseInt(document.getElementById('chVideos').value) || 0,
+    verified: document.getElementById('chVerified').checked,
+    description: document.getElementById('chDesc').value.trim(),
+    products: idx === -1 ? [] : (tvData.channels[idx].products || [])
+  };
+  if (idx === -1) tvData.channels.push(data);
+  else tvData.channels[idx] = data;
+  await saveAll();
+  closeModal();
+  renderChannels();
+  renderDashboard();
+}
+
+async function deleteChannel(idx) {
+  if (!confirm('Xóa kênh "' + tvData.channels[idx].name + '"?')) return;
+  tvData.channels.splice(idx, 1);
+  await saveAll();
+  renderChannels();
+  renderDashboard();
+}
+
+// ===== VIDEOS =====
+function renderVideos() {
+  const el = document.getElementById('tab-videos');
+  el.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-video"></i> Danh sách video (${(tvData.videos||[]).length})</h3>
+        <button class="btn-primary btn-sm" onclick="videoForm()"><i class="fas fa-plus"></i> Thêm video</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Tiêu đề</th><th>Kênh</th><th>Lượt xem</th><th>Danh mục</th><th>Thời lượng</th><th></th></tr></thead>
+          <tbody>
+            ${(tvData.videos||[]).map((v, i) => `
+              <tr>
+                <td><img src="${v.thumbnail}" style="width:64px;height:36px;border-radius:6px;object-fit:cover"></td>
+                <td><div style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><strong>${esc(v.title)}</strong></div></td>
+                <td style="font-size:.82rem">${esc(v.channelName)}</td>
+                <td>${formatNum(v.views)}</td>
+                <td><span class="badge">${esc(v.category||'')}</span></td>
+                <td>${fmtDuration(v.duration)}</td>
+                <td><div class="actions"><button onclick="videoForm(${i})" title="Sửa"><i class="fas fa-edit"></i></button><button class="danger" onclick="deleteVideo(${i})" title="Xóa"><i class="fas fa-trash"></i></button></div></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function videoForm(idx) {
+  const v = idx !== undefined ? tvData.videos[idx] : { id: 'vid' + String(Date.now()).slice(-6), title: '', slug: '', description: '', channelId: '', channelName: '', channelAvatar: '', thumbnail: '', duration: 300, videoUrl: '', views: 0, likes: 0, category: '', publishedAt: new Date().toISOString(), tags: [], chapters: [], productTimestamps: [], comments: [] };
+  const isNew = idx === undefined;
+  const chOpts = (tvData.channels||[]).map(c => `<option value="${c.id}" ${c.id === v.channelId ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
+  showModal(`
+    <h3>${isNew ? '<i class="fas fa-plus-circle"></i> Thêm video' : '<i class="fas fa-edit"></i> Sửa video'}</h3>
+    <div class="f-group"><label>Tiêu đề</label><input id="vTitle" value="${esc(v.title)}" /></div>
+    <div class="f-row">
+      <div class="f-group"><label>Slug</label><input id="vSlug" value="${esc(v.slug||'')}" /></div>
+      <div class="f-group"><label>Danh mục</label><input id="vCategory" value="${esc(v.category||'')}" /></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label>Kênh</label><select id="vChannel">${chOpts}</select></div>
+      <div class="f-group"><label>Thời lượng (giây)</label><input type="number" id="vDuration" value="${v.duration}" /></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label>Lượt xem</label><input type="number" id="vViews" value="${v.views}" /></div>
+      <div class="f-group"><label>Lượt thích</label><input type="number" id="vLikes" value="${v.likes||0}" /></div>
+    </div>
+    <div class="f-group"><label>Thumbnail URL</label><input id="vThumb" value="${esc(v.thumbnail)}" /></div>
+    <div class="f-group"><label>Video URL</label><input id="vUrl" value="${esc(v.videoUrl||'')}" /></div>
+    <div class="f-group"><label>Mô tả</label><textarea id="vDesc" rows="4">${esc(v.description||'')}</textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn-outline" onclick="closeModal()">Hủy</button>
+      <button class="btn-primary" onclick="saveVideo(${idx === undefined ? -1 : idx})"><i class="fas fa-save"></i> Lưu</button>
+    </div>
+  `);
+  document.getElementById('vChannel').addEventListener('change', function() {
+    const ch = (tvData.channels||[]).find(c => c.id === this.value);
+    if (ch) { document.getElementById('vTitle').dataset.chName = ch.name; }
+  });
+}
+
+async function saveVideo(idx) {
+  const chId = document.getElementById('vChannel').value;
+  const ch = (tvData.channels||[]).find(c => c.id === chId);
+  const data = {
+    id: idx === -1 ? 'vid' + String(Date.now()).slice(-6) : tvData.videos[idx].id,
+    title: document.getElementById('vTitle').value.trim(),
+    slug: document.getElementById('vSlug').value.trim() || document.getElementById('vTitle').value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+    description: document.getElementById('vDesc').value.trim(),
+    channelId: chId,
+    channelName: ch ? ch.name : '',
+    channelAvatar: ch ? ch.avatar : '',
+    thumbnail: document.getElementById('vThumb').value.trim(),
+    duration: parseInt(document.getElementById('vDuration').value) || 300,
+    videoUrl: document.getElementById('vUrl').value.trim(),
+    views: parseInt(document.getElementById('vViews').value) || 0,
+    likes: parseInt(document.getElementById('vLikes').value) || 0,
+    dislikes: idx === -1 ? 0 : (tvData.videos[idx].dislikes || 0),
+    category: document.getElementById('vCategory').value.trim(),
+    publishedAt: idx === -1 ? new Date().toISOString() : tvData.videos[idx].publishedAt,
+    tags: idx === -1 ? [] : (tvData.videos[idx].tags || []),
+    chapters: idx === -1 ? [] : (tvData.videos[idx].chapters || []),
+    productTimestamps: idx === -1 ? [] : (tvData.videos[idx].productTimestamps || []),
+    comments: idx === -1 ? [] : (tvData.videos[idx].comments || [])
+  };
+  if (idx === -1) tvData.videos.push(data);
+  else tvData.videos[idx] = data;
+  await saveAll();
+  closeModal();
+  renderVideos();
+  renderDashboard();
+}
+
+async function deleteVideo(idx) {
+  if (!confirm('Xóa video "' + tvData.videos[idx].title + '"?')) return;
+  tvData.videos.splice(idx, 1);
+  await saveAll();
+  renderVideos();
+  renderDashboard();
+}
+
+// ===== LIVESTREAMS =====
+function renderLivestreams() {
+  const el = document.getElementById('tab-livestreams');
+  el.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-broadcast-tower"></i> Danh sách livestream (${(tvData.livestreams||[]).length})</h3>
+        <button class="btn-primary btn-sm" onclick="livestreamForm()"><i class="fas fa-plus"></i> Thêm livestream</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Tiêu đề</th><th>Kênh</th><th>Trạng thái</th><th>Người xem</th><th></th></tr></thead>
+          <tbody>
+            ${(tvData.livestreams||[]).map((s, i) => `
+              <tr>
+                <td><img src="${s.thumbnail}" style="width:64px;height:36px;border-radius:6px;object-fit:cover"></td>
+                <td><strong>${esc(s.title)}</strong></td>
+                <td>${esc(s.channelName)}</td>
+                <td><span class="badge ${s.status}">${s.status === 'live' ? '<span class="live-dot"></span>' : ''} ${s.status}</span></td>
+                <td>${formatNum(s.viewerCount)}</td>
+                <td><div class="actions"><button onclick="livestreamForm(${i})" title="Sửa"><i class="fas fa-edit"></i></button><button class="danger" onclick="deleteLivestream(${i})" title="Xóa"><i class="fas fa-trash"></i></button></div></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function livestreamForm(idx) {
+  const s = idx !== undefined ? tvData.livestreams[idx] : { id: 'live' + String(Date.now()).slice(-6), title: '', channelId: '', channelName: '', channelAvatar: '', thumbnail: '', status: 'live', viewerCount: 0, category: '', description: '', streamUrl: '', pinnedProducts: [] };
+  const isNew = idx === undefined;
+  const chOpts = (tvData.channels||[]).map(c => `<option value="${c.id}" ${c.id === s.channelId ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
+  showModal(`
+    <h3>${isNew ? '<i class="fas fa-plus-circle"></i> Thêm livestream' : '<i class="fas fa-edit"></i> Sửa livestream'}</h3>
+    <div class="f-group"><label>Tiêu đề</label><input id="lsTitle" value="${esc(s.title)}" /></div>
+    <div class="f-row">
+      <div class="f-group"><label>Kênh</label><select id="lsChannel">${chOpts}</select></div>
+      <div class="f-group"><label>Trạng thái</label><select id="lsStatus"><option value="live" ${s.status==='live'?'selected':''}>Live</option><option value="upcoming" ${s.status==='upcoming'?'selected':''}>Sắp diễn ra</option><option value="ended" ${s.status==='ended'?'selected':''}>Đã kết thúc</option></select></div>
+    </div>
+    <div class="f-row">
+      <div class="f-group"><label>Người xem</label><input type="number" id="lsViewers" value="${s.viewerCount}" /></div>
+      <div class="f-group"><label>Danh mục</label><input id="lsCategory" value="${esc(s.category||'')}" /></div>
+    </div>
+    <div class="f-group"><label>Thumbnail URL</label><input id="lsThumb" value="${esc(s.thumbnail)}" /></div>
+    <div class="f-group"><label>Stream URL</label><input id="lsUrl" value="${esc(s.streamUrl||'')}" /></div>
+    <div class="f-group"><label>Mô tả</label><textarea id="lsDesc" rows="3">${esc(s.description||'')}</textarea></div>
+    ${s.status === 'upcoming' ? `<div class="f-group"><label>Lịch phát sóng</label><input type="datetime-local" id="lsScheduled" value="${s.scheduledTime ? s.scheduledTime.slice(0,16) : ''}" /></div>` : ''}
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn-outline" onclick="closeModal()">Hủy</button>
+      <button class="btn-primary" onclick="saveLivestream(${idx === undefined ? -1 : idx})"><i class="fas fa-save"></i> Lưu</button>
+    </div>
+  `);
+}
+
+async function saveLivestream(idx) {
+  const chId = document.getElementById('lsChannel').value;
+  const ch = (tvData.channels||[]).find(c => c.id === chId);
+  const scheduledEl = document.getElementById('lsScheduled');
+  const data = {
+    id: idx === -1 ? 'live' + String(Date.now()).slice(-6) : tvData.livestreams[idx].id,
+    title: document.getElementById('lsTitle').value.trim(),
+    channelId: chId,
+    channelName: ch ? ch.name : '',
+    channelAvatar: ch ? ch.avatar : '',
+    thumbnail: document.getElementById('lsThumb').value.trim(),
+    status: document.getElementById('lsStatus').value,
+    viewerCount: parseInt(document.getElementById('lsViewers').value) || 0,
+    category: document.getElementById('lsCategory').value.trim(),
+    description: document.getElementById('lsDesc').value.trim(),
+    streamUrl: document.getElementById('lsUrl').value.trim(),
+    pinnedProducts: idx === -1 ? [] : (tvData.livestreams[idx].pinnedProducts || [])
+  };
+  if (scheduledEl && scheduledEl.value) data.scheduledTime = scheduledEl.value + ':00Z';
+  else if (idx !== -1 && tvData.livestreams[idx].scheduledTime) data.scheduledTime = tvData.livestreams[idx].scheduledTime;
+  if (idx === -1) tvData.livestreams.push(data);
+  else tvData.livestreams[idx] = data;
+  await saveAll();
+  closeModal();
+  renderLivestreams();
+  renderDashboard();
+}
+
+async function deleteLivestream(idx) {
+  if (!confirm('Xóa livestream "' + tvData.livestreams[idx].title + '"?')) return;
+  tvData.livestreams.splice(idx, 1);
+  await saveAll();
+  renderLivestreams();
+  renderDashboard();
+}
+
+// ===== SCHEDULE =====
+function renderSchedule() {
+  const el = document.getElementById('tab-schedule');
+  el.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-calendar-alt"></i> Lịch phát sóng (${(tvData.schedule||[]).length})</h3>
+        <button class="btn-primary btn-sm" onclick="scheduleForm()"><i class="fas fa-plus"></i> Thêm lịch</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tiêu đề</th><th>Kênh</th><th>Thời gian</th><th>Danh mục</th><th></th></tr></thead>
+          <tbody>
+            ${(tvData.schedule||[]).sort((a,b) => new Date(a.scheduledTime) - new Date(b.scheduledTime)).map((s, i) => `
+              <tr>
+                <td><strong>${esc(s.title)}</strong></td>
+                <td>${esc(s.channelName)}</td>
+                <td style="font-size:.82rem">${new Date(s.scheduledTime).toLocaleString('vi-VN')}</td>
+                <td><span class="badge">${esc(s.category||'')}</span></td>
+                <td><div class="actions"><button onclick="scheduleForm(${i})" title="Sửa"><i class="fas fa-edit"></i></button><button class="danger" onclick="deleteSchedule(${i})" title="Xóa"><i class="fas fa-trash"></i></button></div></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function scheduleForm(idx) {
+  const s = idx !== undefined ? tvData.schedule[idx] : { id: 'sch' + String(Date.now()).slice(-6), title: '', channelId: '', channelName: '', channelAvatar: '', thumbnail: '', scheduledTime: new Date(Date.now()+86400000).toISOString(), category: '' };
+  const isNew = idx === undefined;
+  const chOpts = (tvData.channels||[]).map(c => `<option value="${c.id}" ${c.id === s.channelId ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
+  showModal(`
+    <h3>${isNew ? '<i class="fas fa-plus-circle"></i> Thêm lịch phát sóng' : '<i class="fas fa-edit"></i> Sửa lịch'}</h3>
+    <div class="f-group"><label>Tiêu đề</label><input id="scTitle" value="${esc(s.title)}" /></div>
+    <div class="f-row">
+      <div class="f-group"><label>Kênh</label><select id="scChannel">${chOpts}</select></div>
+      <div class="f-group"><label>Danh mục</label><input id="scCategory" value="${esc(s.category||'')}" /></div>
+    </div>
+    <div class="f-group"><label>Thời gian</label><input type="datetime-local" id="scTime" value="${s.scheduledTime.slice(0,16)}" /></div>
+    <div class="f-group"><label>Thumbnail URL</label><input id="scThumb" value="${esc(s.thumbnail)}" /></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn-outline" onclick="closeModal()">Hủy</button>
+      <button class="btn-primary" onclick="saveSchedule(${idx === undefined ? -1 : idx})"><i class="fas fa-save"></i> Lưu</button>
+    </div>
+  `);
+}
+
+async function saveSchedule(idx) {
+  const chId = document.getElementById('scChannel').value;
+  const ch = (tvData.channels||[]).find(c => c.id === chId);
+  const data = {
+    id: idx === -1 ? 'sch' + String(Date.now()).slice(-6) : tvData.schedule[idx].id,
+    title: document.getElementById('scTitle').value.trim(),
+    channelId: chId,
+    channelName: ch ? ch.name : '',
+    channelAvatar: ch ? ch.avatar : '',
+    thumbnail: document.getElementById('scThumb').value.trim(),
+    scheduledTime: document.getElementById('scTime').value + ':00Z',
+    category: document.getElementById('scCategory').value.trim()
+  };
+  if (idx === -1) tvData.schedule.push(data);
+  else tvData.schedule[idx] = data;
+  await saveAll();
+  closeModal();
+  renderSchedule();
+  renderDashboard();
+}
+
+async function deleteSchedule(idx) {
+  if (!confirm('Xóa lịch "' + tvData.schedule[idx].title + '"?')) return;
+  tvData.schedule.splice(idx, 1);
+  await saveAll();
+  renderSchedule();
+}
+
+// ===== CHALLENGES =====
+function renderChallenges() {
+  const el = document.getElementById('tab-challenges');
+  el.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-trophy"></i> Thử thách xanh (${(tvData.ecoChallenges||[]).length})</h3>
+        <button class="btn-primary btn-sm" onclick="challengeForm()"><i class="fas fa-plus"></i> Thêm thử thách</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tiêu đề</th><th>Mô tả</th><th>Điểm</th><th>Yêu cầu</th><th></th></tr></thead>
+          <tbody>
+            ${(tvData.ecoChallenges||[]).map((c, i) => `
+              <tr>
+                <td><strong>${esc(c.title)}</strong></td>
+                <td style="font-size:.82rem;color:var(--muted)">${esc(c.description)}</td>
+                <td><span class="badge" style="background:#fef3c7;color:#92400e">+${c.points}</span></td>
+                <td>${c.maxProgress}</td>
+                <td><div class="actions"><button onclick="challengeForm(${i})" title="Sửa"><i class="fas fa-edit"></i></button><button class="danger" onclick="deleteChallenge(${i})" title="Xóa"><i class="fas fa-trash"></i></button></div></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function challengeForm(idx) {
+  const c = idx !== undefined ? tvData.ecoChallenges[idx] : { id: 'chal' + String(Date.now()).slice(-6), title: '', description: '', points: 10, icon: 'fa-leaf', maxProgress: 5 };
+  const isNew = idx === undefined;
+  const icons = ['fa-leaf','fa-eye','fa-comment','fa-share-alt','fa-broadcast-tower','fa-heart','fa-star','fa-fire','fa-seedling','fa-tree'];
+  showModal(`
+    <h3>${isNew ? '<i class="fas fa-plus-circle"></i> Thêm thử thách' : '<i class="fas fa-edit"></i> Sửa thử thách'}</h3>
+    <div class="f-group"><label>Tiêu đề</label><input id="chTitle" value="${esc(c.title)}" /></div>
+    <div class="f-group"><label>Mô tả</label><input id="chDesc" value="${esc(c.description)}" /></div>
+    <div class="f-row">
+      <div class="f-group"><label>Điểm thưởng</label><input type="number" id="chPoints" value="${c.points}" /></div>
+      <div class="f-group"><label>Yêu cầu (maxProgress)</label><input type="number" id="chMax" value="${c.maxProgress}" /></div>
+    </div>
+    <div class="f-group"><label>Icon</label><select id="chIcon">${icons.map(ic => `<option value="${ic}" ${ic === c.icon ? 'selected' : ''}>${ic}</option>`).join('')}</select></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn-outline" onclick="closeModal()">Hủy</button>
+      <button class="btn-primary" onclick="saveChallenge(${idx === undefined ? -1 : idx})"><i class="fas fa-save"></i> Lưu</button>
+    </div>
+  `);
+}
+
+async function saveChallenge(idx) {
+  const data = {
+    id: idx === -1 ? 'chal' + String(Date.now()).slice(-6) : tvData.ecoChallenges[idx].id,
+    title: document.getElementById('chTitle').value.trim(),
+    description: document.getElementById('chDesc').value.trim(),
+    points: parseInt(document.getElementById('chPoints').value) || 10,
+    icon: document.getElementById('chIcon').value,
+    maxProgress: parseInt(document.getElementById('chMax').value) || 5
+  };
+  if (idx === -1) tvData.ecoChallenges.push(data);
+  else tvData.ecoChallenges[idx] = data;
+  await saveAll();
+  closeModal();
+  renderChallenges();
+}
+
+async function deleteChallenge(idx) {
+  if (!confirm('Xóa thử thách "' + tvData.ecoChallenges[idx].title + '"?')) return;
+  tvData.ecoChallenges.splice(idx, 1);
+  await saveAll();
+  renderChallenges();
+}
+
+// ===== REWARDS =====
+function renderRewards() {
+  const el = document.getElementById('tab-rewards');
+  el.innerHTML = `
+    <div class="panel">
+      <div class="panel-header">
+        <h3><i class="fas fa-gift"></i> Phần thưởng (${(tvData.rewards||[]).length})</h3>
+        <button class="btn-primary btn-sm" onclick="rewardForm()"><i class="fas fa-plus"></i> Thêm phần thưởng</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tên</th><th>Mô tả</th><th>Điểm</th><th></th></tr></thead>
+          <tbody>
+            ${(tvData.rewards||[]).map((r, i) => `
+              <tr>
+                <td><strong>${esc(r.name)}</strong></td>
+                <td style="font-size:.82rem;color:var(--muted)">${esc(r.description)}</td>
+                <td><span class="badge" style="background:#fef3c7;color:#92400e">${r.points}</span></td>
+                <td><div class="actions"><button onclick="rewardForm(${i})" title="Sửa"><i class="fas fa-edit"></i></button><button class="danger" onclick="deleteReward(${i})" title="Xóa"><i class="fas fa-trash"></i></button></div></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function rewardForm(idx) {
+  const r = idx !== undefined ? tvData.rewards[idx] : { id: 'rwd' + String(Date.now()).slice(-6), name: '', description: '', points: 100, icon: 'fa-gift' };
+  const isNew = idx === undefined;
+  const icons = ['fa-gift','fa-truck','fa-percent','fa-ticket-alt','fa-leaf','fa-tree','fa-seedling','fa-star','fa-heart','fa-certificate'];
+  showModal(`
+    <h3>${isNew ? '<i class="fas fa-plus-circle"></i> Thêm phần thưởng' : '<i class="fas fa-edit"></i> Sửa phần thưởng'}</h3>
+    <div class="f-group"><label>Tên</label><input id="rwName" value="${esc(r.name)}" /></div>
+    <div class="f-group"><label>Mô tả</label><input id="rwDesc" value="${esc(r.description)}" /></div>
+    <div class="f-row">
+      <div class="f-group"><label>Điểm yêu cầu</label><input type="number" id="rwPoints" value="${r.points}" /></div>
+      <div class="f-group"><label>Icon</label><select id="rwIcon">${icons.map(ic => `<option value="${ic}" ${ic === r.icon ? 'selected' : ''}>${ic}</option>`).join('')}</select></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn-outline" onclick="closeModal()">Hủy</button>
+      <button class="btn-primary" onclick="saveReward(${idx === undefined ? -1 : idx})"><i class="fas fa-save"></i> Lưu</button>
+    </div>
+  `);
+}
+
+async function saveReward(idx) {
+  const data = {
+    id: idx === -1 ? 'rwd' + String(Date.now()).slice(-6) : tvData.rewards[idx].id,
+    name: document.getElementById('rwName').value.trim(),
+    description: document.getElementById('rwDesc').value.trim(),
+    points: parseInt(document.getElementById('rwPoints').value) || 100,
+    icon: document.getElementById('rwIcon').value
+  };
+  if (idx === -1) tvData.rewards.push(data);
+  else tvData.rewards[idx] = data;
+  await saveAll();
+  closeModal();
+  renderRewards();
+}
+
+async function deleteReward(idx) {
+  if (!confirm('Xóa phần thưởng "' + tvData.rewards[idx].name + '"?')) return;
+  tvData.rewards.splice(idx, 1);
+  await saveAll();
+  renderRewards();
+}
+
+// ===== SAVE ALL =====
+async function saveAll() {
+  try {
+    tvData.schedule = tvData.schedule || [];
+    tvData.ecoChallenges = tvData.ecoChallenges || [];
+    tvData.rewards = tvData.rewards || [];
+    const res = await api('POST', '/api/tv/data', tvData);
+    if (res.success) toast('Đã lưu dữ liệu thành công!');
+    else toast('Lỗi khi lưu dữ liệu', 'error');
+  } catch(e) {
+    toast('Lỗi: ' + e.message, 'error');
+  }
+}
+
+// ===== UTILITIES =====
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function formatNum(n) { if (n >= 1000000) return (n/1000000).toFixed(1) + 'M'; if (n >= 1000) return (n/1000).toFixed(1) + 'K'; return String(n); }
+function fmtDuration(s) { const m = Math.floor(s/60); const sec = s%60; return m + ':' + String(sec).padStart(2,'0'); }
+
+</script>
+</body>
+</html>

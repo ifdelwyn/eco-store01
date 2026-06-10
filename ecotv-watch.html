@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">EcoTV – Xem Video</title>
+<meta name="description" id="pageDesc" content="Xem video trên EcoTV">
+<meta property="og:title" id="ogTitle" content="EcoTV Video">
+<meta property="og:description" id="ogDesc" content="Xem video trên EcoTV">
+<meta property="og:image" id="ogImage" content="">
+<meta property="og:type" content="video.other">
+<link rel="canonical" href="" id="canonicalUrl">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/ecotv.css">
+<script type="importmap">
+{ "imports": {
+  "ecotv-core": "/js/ecotv-core.js",
+  "ecotv-data": "/js/ecotv-data.js",
+  "ecotv-player": "/js/ecotv-player.js"
+}}
+</script>
+</head>
+<body class="tv-body light-mode">
+<nav class="tv-nav">
+  <a href="ecotv.html" class="tv-nav-brand"><i class="fas fa-leaf"></i> EcoTV</a>
+  <div class="tv-nav-search">
+    <i class="fas fa-search"></i>
+    <input type="text" id="tvSearch" placeholder="Tìm kiếm..." aria-label="Tìm kiếm">
+  </div>
+  <div class="tv-nav-actions">
+    <button class="tv-nav-btn" id="tvPiPBtn" style="display:none" title="Picture-in-Picture"><i class="fas fa-clone"></i></button>
+    <button class="tv-nav-btn" id="tvThemeToggle" title="Sáng/tối"><i class="fas fa-moon"></i></button>
+  </div>
+</nav>
+
+<div class="tv-watch-layout">
+  <main class="tv-watch-main">
+    <!-- Player -->
+    <div class="tv-player-wrap" id="tvPlayerContainer"></div>
+
+    <!-- Video info -->
+    <div class="tv-video-info" id="tvVideoInfo">
+      <h1 id="videoTitle">Đang tải...</h1>
+      <div class="tv-vid-actions">
+        <span id="videoViews" style="font-size:0.85rem;color:var(--tv-text-muted)"></span>
+        <span style="font-size:0.85rem;color:var(--tv-text-muted)" id="videoDate"></span>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="tv-vid-action-btn" id="btnLike"><i class="fas fa-thumbs-up"></i> <span id="likeCount">0</span></button>
+          <button class="tv-vid-action-btn" id="btnDislike"><i class="fas fa-thumbs-down"></i> <span id="dislikeCount">0</span></button>
+          <button class="tv-vid-action-btn" id="btnShare"><i class="fas fa-share"></i> Chia sẻ</button>
+          <button class="tv-vid-action-btn" id="btnSave"><i class="fas fa-bookmark"></i> Lưu</button>
+          <button class="tv-vid-action-btn" id="btnWatchLater"><i class="fas fa-clock"></i> Xem sau</button>
+        </div>
+      </div>
+      <div class="tv-vid-desc" id="videoDesc"></div>
+      <button class="tv-vid-desc-toggle" id="descToggle">Hiện thêm</button>
+      <div class="tv-vid-tags" id="videoTags"></div>
+
+      <!-- Channel bar -->
+      <div class="tv-channel-bar" id="channelBar">
+        <img id="chAvatar" src="" alt="">
+        <div class="tv-ch-info">
+          <strong id="chName">---</strong>
+          <span id="chSubs">--- người theo dõi</span>
+        </div>
+        <button class="tv-ch-bell" id="chBell" title="Bật thông báo"><i class="fas fa-bell"></i></button>
+        <button class="tv-ch-sub-btn" id="chSubBtn">Theo dõi</button>
+      </div>
+    </div>
+
+    <!-- Chapters -->
+    <div class="tv-chapters" id="tvChapters">
+      <div class="tv-chapters-header"><i class="fas fa-list"></i> Danh sách chương</div>
+      <div class="tv-chapter-list"></div>
+    </div>
+
+    <!-- Autoplay -->
+    <div class="tv-autoplay" id="tvAutoplay" style="display:none">
+      <div class="tv-auto-info">Tự động phát sau <span id="tvAutoCountdown">5</span>s</div>
+      <div class="tv-autoplay-bar"><span style="width:100%"></span></div>
+      <button data-auto-cancel><i class="fas fa-times"></i> Hủy</button>
+      <button data-auto-watch style="background:var(--tv-primary);color:#fff;border:none">Xem ngay</button>
+    </div>
+
+    <!-- Comments -->
+    <div class="tv-comments" id="tvComments">
+      <div class="tv-comments-header">
+        <h3>Bình luận <span id="commentCount">(0)</span></h3>
+        <div class="tv-comments-sort">
+          <select id="commentSort">
+            <option value="newest">Mới nhất</option>
+            <option value="popular">Phổ biến nhất</option>
+          </select>
+        </div>
+      </div>
+      <div id="commentList"></div>
+      <div class="tv-load-more" id="loadMoreComments" style="display:none">Xem thêm bình luận</div>
+    </div>
+  </main>
+
+  <!-- Sidebar -->
+  <aside class="tv-watch-sidebar">
+    <!-- Products -->
+    <div class="tv-products-sidebar" id="tvProducts">
+      <div class="tv-products-header"><i class="fas fa-shopping-bag"></i> Sản phẩm trong video</div>
+      <div class="tv-products-list"></div>
+    </div>
+
+    <!-- Related videos -->
+    <div class="tv-related" id="tvRelated">
+      <h3>Video liên quan</h3>
+      <div id="relatedList"></div>
+    </div>
+  </aside>
+</div>
+
+<!-- Mobile bottom tabs -->
+<div class="tv-mobile-tabs">
+  <button class="tv-mobile-tab active" data-tab="video"><i class="fas fa-video"></i><span>Video</span></button>
+  <button class="tv-mobile-tab" data-tab="products"><i class="fas fa-shopping-bag"></i><span>Sản phẩm</span></button>
+  <button class="tv-mobile-tab" data-tab="chapters"><i class="fas fa-list"></i><span>Chương</span></button>
+  <button class="tv-mobile-tab" data-tab="comments"><i class="fas fa-comment"></i><span>Bình luận</span></button>
+</div>
+
+<script type="module">
+import { EcoTV } from 'ecotv-core';
+import { ecoTVData } from 'ecotv-data';
+import { EcoTVPlayer } from 'ecotv-player';
+
+const { utils, state } = EcoTV;
+
+// Theme
+document.getElementById('tvThemeToggle').addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+  const isLight = document.body.classList.contains('light-mode');
+  localStorage.setItem('tv_theme', isLight ? 'light' : 'dark');
+  document.getElementById('tvThemeToggle').innerHTML = isLight ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+});
+if (localStorage.getItem('tv_theme') === 'dark') {
+  document.body.classList.remove('light-mode');
+  document.getElementById('tvThemeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+}
+const tvNav = document.querySelector('.tv-nav');
+window.addEventListener('scroll', () => {
+  tvNav.classList.toggle('scrolled', window.pageYOffset > 60);
+}, { passive: true });
+
+// Load video
+const videoId = utils.getUrlParam('v');
+if (!videoId) {
+  document.body.innerHTML = '<div style="padding:40px;text-align:center"><h2>Không tìm thấy video</h2><a href="ecotv.html">Quay về trang chủ</a></div>';
+} else {
+  const video = await ecoTVData.getVideo(videoId);
+  if (!video) {
+    document.body.innerHTML = '<div style="padding:40px;text-align:center"><h2>Video không tồn tại</h2><a href="ecotv.html">Quay về trang chủ</a></div>';
+  } else {
+    // SEO metadata
+    document.title = video.title + ' - EcoTV';
+    document.getElementById('pageDesc').content = video.description?.slice(0, 160) || '';
+    document.getElementById('ogTitle').content = video.title;
+    document.getElementById('ogDesc').content = video.description?.slice(0, 160) || '';
+    document.getElementById('ogImage').content = video.thumbnail;
+    document.getElementById('canonicalUrl').href = 'https://delwyn.id.vn/ecotv-watch.html?v=' + video.id;
+
+    // Video info
+    document.getElementById('videoTitle').textContent = video.title;
+    document.getElementById('videoViews').textContent = utils.formatViews(video.views) + ' lượt xem';
+    document.getElementById('videoDate').textContent = utils.timeAgo(video.publishedAt);
+    document.getElementById('likeCount').textContent = utils.formatViews(video.likes);
+    document.getElementById('dislikeCount').textContent = utils.formatViews(video.dislikes);
+
+    // Description
+    const desc = document.getElementById('videoDesc');
+    desc.textContent = video.description || '';
+    const descToggle = document.getElementById('descToggle');
+    if (desc.scrollHeight <= 80) descToggle.style.display = 'none';
+    descToggle.addEventListener('click', () => {
+      const expanded = desc.classList.toggle('expanded');
+      descToggle.textContent = expanded ? 'Ẩn bớt' : 'Hiện thêm';
+    });
+
+    // Tags
+    const tagsContainer = document.getElementById('videoTags');
+    if (video.tags?.length) {
+      tagsContainer.innerHTML = video.tags.map(t => `<span>#${t}</span>`).join('');
+    }
+
+    // Channel bar
+    document.getElementById('chAvatar').src = video.channelAvatar;
+    document.getElementById('chName').textContent = video.channelName;
+    document.getElementById('chName').onclick = () => window.location.href = 'ecotv-channel.html?c=' + video.channelId;
+    const channel = await ecoTVData.getChannel(video.channelId);
+    if (channel) {
+      document.getElementById('chSubs').textContent = utils.formatViews(channel.subscriberCount) + ' người theo dõi';
+    }
+    const isSubbed = state.isSubscribed(video.channelId);
+    const subBtn = document.getElementById('chSubBtn');
+    subBtn.textContent = isSubbed ? 'Đã theo dõi' : 'Theo dõi';
+    subBtn.classList.toggle('subscribed', isSubbed);
+    subBtn.addEventListener('click', () => {
+      const nowSubbed = state.toggleSubscribe(video.channelId);
+      state.save();
+      subBtn.textContent = nowSubbed ? 'Đã theo dõi' : 'Theo dõi';
+      subBtn.classList.toggle('subscribed', nowSubbed);
+    });
+
+    // Like / Save / Watch Later
+    const btnLike = document.getElementById('btnLike');
+    btnLike.classList.toggle('active', state.isLiked(video.id));
+    btnLike.addEventListener('click', () => {
+      state.toggleLike(video.id);
+      state.save();
+      btnLike.classList.toggle('active');
+    });
+
+    const btnSave = document.getElementById('btnSave');
+    btnSave.addEventListener('click', () => {
+      utils.showToast('Đã lưu video vào danh sách', 'fa-bookmark');
+    });
+
+    const btnWL = document.getElementById('btnWatchLater');
+    btnWL.classList.toggle('active', state.isWatchLater(video.id));
+    btnWL.addEventListener('click', () => {
+      state.toggleWatchLater(video.id);
+      state.save();
+      btnWL.classList.toggle('active');
+      utils.showToast(state.isWatchLater(video.id) ? 'Đã thêm vào Xem sau' : 'Đã xóa khỏi Xem sau', 'fa-clock');
+    });
+
+    // Share
+    document.getElementById('btnShare').addEventListener('click', () => {
+      if (navigator.share) {
+        navigator.share({ title: video.title, url: window.location.href });
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        utils.showToast('Đã sao chép liên kết', 'fa-link');
+      }
+    });
+
+    // Init player
+    const player = new EcoTVPlayer({
+      videoId: video.id,
+      videoData: video,
+      container: document.getElementById('tvPlayerContainer'),
+      chaptersContainer: document.querySelector('.tv-chapter-list'),
+    });
+    await player.init();
+
+    // Comments
+    const comments = video.comments || [];
+    let commentPage = 0;
+    const pageSize = 5;
+
+    function renderComments() {
+      const list = document.getElementById('commentList');
+      const sorted = [...comments];
+      const sort = document.getElementById('commentSort').value;
+      if (sort === 'popular') sorted.sort((a, b) => b.likes - a.likes);
+      else sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      document.getElementById('commentCount').textContent = `(${sorted.length})`;
+      const pinned = sorted.filter(c => c.pinned);
+      const normal = sorted.filter(c => !c.pinned);
+      const ordered = [...pinned, ...normal];
+      const page = ordered.slice(0, (commentPage + 1) * pageSize);
+
+      list.innerHTML = page.map(c => {
+        const replies = (c.replies || []).map(r => `
+          <div class="tv-cmt-reply">
+            <img src="${r.avatar}" alt="" loading="lazy">
+            <div class="tv-cmt-body">
+              <div class="tv-cmt-user">${utils.escapeHtml(r.user)}</div>
+              <div class="tv-cmt-text">${utils.escapeHtml(r.text)}</div>
+              <div class="tv-cmt-actions"><span>Thích (${r.likes})</span><span>Trả lời</span></div>
+            </div>
+          </div>
+        `).join('');
+
+        return `
+          <div class="tv-comment">
+            <img src="${c.avatar}" alt="" loading="lazy">
+            <div class="tv-cmt-body">
+              <div class="tv-cmt-user">
+                ${utils.escapeHtml(c.user)}
+                ${c.pinned ? '<span class="tv-cmt-pinned">Ghim</span>' : ''}
+              </div>
+              <div class="tv-cmt-text">${utils.escapeHtml(c.text)}</div>
+              <div class="tv-cmt-actions">
+                <span>Thích (${c.likes})</span>
+                <span>Trả lời</span>
+              </div>
+              ${replies}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('loadMoreComments').style.display = page.length < sorted.length ? 'block' : 'none';
+    }
+
+    renderComments();
+    document.getElementById('commentSort').addEventListener('change', () => {
+      commentPage = 0;
+      renderComments();
+    });
+    document.getElementById('loadMoreComments').addEventListener('click', () => {
+      commentPage++;
+      renderComments();
+    });
+
+    // Related videos
+    const related = await ecoTVData.getRelatedVideos(video.id);
+    const relatedList = document.getElementById('relatedList');
+    if (related.length) {
+      relatedList.innerHTML = related.map(v => `
+        <a class="tv-related-item" href="ecotv-watch.html?v=${v.id}">
+          <img src="${v.thumbnail}" alt="${utils.escapeHtml(v.title)}" loading="lazy">
+          <div class="tv-rel-info">
+            <h4>${utils.escapeHtml(v.title)}</h4>
+            <span>${utils.escapeHtml(v.channelName)}</span>
+            <span>${utils.formatViews(v.views)} lượt xem</span>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    // Autoplay next
+    const nextRelated = related[0];
+    if (nextRelated) {
+      // Listen for 80% watch time to trigger autoplay
+      player.player?.on('timeupdate', () => {
+        if (!player.player || !nextRelated) return;
+        const dur = player.player.duration();
+        const cur = player.player.currentTime();
+        if (dur > 0 && cur / dur > 0.8 && !player.autoplayTimer) {
+          player.setupAutoplay(nextRelated.id, nextRelated.title);
+        }
+      });
+    }
+
+    // Mobile tabs
+    document.querySelectorAll('.tv-mobile-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tv-mobile-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const target = tab.dataset.tab;
+        document.querySelectorAll('.tv-watch-main > div:not(#tvPlayerContainer)').forEach(el => el.style.display = 'none');
+        if (target === 'video') {
+          document.getElementById('tvVideoInfo').style.display = '';
+          document.getElementById('tvChapters').style.display = '';
+          document.getElementById('tvComments').style.display = '';
+        } else if (target === 'products') {
+          document.getElementById('tvProducts').style.display = '';
+        } else if (target === 'chapters') {
+          document.getElementById('tvChapters').style.display = '';
+        } else if (target === 'comments') {
+          document.getElementById('tvComments').style.display = '';
+        }
+      });
+    });
+  }
+}
+</script>
+</body>
+</html>

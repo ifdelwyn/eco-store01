@@ -1606,6 +1606,46 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // ===== TV Management API (admin) =====
+  const TV_DATA_FILE = path.join(root, 'mock', 'ecotv-data.json');
+
+  function loadTvData() {
+    try { return JSON.parse(fs.readFileSync(TV_DATA_FILE, 'utf-8')); }
+    catch (e) { return { channels: [], videos: [], livestreams: [], schedule: [], ecoChallenges: [], rewards: [] }; }
+  }
+
+  function saveTvData(data) {
+    const tmp = TV_DATA_FILE + '.tmp';
+    try {
+      fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf-8');
+      fs.renameSync(tmp, TV_DATA_FILE);
+      return true;
+    } catch(e) {
+      try { fs.unlinkSync(tmp); } catch(_) {}
+      return false;
+    }
+  }
+
+  if (url === '/api/tv/data' && req.method === 'GET') {
+    const data = loadTvData();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(data));
+    return;
+  }
+
+  if (url === '/api/tv/data' && req.method === 'POST') {
+    if (!requireAdmin(req, res)) return;
+    parseBody(req).then(data => {
+      if (saveTvData(data)) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true }));
+      } else {
+        sendError(res, 500, 'SAVE_ERROR', 'Không thể lưu dữ liệu');
+      }
+    }).catch(() => sendError(res, 400, 'INVALID_JSON', 'Invalid JSON'));
+    return;
+  }
+
   if (url.startsWith('/uploads/')) {
     const filePath = path.join(root, url);
     if (!filePath.startsWith(root)) { res.writeHead(403); res.end('Forbidden'); return; }
@@ -1613,6 +1653,19 @@ const server = http.createServer((req, res) => {
       if (err) { res.writeHead(404); res.end('Not found'); return; }
       const extMap = { '.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.gif':'image/gif','.webp':'image/webp','.mp4':'video/mp4','.webm':'video/webm','.mov':'video/quicktime','.avi':'video/x-msvideo' };
       res.writeHead(200, { 'Content-Type': extMap[path.extname(filePath).toLowerCase()] || 'application/octet-stream' });
+      res.end(data);
+    });
+    return;
+  }
+
+  // Serve /mock/ and /js/ directories (livestream module)
+  if (url.startsWith('/mock/') || url.startsWith('/js/')) {
+    let filePath = path.resolve(path.join(root, url));
+    if (!filePath.startsWith(root)) { res.writeHead(403); res.end('Forbidden'); return; }
+    fs.readFile(filePath, (err, data) => {
+      if (err) { res.writeHead(404); res.end('Not found'); return; }
+      const ext = path.extname(filePath).toLowerCase();
+      res.writeHead(200, { 'Content-Type': mime[ext] || 'text/plain' });
       res.end(data);
     });
     return;
@@ -1631,7 +1684,7 @@ const server = http.createServer((req, res) => {
     const ext = path.extname(filePath).toLowerCase();
     res.writeHead(200, {
       'Content-Type': mime[ext] || 'text/plain',
-      'Content-Security-Policy': "default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' https://images.unsplash.com https://placehold.co https://cdn.jsdelivr.net data: blob:; connect-src 'self';" // [FIX-Bug7]
+      'Content-Security-Policy': "default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://code.jquery.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' https://images.unsplash.com https://placehold.co https://cdn.jsdelivr.net https://img.icons8.com https://api.dicebear.com https://icons.duckduckgo.com data: blob:; connect-src 'self' https://test-streams.mux.dev; media-src 'self' https://test-streams.mux.dev blob:; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;" // [FIX-Bug7]
     });
     res.end(data);
     logRequest(req.method, url, 200, Date.now() - t0); // [UPGRADE-3]

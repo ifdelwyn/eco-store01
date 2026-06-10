@@ -148,5 +148,27 @@
     "membershipEndDate": null,
     "membershipDiscount": 0,
     "membershipFreeShipping": 0
+  },
+  {
+    "id": 10,
+    "username": "admtv1",
+    "password": "scrypt:65bb14785f07357a36a468d252629a24:140d1c8c71f681b3cda81a323a228f8649b684b6f9169fa056089456ff5ce475b2667c621b4f8557a28f8db3ce5b103b3020afe07147490d834842505d5a14c5",
+    "phone": "",
+    "email": "admtv1@ecoshop.com",
+    "fullName": "TV Admin",
+    "role": "admin",
+    "createdAt": "2026-06-10T00:00:00.000Z",
+    "banned": false,
+    "banType": null,
+    "banMessage": null,
+    "banExpiresAt": null,
+    "bannedAt": null,
+    "membershipType": "Thường",
+    "membershipPlan": null,
+    "membershipPlanName": null,
+    "membershipStartDate": null,
+    "membershipEndDate": null,
+    "membershipDiscount": 0,
+    "membershipFreeShipping": 0
   }
 ]

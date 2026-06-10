@@ -1,0 +1,119 @@
+{
+  "greenFund": {
+    "totalTrees": 8300,
+    "yearlyGoal": 15000,
+    "treesThisMonth": 412,
+    "donorsThisMonth": 1250,
+    "provinces": {
+      "lao-cai": { "name": "Lào Cai", "trees": 1200 },
+      "ha-giang": { "name": "Hà Giang", "trees": 980 },
+      "son-la": { "name": "Sơn La", "trees": 1450 },
+      "dien-bien": { "name": "Điện Biên", "trees": 670 },
+      "hoa-binh": { "name": "Hòa Bình", "trees": 520 },
+      "quang-tri": { "name": "Quảng Trị", "trees": 890 },
+      "quang-nam": { "name": "Quảng Nam", "trees": 760 },
+      "gia-lai": { "name": "Gia Lai", "trees": 430 },
+      "lam-dong": { "name": "Lâm Đồng", "trees": 1100 },
+      "ca-mau": { "name": "Cà Mau", "trees": 300 }
+    },
+    "galleries": [
+      { "id": 1, "image": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=400&q=80", "farm": "Trang trại Xanh Sơn La", "volunteer": "Nguyễn Văn A", "date": "15/05/2026", "trees": 200 },
+      { "id": 2, "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80", "farm": "Rừng phòng hộ Lào Cai", "volunteer": "Trần Thị B", "date": "22/04/2026", "trees": 150 },
+      { "id": 3, "image": "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=400&q=80", "farm": "Đồi chè Lâm Đồng", "volunteer": "Lê Văn C", "date": "10/04/2026", "trees": 300 },
+      { "id": 4, "image": "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&q=80", "farm": "Cánh rừng Gia Lai", "volunteer": "Phạm Thị D", "date": "28/03/2026", "trees": 180 },
+      { "id": 5, "image": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&q=80", "farm": "Vườn quốc gia Cà Mau", "volunteer": "Hoàng Văn E", "date": "05/03/2026", "trees": 250 },
+      { "id": 6, "image": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=80", "farm": "Khu bảo tồn Quảng Trị", "volunteer": "Ngô Thị F", "date": "18/02/2026", "trees": 220 }
+    ],
+    "leaderboard": [
+      { "rank": 1, "name": "Nguyễn Hoàng Anh", "trees": 45, "amount": 2250000, "avatar": "NA" },
+      { "rank": 2, "name": "Trần Minh Quân", "trees": 38, "amount": 1900000, "avatar": "TQ" },
+      { "rank": 3, "name": "Lê Thị Hương", "trees": 32, "amount": 1600000, "avatar": "LH" },
+      { "rank": 4, "name": "Phạm Văn Đức", "trees": 28, "amount": 1400000, "avatar": "PĐ" },
+      { "rank": 5, "name": "Đặng Thùy Trang", "trees": 25, "amount": 1250000, "avatar": "DT" },
+      { "rank": 6, "name": "Vũ Hoàng Long", "trees": 22, "amount": 1100000, "avatar": "VL" },
+      { "rank": 7, "name": "Bùi Thị Mai", "trees": 20, "amount": 1000000, "avatar": "BM" },
+      { "rank": 8, "name": "Đỗ Quốc Bảo", "trees": 18, "amount": 900000, "avatar": "ĐB" },
+      { "rank": 9, "name": "Nguyễn Thị Lan", "trees": 15, "amount": 750000, "avatar": "NL" },
+      { "rank": 10, "name": "Trịnh Văn Tài", "trees": 12, "amount": 600000, "avatar": "TT" }
+    ]
+  },
+  "communityFund": {
+    "totalRaised": 48500000,
+    "totalBeneficiaries": 12,
+    "stories": [
+      {
+        "id": 1,
+        "name": "Hoàn cảnh gia đình chú Ba",
+        "anonymous": false,
+        "summary": "Chú Ba (65 tuổi) bị tai biến, vợ mất sớm, con gái nhỏ đang học lớp 7. Gia đình sống trong căn nhà dột nát tại Cà Mau.",
+        "story": "Chú Nguyễn Văn Ba, 65 tuổi, hiện đang sống một mình cùng con gái nhỏ Nguyễn Thị An (13 tuổi) tại ấp 4, xã Khánh Bình, huyện Trần Văn Thời, tỉnh Cà Mau. Chú bị tai biến mạch máu não vào năm 2023, di chứng liệt nửa người, mất khả năng lao động. Vợ chú mất vì ung thư năm 2020. Hiện tại, hai cha con sống nhờ vào tiền trợ cấp người già và sự giúp đỡ của bà con lối xóm. Căn nhà xuống cấp nghiêm trọng, mưa dột khắp nơi. Chúng tôi đang kêu gọi 30.000.000đ để sửa lại mái nhà và hỗ trợ cháu An tiếp tục đến trường.",
+        "images": ["https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80", "https://images.unsplash.com/photo-1582075439902-8e0c4af1fe3b?w=600&q=80"],
+        "goal": 30000000,
+        "raised": 18500000,
+        "supporters": 142,
+        "status": "active",
+        "urgent": false,
+        "updates": [
+          { "date": "01/06/2026", "content": "Đã nhận được 15.000.000đ từ 98 nhà hảo tâm. Cảm ơn mọi người!" },
+          { "date": "25/05/2026", "content": "Bắt đầu chiến dịch kêu gọi hỗ trợ gia đình chú Ba." }
+        ],
+        "donations": [
+          { "name": "Nguyễn Thị Hồng", "amount": 500000, "date": "02/06/2026", "message": "Chúc chú Ba và cháu An sớm vượt qua khó khăn!" },
+          { "name": "Ẩn danh", "amount": 2000000, "date": "01/06/2026", "message": "" },
+          { "name": "Trần Văn Nam", "amount": 300000, "date": "30/05/2026", "message": "Mong cháu An học giỏi!" }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Mổ tim cho bé Minh",
+        "anonymous": false,
+        "summary": "Bé Minh (3 tuổi) mắc bệnh tim bẩm sinh, gia đình làm nông, không đủ chi phí phẫu thuật 50 triệu đồng.",
+        "story": "Bé Nguyễn Văn Minh, 3 tuổi, tại huyện Ea H'leo, Đắk Lắk, được chẩn đoán mắc bệnh tim bẩm sinh (thông liên thất) từ khi 6 tháng tuổi. Bác sĩ khuyến cáo cần phẫu thuật trước khi bé vào lớp 1. Bố mẹ bé là nông dân, thu nhập bấp bênh, vay mượn khắp nơi mới được 15 triệu. Gia đình rất mong nhận được sự giúp đỡ để bé có cơ hội được phẫu thuật kịp thời.",
+        "images": ["https://images.unsplash.com/photo-1584515933487-779824d29309?w=600&q=80", "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80"],
+        "goal": 50000000,
+        "raised": 50000000,
+        "supporters": 312,
+        "status": "completed",
+        "urgent": false,
+        "updates": [
+          { "date": "15/05/2026", "content": "Đã hoàn thành mục tiêu 50.000.000đ! Bé Minh sẽ được phẫu thuật trong tháng 6." },
+          { "date": "20/04/2026", "content": "Đã nhận viện phí lần 1: 25.000.000đ. Cảm ơn 158 nhà hảo tâm!" },
+          { "date": "01/04/2026", "content": "Bắt đầu kêu gọi hỗ trợ cho bé Minh." }
+        ],
+        "donations": [
+          { "name": "Công ty EcoFood", "amount": 10000000, "date": "10/05/2026", "message": "Chúc bé mau khỏe!" },
+          { "name": "Lê Thị Ánh", "amount": 1000000, "date": "08/05/2026", "message": "Thương bé quá!" },
+          { "name": "Ẩn danh", "amount": 5000000, "date": "05/05/2026", "message": "" },
+          { "name": "Phạm Quốc Tuấn", "amount": 200000, "date": "02/05/2026", "message": "Cố lên bé Minh!" }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Cứu trợ lũ lụt miền Trung",
+        "anonymous": false,
+        "summary": "Đợt lũ lịch sử tại Quảng Bình khiến 200 hộ dân mất nhà cửa. Khẩn cấp cần nhu yếu phẩm và vật liệu xây dựng.",
+        "story": "Trận lũ cuối tháng 5/2026 đã gây thiệt hại nặng nề tại các huyện Lệ Thủy, Quảng Ninh, tỉnh Quảng Bình. Hơn 200 hộ dân mất nhà cửa, nhiều người bị thương. Chúng tôi cần khẩn cấp 100.000.000đ để mua nhu yếu phẩm, thuốc men và vật liệu xây dựng tạm thời cho bà con.",
+        "images": ["https://images.unsplash.com/photo-1547683905-f686c993aae5?w=600&q=80", "https://images.unsplash.com/photo-1463130456064-77fda7f96d6b?w=600&q=80"],
+        "goal": 100000000,
+        "raised": 42000000,
+        "supporters": 580,
+        "status": "active",
+        "urgent": true,
+        "updates": [
+          { "date": "03/06/2026", "content": "Đã gửi 200 thùng mì tôm và 500 chai nước lọc đến vùng lũ." },
+          { "date": "28/05/2026", "content": "Khởi động chiến dịch khẩn cấp cứu trợ lũ lụt." }
+        ],
+        "donations": [
+          { "name": "EcoShop Team", "amount": 5000000, "date": "29/05/2026", "message": "Chung tay vì miền Trung!" },
+          { "name": "Nguyễn Văn Hùng", "amount": 200000, "date": "29/05/2026", "message": "Cố gắng lên bà con!" },
+          { "name": "Ẩn danh", "amount": 1000000, "date": "28/05/2026", "message": "" }
+        ]
+      }
+    ]
+  },
+  "stats": {
+    "totalCustomers": 12450,
+    "totalTreesCustomer": 8300,
+    "lastUpdated": "2026-06-10T08:00:00Z"
+  }
+}
