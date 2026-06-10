@@ -1290,7 +1290,6 @@
         position: absolute;
         inset: 0;
         background: rgba(10, 30, 18, 0.55);
-        backdrop-filter: blur(6px);
       }
       .eco-modal-content {
         position: relative;
@@ -1601,7 +1600,6 @@
         .auth-form-wrap h3 { font-size: 1.2rem; }
         .input-eco input { padding: 16px 14px 8px; font-size: 16px; }
         .modal-close { top: 10px; right: 10px; width: 32px; height: 32px; }
-        .eco-modal-bg { backdrop-filter: blur(4px); }
       }
         font-weight: 700;
         cursor: pointer;
@@ -3464,8 +3462,8 @@
                 </div>
               </div>
               <div class="ad-reg-action">
-                <button class="btn-eco" onclick="showAdRegisterModal()">
-                  <i class="fa-solid fa-paper-plane"></i> Đăng ký ngay
+                <button class="btn-eco" onclick="showAdCampaignModal()"><!-- // [NEW] Campaign System: replaced old ad-request -->
+                  <i class="fa-solid fa-paper-plane"></i> Tạo chiến dịch
                 </button>
               </div>
             </div>
@@ -10211,42 +10209,82 @@
       }
     </script>
 
-  <!-- ===== AD REGISTRATION MODAL ===== -->
-    <div class="eco-modal" id="adRegisterModal">
-      <div class="eco-modal-bg" onclick="closeAdRegisterModal()"></div>
-      <div class="eco-modal-content md">
-        <button class="modal-close" onclick="closeAdRegisterModal()"><i class="fa-solid fa-xmark"></i></button>
-        <div style="padding:30px">
-          <h4 style="font-weight:800;margin-bottom:4px;display:flex;align-items:center;gap:10px">
-            <span style="width:40px;height:40px;border-radius:12px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem"><i class="fa-solid fa-bullhorn"></i></span>
-            Đăng ký quảng cáo
-          </h4>
-          <p style="color:var(--muted);font-size:.85rem;margin:4px 0 16px">
-            Dành cho doanh nghiệp, tổ chức buôn bán nhỏ lẻ. Chúng tôi sẽ liên hệ và hỗ trợ bạn sớm nhất.
-          </p>
-          <div class="input-eco"><input id="adr_businessName" placeholder=" "><label>Tên doanh nghiệp / tổ chức *</label></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <div class="input-eco"><input id="adr_contactPerson" placeholder=" "><label>Người liên hệ *</label></div>
-            <div class="input-eco"><input id="adr_phone" placeholder=" "><label>Số điện thoại *</label></div>
+  <!-- ===== AD CAMPAIGN MODAL ===== --> <!-- // [NEW] Campaign System: replaced old ad-request -->
+  <div class="eco-modal" id="adCampaignModal">
+    <div class="eco-modal-bg" onclick="closeAdCampaignModal()"></div>
+    <div class="eco-modal-content lg">
+      <button class="modal-close" onclick="closeAdCampaignModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div style="padding:30px">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
+          <div style="width:56px;height:56px;border-radius:16px;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;flex-shrink:0"><i class="fa-solid fa-bullhorn"></i></div>
+          <div>
+            <h4 style="font-weight:800;margin:0">Tạo chiến dịch quảng cáo</h4>
+            <p style="color:var(--muted);font-size:.85rem;margin:2px 0 0">Tự động chạy quảng cáo với ngân sách của bạn</p>
           </div>
-          <div class="input-eco"><input id="adr_email" placeholder=" "><label>Email</label></div>
-          <div class="input-eco"><textarea id="adr_adContent" placeholder=" " style="width:100%;padding:18px 16px 8px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);outline:none;font-size:.95rem;resize:vertical;min-height:70px;font-family:inherit"></textarea><label style="top:14px">Nội dung quảng cáo mong muốn</label></div>
-          <div class="input-eco"><textarea id="adr_notes" placeholder=" " style="width:100%;padding:18px 16px 8px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);outline:none;font-size:.95rem;resize:vertical;min-height:60px;font-family:inherit"></textarea><label style="top:14px">Ghi chú thêm</label></div>
-          <div class="input-eco">
-            <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1.5px dashed var(--border);background:var(--soft);cursor:pointer" onclick="document.getElementById('adr_images').click()">
-              <i class="fa-solid fa-cloud-upload-alt" style="font-size:1.3rem;color:var(--primary)"></i>
-              <div><div style="font-weight:700;font-size:.88rem;color:var(--text)">Tải hình ảnh quảng cáo</div><div style="font-size:.75rem;color:var(--muted)">Logo, banner, hình ảnh sản phẩm (PNG, JPG, tối đa 5MB)</div></div>
-            </div>
-            <input id="adr_images" type="file" accept="image/*" multiple style="display:none" onchange="previewAdImages(this)">
-            <div id="adr_image_preview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="input-eco" style="grid-column:1/-1"><input id="cmp_name" placeholder=" " maxlength="200"><label>Tên chiến dịch *</label></div>
+          <div class="input-eco" style="grid-column:1/-1"><input id="cmp_headline" placeholder=" " maxlength="500"><label>Nội dung quảng cáo (headline) *</label></div>
+          <div class="input-eco"><input id="cmp_business" placeholder=" " maxlength="200"><label>Tên doanh nghiệp / tổ chức *</label></div>
+          <div class="input-eco"><input id="cmp_contact" placeholder=" " maxlength="100"><label>Người liên hệ *</label></div>
+          <div class="input-eco"><input id="cmp_phone" placeholder=" " maxlength="20"><label>Số điện thoại *</label></div>
+          <div class="input-eco"><input id="cmp_email" placeholder=" " maxlength="100"><label>Email</label></div>
+          <div class="input-eco" style="grid-column:1/-1"><input id="cmp_link" placeholder=" " value="/shop" maxlength="500"><label>Đường dẫn (VD: /shop/ten-doanh-nghiep) *</label></div>
+        </div>
+
+        <div style="margin:18px 0 14px;font-weight:700;font-size:.9rem"><i class="fa-solid fa-map-pin" style="color:var(--primary)"></i> Chọn vị trí quảng cáo</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="slotSelector">
+          <div class="slot-option selected" data-slot="hero" onclick="pickSlot(this,'hero')" style="padding:14px;border-radius:14px;border:2px solid var(--primary);background:var(--soft);cursor:pointer;transition:all .2s">
+            <div style="font-weight:800;font-size:.95rem">Banner chính trang chủ</div>
+            <div style="font-size:.78rem;color:var(--muted);margin:2px 0">Hiển thị luân phiên đầu trang</div>
+            <div style="font-weight:800;color:var(--secondary);font-size:1.1rem;margin-top:4px">$50 <span style="font-size:.7rem;font-weight:400;color:var(--muted)">/ ngày</span></div>
           </div>
-          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
-            <button class="btn-ghost" onclick="closeAdRegisterModal()">Hủy</button>
-            <button class="btn-eco" onclick="submitAdRequest()"><i class="fa-solid fa-paper-plane"></i> Gửi đăng ký</button>
+          <div class="slot-option" data-slot="sidebar" onclick="pickSlot(this,'sidebar')" style="padding:14px;border-radius:14px;border:2px solid var(--border);cursor:pointer;transition:all .2s">
+            <div style="font-weight:800;font-size:.95rem">Banner cột bên</div>
+            <div style="font-size:.78rem;color:var(--muted);margin:2px 0">Hiển thị ở sidebar trang web</div>
+            <div style="font-weight:800;color:var(--secondary);font-size:1.1rem;margin-top:4px">$20 <span style="font-size:.7rem;font-weight:400;color:var(--muted)">/ ngày</span></div>
           </div>
+          <div class="slot-option" data-slot="product" onclick="pickSlot(this,'product')" style="padding:14px;border-radius:14px;border:2px solid var(--border);cursor:pointer;transition:all .2s">
+            <div style="font-weight:800;font-size:.95rem">Banner trang sản phẩm</div>
+            <div style="font-size:.78rem;color:var(--muted);margin:2px 0">Hiển thị trên trang chi tiết SP</div>
+            <div style="font-weight:800;color:var(--secondary);font-size:1.1rem;margin-top:4px">$30 <span style="font-size:.7rem;font-weight:400;color:var(--muted)">/ ngày</span></div>
+          </div>
+          <div class="slot-option" data-slot="footer" onclick="pickSlot(this,'footer')" style="padding:14px;border-radius:14px;border:2px solid var(--border);cursor:pointer;transition:all .2s">
+            <div style="font-weight:800;font-size:.95rem">Banner chân trang</div>
+            <div style="font-size:.78rem;color:var(--muted);margin:2px 0">Hiển thị cuối mỗi trang</div>
+            <div style="font-weight:800;color:var(--secondary);font-size:1.1rem;margin-top:4px">$10 <span style="font-size:.7rem;font-weight:400;color:var(--muted)">/ ngày</span></div>
+          </div>
+        </div>
+
+        <div style="margin:18px 0 14px;font-weight:700;font-size:.9rem"><i class="fa-solid fa-wallet" style="color:var(--primary)"></i> Ngân sách & Lịch chạy</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div class="input-eco"><input id="cmp_daily" type="number" min="1" placeholder=" " oninput="calcCampaignBudget()"><label>Ngân sách/ngày ($) *</label></div>
+          <div class="input-eco"><input id="cmp_total" type="number" min="1" placeholder=" " oninput="calcCampaignBudget()"><label>Tổng ngân sách ($)</label></div>
+          <div class="input-eco"><input id="cmp_duration" type="number" min="1" placeholder=" " value="7" oninput="calcCampaignBudget()"><label>Số ngày chạy</label></div>
+        </div>
+        <div id="budgetSummary" style="background:var(--soft);border-radius:10px;padding:10px 14px;font-size:.85rem;color:var(--muted);margin-top:8px;display:flex;justify-content:space-between">
+          <span>Dự kiến: <strong id="estTotal" style="color:var(--secondary)">$0</strong></span>
+          <span>Ngày: <strong id="estDaily" style="color:var(--text)">$0</strong></span>
+          <span>Số ngày: <strong id="estDays">7</strong></span>
+        </div>
+
+        <div style="margin:18px 0 14px;font-weight:700;font-size:.9rem"><i class="fa-solid fa-image" style="color:var(--primary)"></i> Hình ảnh quảng cáo</div>
+        <div class="input-eco">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:12px;border:1.5px dashed var(--border);background:var(--soft);cursor:pointer" onclick="document.getElementById('cmp_image').click()">
+            <i class="fa-solid fa-cloud-upload-alt" style="font-size:1.3rem;color:var(--primary)"></i>
+            <div><div style="font-weight:700;font-size:.88rem;color:var(--text)">Tải ảnh banner quảng cáo</div><div style="font-size:.75rem;color:var(--muted)">PNG, JPG tối đa 5MB. Khuyến nghị 1200x400px</div></div>
+          </div>
+          <input id="cmp_image" type="file" accept="image/*" style="display:none" onchange="previewCampaignImage(this)">
+          <div id="cmp_image_preview" style="margin-top:8px"></div>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;border-top:1px solid var(--border);padding-top:16px">
+          <button class="btn-ghost" onclick="closeAdCampaignModal()">Hủy</button>
+          <button class="btn-eco" id="submitCampaignBtn" onclick="submitAdCampaign()"><i class="fa-solid fa-paper-plane"></i> Gửi duyệt</button>
         </div>
       </div>
     </div>
+  </div>
 
   <!-- ===== LIVE CHAT WIDGET ===== -->
     <div id="chatWidget" style="position:fixed;bottom:24px;right:24px;z-index:9999">
@@ -10417,92 +10455,125 @@
       });
     }
 
-    /* ---------------- AD REGISTRATION ---------------- */
-    function showAdRegisterModal() {
-      $('#adRegisterModal').addClass('show');
+    /* ---------------- AD CAMPAIGN SYSTEM ---------------- */ // [NEW] Campaign System: replaced old ad-request
+    var campaignSlot = 'hero';
+
+    function showAdCampaignModal() {
+      campaignSlot = 'hero';
+      $('#adCampaignModal').addClass('show');
       $('body').css('overflow', 'hidden');
-      setTimeout(function() { $('#adr_businessName').focus(); }, 200);
+      setTimeout(function() { $('#cmp_name').focus(); }, 300);
+      calcCampaignBudget();
     }
 
-    function closeAdRegisterModal() {
-      $('#adRegisterModal').removeClass('show');
+    function closeAdCampaignModal() {
+      $('#adCampaignModal').removeClass('show');
       $('body').css('overflow', '');
+      $('#cmp_name, #cmp_headline, #cmp_business, #cmp_contact, #cmp_phone, #cmp_email, #cmp_link, #cmp_daily, #cmp_total').val('');
+      $('#cmp_duration').val('7');
+      document.getElementById('cmp_image').value = '';
+      $('#cmp_image_preview').empty();
+      $('#submitCampaignBtn').prop('disabled', false).html('<i class="fa-solid fa-paper-plane"></i> Gửi duyệt');
     }
 
-    function previewAdImages(input) {
-      var preview = $('#adr_image_preview');
-      preview.empty();
-      var files = input.files;
-      for (var i = 0; i < files.length; i++) {
-        (function(file) {
-          var reader = new FileReader();
-          reader.onload = function(e) {
-            preview.append('<img src="' + e.target.result + '" style="width:70px;height:70px;border-radius:10px;object-fit:cover;border:2px solid var(--border);background:var(--card)">');
-          };
-          reader.readAsDataURL(file);
-        })(files[i]);
+    function pickSlot(el, slot) {
+      campaignSlot = slot;
+      $('.slot-option').css({ 'border-color': 'var(--border)', 'background': 'var(--card)' });
+      $(el).css({ 'border-color': 'var(--primary)', 'background': 'var(--soft)' });
+    }
+
+    function calcCampaignBudget() {
+      var daily = parseFloat($('#cmp_daily').val()) || 0;
+      var total = parseFloat($('#cmp_total').val()) || 0;
+      var days = parseInt($('#cmp_duration').val()) || 1;
+      var minDaily = { hero: 50, sidebar: 20, product: 30, footer: 10 }[campaignSlot] || 10;
+      if (daily > 0 && daily < minDaily) {
+        $('#cmp_daily').val(minDaily);
+        daily = minDaily;
+      }
+      var estTotal = total > 0 ? total : daily * days;
+      $('#estDaily').text('$' + daily.toFixed(0));
+      $('#estDays').text(days);
+      $('#estTotal').text('$' + estTotal.toFixed(0));
+      if (daily > 0 && total > 0 && daily * days > total) {
+        $('#budgetSummary').css('background', '#fef2f2');
+      } else {
+        $('#budgetSummary').css('background', '');
       }
     }
 
-    function submitAdRequest() {
-      var businessName = $('#adr_businessName').val().trim();
-      var contactPerson = $('#adr_contactPerson').val().trim();
-      var phone = $('#adr_phone').val().trim();
-      var email = $('#adr_email').val().trim();
-      var adContent = $('#adr_adContent').val().trim();
-      var notes = $('#adr_notes').val().trim();
-      var files = document.getElementById('adr_images').files;
-      if (!businessName || !contactPerson || !phone) {
-        toast('Vui lòng nhập tên doanh nghiệp, người liên hệ và số điện thoại', 'error');
+    function previewCampaignImage(input) {
+      var preview = $('#cmp_image_preview');
+      preview.empty();
+      if (input.files && input.files[0]) {
+        var file = input.files[0];
+        if (file.size > 5 * 1024 * 1024) { toast('Ảnh quá lớn (tối đa 5MB)', 'error'); input.value = ''; return; }
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          preview.html('<img src="' + e.target.result + '" style="width:100%;max-height:160px;border-radius:12px;object-fit:cover;border:2px solid var(--border);background:var(--card)">');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function submitAdCampaign() {
+      var name = $('#cmp_name').val().trim();
+      var headline = $('#cmp_headline').val().trim();
+      var business = $('#cmp_business').val().trim();
+      var contact = $('#cmp_contact').val().trim();
+      var phone = $('#cmp_phone').val().trim();
+      var email = $('#cmp_email').val().trim();
+      var ctaLink = $('#cmp_link').val().trim() || '/shop';
+      var daily = parseFloat($('#cmp_daily').val()) || 0;
+      var total = parseFloat($('#cmp_total').val()) || 0;
+      var days = parseInt($('#cmp_duration').val()) || 1;
+      if (!name || !headline || !business || !contact || !phone || daily <= 0) {
+        toast('Vui lòng điền đầy đủ thông tin bắt buộc (*)', 'error');
         return;
       }
+      if (total > 0 && daily * days > total) {
+        toast('Tổng ngân sách không đủ cho số ngày đã chọn', 'error');
+        return;
+      }
+      var minDaily = { hero: 50, sidebar: 20, product: 30, footer: 10 }[campaignSlot] || 10;
+      if (daily < minDaily) {
+        toast('Ngân sách tối thiểu cho vị trí này là $' + minDaily + '/ngày', 'error');
+        return;
+      }
+      var btn = $('#submitCampaignBtn');
+      btn.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi...');
+      var files = document.getElementById('cmp_image').files;
+      var done = function() {
+        closeAdCampaignModal();
+        toast('Đã gửi chiến dịch quảng cáo thành công! Chờ admin duyệt.', 'success', 6000);
+        btn.prop('disabled', false).html('<i class="fa-solid fa-paper-plane"></i> Gửi duyệt');
+      };
+      var fail = function() {
+        btn.prop('disabled', false).html('<i class="fa-solid fa-paper-plane"></i> Gửi duyệt');
+        toast('Lỗi khi gửi. Vui lòng thử lại sau.', 'error');
+      };
+      var data = {
+        campaignName: name,
+        headline: headline,
+        businessName: business,
+        contactPerson: contact,
+        phone: phone,
+        email: email,
+        ctaLink: ctaLink,
+        slotType: campaignSlot,
+        dailyBudget: daily,
+        totalBudget: total > 0 ? total : daily * days,
+        startDate: Date.now(),
+        endDate: Date.now() + days * 86400000,
+        userId: DB.session ? DB.session.id || DB.session.username : ''
+      };
       if (files.length > 0) {
         var fd = new FormData();
-        fd.append('businessName', businessName);
-        fd.append('contactPerson', contactPerson);
-        fd.append('phone', phone);
-        fd.append('email', email);
-        fd.append('adContent', adContent);
-        fd.append('notes', notes);
-        for (var i = 0; i < files.length; i++) {
-          fd.append('file' + (i + 1), files[i]);
-        }
-        $.ajax({
-          url: '/api/ad-requests',
-          method: 'POST',
-          contentType: false,
-          processData: false,
-          data: fd,
-          success: function () {
-            closeAdRegisterModal();
-            $('#adr_businessName, #adr_contactPerson, #adr_phone, #adr_email, #adr_adContent, #adr_notes').val('');
-            document.getElementById('adr_images').value = '';
-            $('#adr_image_preview').empty();
-            toast('Đã gửi đăng ký quảng cáo thành công! Chúng tôi sẽ liên hệ bạn sớm nhất.', 'success', 6000);
-          },
-          error: function () { toast('Lỗi khi gửi đăng ký', 'error'); }
-        });
+        Object.keys(data).forEach(function(k) { fd.append(k, data[k]); });
+        fd.append('file1', files[0]);
+        $.ajax({ url: '/api/ad-campaigns', method: 'POST', contentType: false, processData: false, data: fd, success: done, error: fail });
       } else {
-        $.ajax({
-          url: '/api/ad-requests',
-          method: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify({
-            businessName: businessName,
-            contactPerson: contactPerson,
-            phone: phone,
-            email: email,
-            adContent: adContent,
-            notes: notes
-          }),
-          success: function () {
-            closeAdRegisterModal();
-            $('#adr_businessName, #adr_contactPerson, #adr_phone, #adr_email, #adr_adContent, #adr_notes').val('');
-            $('#adr_image_preview').empty();
-            toast('Đã gửi đăng ký quảng cáo thành công! Chúng tôi sẽ liên hệ bạn sớm nhất.', 'success', 6000);
-          },
-          error: function () { toast('Lỗi khi gửi đăng ký', 'error'); }
-        });
+        $.ajax({ url: '/api/ad-campaigns', method: 'POST', contentType: 'application/json', data: JSON.stringify(data), success: done, error: fail });
       }
     }
 
